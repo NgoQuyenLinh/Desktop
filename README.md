@@ -83,3 +83,4 @@ Yêu cầu: **Windows** + **.NET 8 SDK** (WinForms chỉ chạy trên Windows).
 nhiều ngày khác nhau (từ 01/08/2025 đến 10/08/2025) và điểm tích luỹ khác nhau — dùng ngay
 để demo tìm kiếm, tạo đơn mới, và xem thống kê theo khoảng thời gian mà không cần nhập liệu
 thủ công trước khi thuyết trình.
+# Desktop
