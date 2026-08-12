@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using QuanLyKhachHang.Helpers;
@@ -54,6 +56,9 @@ namespace QuanLyKhachHang.Views
             goc.Children.Add(hangTimKiem);
 
             _listBox.SelectionChanged += (s, e) => _dangChon = _listBox.SelectedItem as KhachHang;
+
+            _listBox.DoubleTapped += ListBox_DoubleTapped;
+
             var khungBang = new Border { Background = Brushes.White, Height = 480, ClipToBounds = true };
             khungBang.Child = UiHelpers.TaoBang<KhachHang>(
                 new List<KhachHang>(),
@@ -135,6 +140,65 @@ namespace QuanLyKhachHang.Views
                 _data.XoaKhachHang(_dangChon.MaKH);
                 TaiLaiDuLieu();
             }
+        }
+
+        private async void ListBox_DoubleTapped(object? sender, TappedEventArgs e)
+        {
+            if (_dangChon == null) return;
+
+            // Tìm container của dòng đang chọn trong ListBox
+            var container = _listBox.ContainerFromItem(_dangChon);
+            if (container == null) return;
+
+            // Tạo một ô TextBox nổi lên ngay tại vị trí dòng đó để người dùng sửa nhanh "Họ tên" hoặc "SĐT"
+            // Ở đây ưu tiên cho phép sửa nhanh Họ tên hoặc SĐT trực tiếp
+            var editPopup = new Window
+            {
+                Title = "Sửa nhanh khách hàng",
+                Width = 350,
+                Height = 160,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                CanResize = false
+            };
+
+            var panel = new StackPanel { Spacing = 10, Margin = new Thickness(15) };
+            
+            var txtHoTen = new TextBox { Text = _dangChon.HoTen, Watermark = "Họ tên" };
+            var txtSdt = new TextBox { Text = _dangChon.SoDienThoai, Watermark = "Số điện thoại" };
+            
+            var btnLuu = new Button 
+            { 
+                Content = "💾 Lưu (Enter)", 
+                Background = new SolidColorBrush(Color.Parse("#16A34A")), 
+                Foreground = Brushes.White,
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+
+            panel.Children.Add(new TextBlock { Text = "Chỉnh sửa thông tin nhanh:", FontWeight = FontWeight.Bold });
+            panel.Children.Add(txtHoTen);
+            panel.Children.Add(txtSdt);
+            panel.Children.Add(btnLuu);
+
+            editPopup.Content = panel;
+
+            // Hành động lưu dữ liệu
+            void LuuVaDong()
+            {
+                _dangChon.HoTen = txtHoTen.Text;
+                _dangChon.SoDienThoai = txtSdt.Text;
+
+                _data.SuaKhachHang(_dangChon);
+                TaiLaiDuLieu();
+                editPopup.Close();
+            }
+
+            btnLuu.Click += (s, ev) => LuuVaDong();
+            
+            // Nhấn Enter ở ô nào cũng tự động lưu và đóng cửa sổ
+            txtHoTen.KeyDown += (s, ev) => { if (ev.Key == Key.Enter) LuuVaDong(); };
+            txtSdt.KeyDown += (s, ev) => { if (ev.Key == Key.Enter) LuuVaDong(); };
+
+            editPopup.ShowDialog(TopLevel.GetTopLevel(this) as Window);
         }
     }
 }

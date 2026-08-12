@@ -1,12 +1,79 @@
 [
-  { "MaKH": "KH001", "HoTen": "Nguyễn Văn An", "SoDienThoai": "0901234561", "DiemTichLuy": 350, "NgayTao": "2025-01-10T08:00:00" },
-  { "MaKH": "KH002", "HoTen": "Trần Thị Bình", "SoDienThoai": "0912345672", "DiemTichLuy": 120, "NgayTao": "2025-02-15T09:30:00" },
-  { "MaKH": "KH003", "HoTen": "Lê Hoàng Cường", "SoDienThoai": "0923456783", "DiemTichLuy": 780, "NgayTao": "2025-03-05T10:15:00" },
-  { "MaKH": "KH004", "HoTen": "Phạm Thị Dung", "SoDienThoai": "0934567894", "DiemTichLuy": 45, "NgayTao": "2025-03-20T14:00:00" },
-  { "MaKH": "KH005", "HoTen": "Hoàng Văn Em", "SoDienThoai": "0945678905", "DiemTichLuy": 990, "NgayTao": "2025-04-01T11:00:00" },
-  { "MaKH": "KH006", "HoTen": "Đỗ Thị Giang", "SoDienThoai": "0956789016", "DiemTichLuy": 60, "NgayTao": "2025-05-12T16:20:00" },
-  { "MaKH": "KH007", "HoTen": "Vũ Minh Hải", "SoDienThoai": "0967890127", "DiemTichLuy": 210, "NgayTao": "2025-06-18T08:45:00" },
-  { "MaKH": "KH008", "HoTen": "Bùi Thị Yến Nhi", "SoDienThoai": "0978901238", "DiemTichLuy": 15, "NgayTao": "2025-07-02T13:10:00" },
-  { "MaKH": "KH009", "HoTen": "Ngô Văn Khoa", "SoDienThoai": "0989012349", "DiemTichLuy": 500, "NgayTao": "2025-07-25T09:00:00" },
-  { "MaKH": "KH010", "HoTen": "Đặng Thị Lan", "SoDienThoai": "0990123450", "DiemTichLuy": 300, "NgayTao": "2025-08-01T10:30:00" }
+  {
+    "MaKH": "KH001",
+    "HoTen": "Nguy\u1EC5n V\u0103n An",
+    "SoDienThoai": "0901234561",
+    "DiemTichLuy": 350,
+    "NgayTao": "2025-01-10T08:00:00"
+  },
+  {
+    "MaKH": "KH002",
+    "HoTen": "Tr\u1EA7n Th\u1ECB B\u00ECnh",
+    "SoDienThoai": "0912345672",
+    "DiemTichLuy": 120,
+    "NgayTao": "2025-02-15T09:30:00"
+  },
+  {
+    "MaKH": "KH003",
+    "HoTen": "L\u00EA Ho\u00E0ng C\u01B0\u1EDDng",
+    "SoDienThoai": "0923456783",
+    "DiemTichLuy": 780,
+    "NgayTao": "2025-03-05T10:15:00"
+  },
+  {
+    "MaKH": "KH004",
+    "HoTen": "Ph\u1EA1m Th\u1ECB Dung",
+    "SoDienThoai": "0934567894",
+    "DiemTichLuy": 45,
+    "NgayTao": "2025-03-20T14:00:00"
+  },
+  {
+    "MaKH": "KH005",
+    "HoTen": "Ho\u00E0ng V\u0103n Em",
+    "SoDienThoai": "0945678905",
+    "DiemTichLuy": 990,
+    "NgayTao": "2025-04-01T11:00:00"
+  },
+  {
+    "MaKH": "KH006",
+    "HoTen": "\u0110\u1ED7 Th\u1ECB Giang",
+    "SoDienThoai": "0956789016",
+    "DiemTichLuy": 60,
+    "NgayTao": "2025-05-12T16:20:00"
+  },
+  {
+    "MaKH": "KH007",
+    "HoTen": "V\u0169 Minh H\u1EA3i",
+    "SoDienThoai": "0967890127",
+    "DiemTichLuy": 210,
+    "NgayTao": "2025-06-18T08:45:00"
+  },
+  {
+    "MaKH": "KH008",
+    "HoTen": "B\u00F9i Th\u1ECB Y\u1EBFn Nhi",
+    "SoDienThoai": "0978901238",
+    "DiemTichLuy": 15,
+    "NgayTao": "2025-07-02T13:10:00"
+  },
+  {
+    "MaKH": "KH009",
+    "HoTen": "Ng\u00F4 V\u0103n Khoa",
+    "SoDienThoai": "0989012349",
+    "DiemTichLuy": 500,
+    "NgayTao": "2025-07-25T09:00:00"
+  },
+  {
+    "MaKH": "KH010",
+    "HoTen": "\u0110\u1EB7ng Th\u1ECB Lan",
+    "SoDienThoai": "0990123450",
+    "DiemTichLuy": 300,
+    "NgayTao": "2025-08-01T10:30:00"
+  },
+  {
+    "MaKH": "KH011",
+    "HoTen": "cao khoi nguyen",
+    "SoDienThoai": "0999999999",
+    "DiemTichLuy": 1000,
+    "NgayTao": "2026-08-12T20:26:31.240783+07:00"
+  }
 ]
