@@ -1,0 +1,12 @@
+[
+  { "MaDon": "DH001", "MaKH": "KH001", "TenKH": "Nguyễn Văn An", "SoTien": 150000, "NgayTao": "2025-08-01T09:00:00", "DiemCong": 150, "DiemSuDung": 0, "TongDiemSauGiaoDich": 150 },
+  { "MaDon": "DH002", "MaKH": "KH002", "TenKH": "Trần Thị Bình", "SoTien": 90000, "NgayTao": "2025-08-02T10:20:00", "DiemCong": 90, "DiemSuDung": 0, "TongDiemSauGiaoDich": 90 },
+  { "MaDon": "DH003", "MaKH": "KH003", "TenKH": "Lê Hoàng Cường", "SoTien": 500000, "NgayTao": "2025-08-03T15:40:00", "DiemCong": 500, "DiemSuDung": 0, "TongDiemSauGiaoDich": 500 },
+  { "MaDon": "DH004", "MaKH": "KH001", "TenKH": "Nguyễn Văn An", "SoTien": 220000, "NgayTao": "2025-08-04T11:15:00", "DiemCong": 220, "DiemSuDung": 20, "TongDiemSauGiaoDich": 350 },
+  { "MaDon": "DH005", "MaKH": "KH005", "TenKH": "Hoàng Văn Em", "SoTien": 700000, "NgayTao": "2025-08-05T08:50:00", "DiemCong": 700, "DiemSuDung": 0, "TongDiemSauGiaoDich": 700 },
+  { "MaDon": "DH006", "MaKH": "KH005", "TenKH": "Hoàng Văn Em", "SoTien": 300000, "NgayTao": "2025-08-06T17:00:00", "DiemCong": 300, "DiemSuDung": 10, "TongDiemSauGiaoDich": 990 },
+  { "MaDon": "DH007", "MaKH": "KH009", "TenKH": "Ngô Văn Khoa", "SoTien": 500000, "NgayTao": "2025-08-07T13:30:00", "DiemCong": 500, "DiemSuDung": 0, "TongDiemSauGiaoDich": 500 },
+  { "MaDon": "DH008", "MaKH": "KH010", "TenKH": "Đặng Thị Lan", "SoTien": 300000, "NgayTao": "2025-08-08T09:10:00", "DiemCong": 300, "DiemSuDung": 0, "TongDiemSauGiaoDich": 300 },
+  { "MaDon": "DH009", "MaKH": "KH007", "TenKH": "Vũ Minh Hải", "SoTien": 210000, "NgayTao": "2025-08-09T14:25:00", "DiemCong": 210, "DiemSuDung": 0, "TongDiemSauGiaoDich": 210 },
+  { "MaDon": "DH010", "MaKH": "KH004", "TenKH": "Phạm Thị Dung", "SoTien": 45000, "NgayTao": "2025-08-10T10:05:00", "DiemCong": 45, "DiemSuDung": 0, "TongDiemSauGiaoDich": 45 }
+]
