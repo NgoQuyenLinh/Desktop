@@ -2,16 +2,21 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>disable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>QuanLyKhachHang</RootNamespace>
-    <ApplicationIcon></ApplicationIcon>
+    <!-- Không dùng net8.0-windows -> build và chạy được trên cả macOS, Windows, Linux -->
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Copy toàn bộ file dữ liệu mẫu sang thư mục build (bin/Debug/...) -->
+    <PackageReference Include="Avalonia" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Data\khachhang.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
