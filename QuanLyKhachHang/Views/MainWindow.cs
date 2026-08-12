@@ -6,11 +6,6 @@ using QuanLyKhachHang.Services;
 
 namespace QuanLyKhachHang.Views
 {
-    /// <summary>
-    /// Cửa sổ chính của ứng dụng: sidebar bên trái để điều hướng (giống layout
-    /// bản WinForms trước đây) và vùng nội dung bên phải hoán đổi giữa các UserControl:
-    /// Trang chủ, Khách hàng, Đơn hàng, Thống kê.
-    /// </summary>
     public class MainWindow : Window
     {
         private readonly DataService _data = new();
@@ -52,7 +47,25 @@ namespace QuanLyKhachHang.Views
             var btnThongKe = TaoNutMenu("📊  Thống kê");
             var btnThoat = TaoNutMenu("🚪  Thoát");
 
-            btnTrangChu.Click += (s, e) => HienThi(new TrangChuView(_data), btnTrangChu);
+            // Hàm tạo TrangChuView có hỗ trợ Callback chuyển tab
+            TrangChuView TaoTrangChuView() => new TrangChuView(_data, (tabIndex, maKH) =>
+            {
+                if (tabIndex == 1) // Tab Khách hàng
+                {
+                    HienThi(new KhachHangView(_data), btnKhachHang);
+                }
+                else if (tabIndex == 2) // Tab Đơn hàng / Tích điểm
+                {
+                    var donHangView = new DonHangView(_data);
+                    if (!string.IsNullOrEmpty(maKH))
+                    {
+                        donHangView.ChonKhachHang(maKH);
+                    }
+                    HienThi(donHangView, btnDonHang);
+                }
+            });
+
+            btnTrangChu.Click += (s, e) => HienThi(TaoTrangChuView(), btnTrangChu);
             btnKhachHang.Click += (s, e) => HienThi(new KhachHangView(_data), btnKhachHang);
             btnDonHang.Click += (s, e) => HienThi(new DonHangView(_data), btnDonHang);
             btnThongKe.Click += (s, e) => HienThi(new ThongKeView(_data), btnThongKe);
@@ -85,7 +98,8 @@ namespace QuanLyKhachHang.Views
             grid.Children.Add(khungNoiDung);
             Content = grid;
 
-            HienThi(new TrangChuView(_data), btnTrangChu);
+            // Hiển thị Trang chủ khi ứng dụng vừa khởi chạy
+            HienThi(TaoTrangChuView(), btnTrangChu);
         }
 
         private Button TaoNutMenu(string text)

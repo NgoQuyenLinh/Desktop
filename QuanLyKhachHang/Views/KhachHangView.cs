@@ -97,8 +97,15 @@ namespace QuanLyKhachHang.Views
         private async void BtnThem_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             var cuaSo = new KhachHangEditWindow(_data.TaoMaKhachHangMoi());
-            await cuaSo.ShowDialog(TopLevel.GetTopLevel(this) as Window);
-
+            //await cuaSo.ShowDialog(TopLevel.GetTopLevel(this) as Window);
+            if (TopLevel.GetTopLevel(this) is Window parentWindow)
+            {
+                await cuaSo.ShowDialog(parentWindow);
+            }
+            else
+            {
+                cuaSo.Show();
+            }
             if (cuaSo.KetQua != null)
             {
                 _data.ThemKhachHang(cuaSo.KetQua);
@@ -115,8 +122,15 @@ namespace QuanLyKhachHang.Views
             }
 
             var cuaSo = new KhachHangEditWindow(_dangChon.MaKH, _dangChon);
-            await cuaSo.ShowDialog(TopLevel.GetTopLevel(this) as Window);
-
+            //await cuaSo.ShowDialog(TopLevel.GetTopLevel(this) as Window);
+            if (TopLevel.GetTopLevel(this) is Window parentWindow)
+            {
+                await cuaSo.ShowDialog(parentWindow);
+            }
+            else
+            {
+                cuaSo.Show();
+            }
             if (cuaSo.KetQua != null)
             {
                 _data.SuaKhachHang(cuaSo.KetQua);
@@ -146,12 +160,9 @@ namespace QuanLyKhachHang.Views
         {
             if (_dangChon == null) return;
 
-            // Tìm container của dòng đang chọn trong ListBox
             var container = _listBox.ContainerFromItem(_dangChon);
             if (container == null) return;
 
-            // Tạo một ô TextBox nổi lên ngay tại vị trí dòng đó để người dùng sửa nhanh "Họ tên" hoặc "SĐT"
-            // Ở đây ưu tiên cho phép sửa nhanh Họ tên hoặc SĐT trực tiếp
             var editPopup = new Window
             {
                 Title = "Sửa nhanh khách hàng",
@@ -181,7 +192,6 @@ namespace QuanLyKhachHang.Views
 
             editPopup.Content = panel;
 
-            // Hành động lưu dữ liệu
             void LuuVaDong()
             {
                 _dangChon.HoTen = txtHoTen.Text;
@@ -193,12 +203,18 @@ namespace QuanLyKhachHang.Views
             }
 
             btnLuu.Click += (s, ev) => LuuVaDong();
-            
-            // Nhấn Enter ở ô nào cũng tự động lưu và đóng cửa sổ
             txtHoTen.KeyDown += (s, ev) => { if (ev.Key == Key.Enter) LuuVaDong(); };
             txtSdt.KeyDown += (s, ev) => { if (ev.Key == Key.Enter) LuuVaDong(); };
 
-            editPopup.ShowDialog(TopLevel.GetTopLevel(this) as Window);
+            // Sửa cảnh báo null reference tại đây
+            if (TopLevel.GetTopLevel(this) is Window parentWindow)
+            {
+                await editPopup.ShowDialog(parentWindow);
+            }
+            else
+            {
+                editPopup.Show();
+            }
         }
     }
 }

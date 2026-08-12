@@ -24,7 +24,7 @@
     "MaKH": "KH004",
     "HoTen": "Ph\u1EA1m Th\u1ECB Dung",
     "SoDienThoai": "0934567894",
-    "DiemTichLuy": 45,
+    "DiemTichLuy": 149,
     "NgayTao": "2025-03-20T14:00:00"
   },
   {
@@ -75,5 +75,12 @@
     "SoDienThoai": "0999999999",
     "DiemTichLuy": 1000,
     "NgayTao": "2026-08-12T20:26:31.240783+07:00"
+  },
+  {
+    "MaKH": "KH012",
+    "HoTen": "nguyen van a",
+    "SoDienThoai": "0900000090",
+    "DiemTichLuy": 0,
+    "NgayTao": "2026-08-12T21:33:44.823195+07:00"
   }
 ]

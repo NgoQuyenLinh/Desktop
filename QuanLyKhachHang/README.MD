@@ -1,0 +1,1 @@
+![giao diện khi mới mở ứng dụng](docs/imagess/Screenshot%202026-08-12%20at%2022.00.36.png)

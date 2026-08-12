@@ -17,6 +17,7 @@ namespace QuanLyKhachHang
         {
             // Áp dụng theme Fluent (giao diện hiện đại, có sẵn trong Avalonia)
             Styles.Add(new FluentTheme());
+            RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light;
         }
 
         public override void OnFrameworkInitializationCompleted()

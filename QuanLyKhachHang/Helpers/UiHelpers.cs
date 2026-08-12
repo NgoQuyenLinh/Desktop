@@ -23,6 +23,7 @@ namespace QuanLyKhachHang.Helpers
     {
         public static Control TaoBang<T>(IReadOnlyList<T> duLieu, IReadOnlyList<ColDef<T>> cot, ListBox listBox)
         {
+            
             var goc = new DockPanel();
 
             var header = new Grid
