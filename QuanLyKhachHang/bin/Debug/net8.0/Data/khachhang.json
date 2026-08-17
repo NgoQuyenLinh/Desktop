@@ -3,14 +3,14 @@
     "MaKH": "KH001",
     "HoTen": "Nguy\u1EC5n V\u0103n An",
     "SoDienThoai": "0901234561",
-    "DiemTichLuy": 350,
+    "DiemTichLuy": 8051,
     "NgayTao": "2025-01-10T08:00:00"
   },
   {
     "MaKH": "KH002",
     "HoTen": "Tr\u1EA7n Th\u1ECB B\u00ECnh",
     "SoDienThoai": "0912345672",
-    "DiemTichLuy": 120,
+    "DiemTichLuy": 570,
     "NgayTao": "2025-02-15T09:30:00"
   },
   {
@@ -38,7 +38,7 @@
     "MaKH": "KH006",
     "HoTen": "\u0110\u1ED7 Th\u1ECB Giang",
     "SoDienThoai": "0956789016",
-    "DiemTichLuy": 60,
+    "DiemTichLuy": 20,
     "NgayTao": "2025-05-12T16:20:00"
   },
   {
@@ -70,17 +70,24 @@
     "NgayTao": "2025-08-01T10:30:00"
   },
   {
-    "MaKH": "KH011",
-    "HoTen": "cao khoi nguyen",
-    "SoDienThoai": "0999999999",
-    "DiemTichLuy": 1000,
-    "NgayTao": "2026-08-12T20:26:31.240783+07:00"
+    "MaKH": "KH013",
+    "HoTen": "C\u01B0\u1EDDng Doly",
+    "SoDienThoai": "0363636363",
+    "DiemTichLuy": 120,
+    "NgayTao": "2026-08-17T07:48:58.818802+07:00"
   },
   {
-    "MaKH": "KH012",
-    "HoTen": "nguyen van a",
-    "SoDienThoai": "0900000090",
+    "MaKH": "KH014",
+    "HoTen": "nguyen",
+    "SoDienThoai": "000",
     "DiemTichLuy": 0,
-    "NgayTao": "2026-08-12T21:33:44.823195+07:00"
+    "NgayTao": "2026-08-17T09:52:34.201413+07:00"
+  },
+  {
+    "MaKH": "KH015",
+    "HoTen": "linh",
+    "SoDienThoai": "0911111111",
+    "DiemTichLuy": 0,
+    "NgayTao": "2026-08-17T09:56:34.64888+07:00"
   }
 ]

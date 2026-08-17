@@ -41,8 +41,9 @@ namespace QuanLyKhachHang.Views
                 HorizontalAlignment = HorizontalAlignment.Center
             };
 
-            var btnTrangChu = TaoNutMenu("🏠  Trang chủ");
+            var btnTrangChu = TaoNutMenu("🏠  Màn hình chính");
             var btnKhachHang = TaoNutMenu("👤  Khách hàng");
+            var btnKhoQua = TaoNutMenu("🎁  Kho quà");
             var btnDonHang = TaoNutMenu("🧾  Đơn hàng / Tích điểm");
             var btnThongKe = TaoNutMenu("📊  Thống kê");
             var btnThoat = TaoNutMenu("🚪  Thoát");
@@ -67,6 +68,7 @@ namespace QuanLyKhachHang.Views
 
             btnTrangChu.Click += (s, e) => HienThi(TaoTrangChuView(), btnTrangChu);
             btnKhachHang.Click += (s, e) => HienThi(new KhachHangView(_data), btnKhachHang);
+            btnKhoQua.Click += (s, e) => HienThi(new KhoQuaView(_data), btnKhoQua);
             btnDonHang.Click += (s, e) => HienThi(new DonHangView(_data), btnDonHang);
             btnThongKe.Click += (s, e) => HienThi(new ThongKeView(_data), btnThongKe);
             btnThoat.Click += (s, e) => Close();
@@ -74,6 +76,7 @@ namespace QuanLyKhachHang.Views
             stackSidebar.Children.Add(lblTieuDe);
             stackSidebar.Children.Add(btnTrangChu);
             stackSidebar.Children.Add(btnKhachHang);
+            stackSidebar.Children.Add(btnKhoQua);
             stackSidebar.Children.Add(btnDonHang);
             stackSidebar.Children.Add(btnThongKe);
             stackSidebar.Children.Add(btnThoat);

@@ -13,7 +13,7 @@ namespace QuanLyKhachHang.Views
 {
     /// <summary>
     /// Màn hình Thống kê: chọn khoảng thời gian (từ ngày -> đến ngày), hiển thị các chỉ số
-    /// tổng hợp và bảng Top khách hàng có điểm tích luỹ cao nhất (toàn bộ dữ liệu hiện có).
+    /// tổng hợp và bảng Top khách hàng có điểm tích luỹ cao nhất.
     /// </summary>
     public class ThongKeView : UserControl
     {
@@ -28,7 +28,7 @@ namespace QuanLyKhachHang.Views
 
         private readonly ListBox _listBoxTop = new();
 
-        private record KhachHangXepHang(int Hang, KhachHang KhachHang);
+        private record KhachHangXepHang(int Hang, string MaKH, string HoTen, string SoDienThoai, decimal TongTien);
 
         public ThongKeView(DataService data)
         {
@@ -37,10 +37,13 @@ namespace QuanLyKhachHang.Views
             var goc = new StackPanel { Spacing = 14 };
             goc.Children.Add(new TextBlock { Text = "Thống kê", FontSize = 20, FontWeight = FontWeight.Bold });
 
-            _dpTu.SelectedDate = _data.DanhSachDonHang.Count > 0
-                ? _data.DanhSachDonHang.Min(d => d.NgayTao)
-                : DateTime.Now.AddMonths(-1);
-            _dpDen.SelectedDate = DateTime.Now;
+            // Thiết lập giá trị mặc định dạng DateTimeOffset
+            DateTimeOffset tuNgayMacDinh = _data.DanhSachDonHang.Count > 0
+                ? new DateTimeOffset(_data.DanhSachDonHang.Min(d => d.NgayTao))
+                : new DateTimeOffset(DateTime.Now.AddMonths(-1));
+
+            _dpTu.SelectedDate = tuNgayMacDinh;
+            _dpDen.SelectedDate = DateTimeOffset.Now;
 
             var hangLoc = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
             hangLoc.Children.Add(new TextBlock { Text = "Từ ngày:", VerticalAlignment = VerticalAlignment.Center });
@@ -48,9 +51,9 @@ namespace QuanLyKhachHang.Views
             hangLoc.Children.Add(new TextBlock { Text = "Đến ngày:", VerticalAlignment = VerticalAlignment.Center });
             hangLoc.Children.Add(_dpDen);
 
-            var btnLoc = new Button { Content = "🔎 Xem thống kê", Background = new SolidColorBrush(Color.Parse("#2563EB")), Foreground = Brushes.White };
-            btnLoc.Click += (s, e) => ThongKe();
-            hangLoc.Children.Add(btnLoc);
+            _dpTu.SelectedDateChanged += (s, e) => ThongKe();
+            _dpDen.SelectedDateChanged += (s, e) => ThongKe();
+
             goc.Children.Add(hangLoc);
 
             var hangThe = new WrapPanel { Orientation = Orientation.Horizontal };
@@ -60,7 +63,7 @@ namespace QuanLyKhachHang.Views
             hangThe.Children.Add(TaoThe("🎁 Điểm đã dùng", _lblDiemDung, "#9333EA"));
             goc.Children.Add(hangThe);
 
-            goc.Children.Add(new TextBlock { Text = "🏆 Top khách hàng có điểm tích luỹ cao nhất", FontSize = 15, FontWeight = FontWeight.Bold });
+            goc.Children.Add(new TextBlock { Text = "🏆 Top khách hàng tiêu tiền nhiều nhất", FontSize = 15, FontWeight = FontWeight.Bold });
 
             var khungBang = new Border { Background = Brushes.White, Height = 300 };
             khungBang.Child = UiHelpers.TaoBang<KhachHangXepHang>(
@@ -68,10 +71,10 @@ namespace QuanLyKhachHang.Views
                 new List<ColDef<KhachHangXepHang>>
                 {
                     new("Hạng", 0.5, x => x.Hang.ToString()),
-                    new("Mã KH", 0.8, x => x.KhachHang.MaKH),
-                    new("Họ tên", 1.6, x => x.KhachHang.HoTen),
-                    new("Số điện thoại", 1.3, x => x.KhachHang.SoDienThoai),
-                    new("Điểm tích luỹ", 1, x => x.KhachHang.DiemTichLuy.ToString())
+                    new("Mã KH", 0.8, x => x.MaKH),
+                    new("Họ tên", 1.6, x => x.HoTen),
+                    new("Số điện thoại", 1.3, x => x.SoDienThoai),
+                    new("Số tiền", 1, x => x.TongTien.ToString("N0"))
                 },
                 _listBoxTop);
             goc.Children.Add(khungBang);
@@ -105,8 +108,11 @@ namespace QuanLyKhachHang.Views
 
         private async void ThongKe()
         {
-            DateTime tuNgay = _dpTu.SelectedDate?.DateTime ?? DateTime.Now.AddMonths(-1);
-            DateTime denNgay = _dpDen.SelectedDate?.DateTime ?? DateTime.Now;
+            // Chuyển đổi chính xác từ SelectedDate (DateTimeOffset?) sang DateTime
+            DateTime tuNgay = _dpTu.SelectedDate?.Date ?? DateTime.Now.AddMonths(-1).Date;
+            
+            // Đặt mốc Đến ngày về cuối ngày (23:59:59) để lấy trọn vẹn hóa đơn phát sinh trong ngày đó
+            DateTime denNgay = _dpDen.SelectedDate?.Date.AddDays(1).AddTicks(-1) ?? DateTime.Now;
 
             if (tuNgay > denNgay)
             {
@@ -115,14 +121,40 @@ namespace QuanLyKhachHang.Views
                 return;
             }
 
-            _lblSoDon.Text = _data.SoLuongDonHang(tuNgay, denNgay).ToString();
-            _lblDoanhThu.Text = $"{_data.TongDoanhThu(tuNgay, denNgay):N0} đ";
-            _lblDiemCong.Text = _data.TongDiemDaTichLuy(tuNgay, denNgay).ToString();
-            _lblDiemDung.Text = _data.TongDiemDaSuDung(tuNgay, denNgay).ToString();
+            var donHangs = _data.LocDonHangTheoNgay(tuNgay, denNgay);
+            
+            _lblSoDon.Text = donHangs.Count.ToString();
+            _lblDoanhThu.Text = $"{donHangs.Sum(d => d.ThanhTien):N0} đ";
+            _lblDiemCong.Text = donHangs.Sum(d => d.DiemCong).ToString();
+            _lblDiemDung.Text = donHangs.Sum(d => d.DiemSuDung).ToString();
 
-            _listBoxTop.ItemsSource = _data.TopKhachHangDiemCao(10)
-                .Select((kh, idx) => new KhachHangXepHang(idx + 1, kh))
+            var topKh = donHangs
+                .GroupBy(d => d.MaKH)
+                .Select(g => new
+                {
+                    MaKH = g.Key,
+                    TongTien = g.Sum(d => d.ThanhTien),
+                    TenKH = g.First().TenKH
+                })
+                .OrderByDescending(x => x.TongTien)
+                .Take(10)
                 .ToList();
+
+            var ketQuaXepHang = new List<KhachHangXepHang>();
+            for (int i = 0; i < topKh.Count; i++)
+            {
+                var x = topKh[i];
+                var kh = _data.DanhSachKhachHang.FirstOrDefault(k => k.MaKH == x.MaKH);
+                ketQuaXepHang.Add(new KhachHangXepHang(
+                    i + 1, 
+                    x.MaKH, 
+                    kh?.HoTen ?? x.TenKH, 
+                    kh?.SoDienThoai ?? "", 
+                    x.TongTien));
+            }
+
+            _listBoxTop.ItemsSource = null;
+            _listBoxTop.ItemsSource = ketQuaXepHang;
         }
     }
 }

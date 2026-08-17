@@ -1,0 +1,32 @@
+[
+  {
+    "MaQua": "Q01",
+    "TenQua": "\u00C1o m\u01B0a",
+    "DiemQuyDoi": 1000,
+    "SoLuong": 8
+  },
+  {
+    "MaQua": "Q02",
+    "TenQua": "Kh\u1EA9u trang",
+    "DiemQuyDoi": 100,
+    "SoLuong": 50
+  },
+  {
+    "MaQua": "Q03",
+    "TenQua": "N\u01B0\u1EDBc mu\u1ED1i",
+    "DiemQuyDoi": 50,
+    "SoLuong": 99
+  },
+  {
+    "MaQua": "Q04",
+    "TenQua": "Gi\u1EA5y",
+    "DiemQuyDoi": 50,
+    "SoLuong": 100
+  },
+  {
+    "MaQua": "Q05",
+    "TenQua": "iphone",
+    "DiemQuyDoi": 99999,
+    "SoLuong": 2
+  }
+]

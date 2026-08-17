@@ -148,12 +148,14 @@ namespace QuanLyKhachHang.Views
                 return;
             }
 
-            bool dongY = await ThongBaoWindow.XacNhan(cuaSoCha, "Xác nhận xoá", $"Bạn có chắc muốn xoá khách hàng '{_dangChon.HoTen}'?");
+            bool dongY = await ThongBaoWindow.XacNhan(cuaSoCha, "Xác nhận xoá", $"Bạn có chắc muốn xoá khách hàng \n'{_dangChon.HoTen}'?");
             if (dongY)
             {
                 _data.XoaKhachHang(_dangChon.MaKH);
+
                 TaiLaiDuLieu();
             }
+            //TaiLaiDuLieu();
         }
 
         private async void ListBox_DoubleTapped(object? sender, TappedEventArgs e)

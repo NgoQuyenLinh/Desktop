@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/caotiendattx/Developer/Destop_program/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj": {}
+    "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj": {}
   },
   "projects": {
-    "/Users/caotiendattx/Developer/Destop_program/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj": {
+    "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/caotiendattx/Developer/Destop_program/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj",
+        "projectUniqueName": "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj",
         "projectName": "QuanLyKhachHang",
-        "projectPath": "/Users/caotiendattx/Developer/Destop_program/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj",
+        "projectPath": "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj",
         "packagesPath": "/Users/caotiendattx/.nuget/packages/",
-        "outputPath": "/Users/caotiendattx/Developer/Destop_program/Desktop/QuanLyKhachHang/obj/",
+        "outputPath": "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/Desktop/QuanLyKhachHang/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/caotiendattx/.nuget/NuGet/NuGet.Config"

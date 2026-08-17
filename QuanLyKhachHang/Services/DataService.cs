@@ -20,6 +20,7 @@ namespace QuanLyKhachHang.Services
         private readonly string _dataFolder;
         private readonly string _khFile;
         private readonly string _donFile;
+        private readonly string _quaFile;
 
         private readonly JsonSerializerOptions _jsonOptions = new()
         {
@@ -28,6 +29,7 @@ namespace QuanLyKhachHang.Services
 
         public List<KhachHang> DanhSachKhachHang { get; private set; } = new();
         public List<DonHang> DanhSachDonHang { get; private set; } = new();
+        public List<QuaTang> DanhSachQuaTang { get; private set; } = new();
 
         public DataService()
         {
@@ -37,16 +39,30 @@ namespace QuanLyKhachHang.Services
 
             _khFile = Path.Combine(_dataFolder, "khachhang.json");
             _donFile = Path.Combine(_dataFolder, "donhang.json");
+            _quaFile = Path.Combine(_dataFolder, "quatang.json");
 
             TaiDuLieu();
+            KhoiTaoQuaTangMacDinh();
         }
 
+        private void KhoiTaoQuaTangMacDinh()
+        {
+            if (DanhSachQuaTang.Count == 0)
+            {
+                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q01", TenQua = "Áo mưa", DiemQuyDoi = 1000, SoLuong = 10 });
+                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q02", TenQua = "Khẩu trang", DiemQuyDoi = 100, SoLuong = 50 });
+                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q03", TenQua = "Nước muối", DiemQuyDoi = 50, SoLuong = 100 });
+                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q04", TenQua = "Giấy", DiemQuyDoi = 50, SoLuong = 100 });
+                LuuQuaTang();
+            }
+        }
         // ================== ĐỌC / GHI FILE ==================
 
         public void TaiDuLieu()
         {
             DanhSachKhachHang = DocFile<KhachHang>(_khFile);
             DanhSachDonHang = DocFile<DonHang>(_donFile);
+            DanhSachQuaTang = DocFile<QuaTang>(_quaFile);
         }
 
         private List<T> DocFile<T>(string duongDan)
@@ -69,6 +85,7 @@ namespace QuanLyKhachHang.Services
 
         public void LuuKhachHang() => GhiFile(_khFile, DanhSachKhachHang);
         public void LuuDonHang() => GhiFile(_donFile, DanhSachDonHang);
+        public void LuuQuaTang() => GhiFile(_quaFile, DanhSachQuaTang);
 
         // ================== KHÁCH HÀNG: CRUD ==================
 
@@ -145,7 +162,7 @@ namespace QuanLyKhachHang.Services
         ///  - Trừ điểm đã dùng, cộng điểm mới (Điểm cộng = SoTien / 1000, làm tròn xuống).
         ///  - Cập nhật lại điểm tích luỹ của khách hàng và ghi file.
         /// </summary>
-        public (bool ThanhCong, string ThongBao, DonHang? Don) TaoDonHang(string maKH, decimal soTien, int diemSuDung)
+        public (bool ThanhCong, string ThongBao, DonHang? Don) TaoDonHang(string maKH, decimal soTien, int diemSuDung, QuaTang? quaTang = null)
         {
             var kh = DanhSachKhachHang.FirstOrDefault(x => x.MaKH == maKH);
             if (kh == null)
@@ -164,9 +181,19 @@ namespace QuanLyKhachHang.Services
             if (diemSuDung * 1000 > soTien)
                 return (false, "Số điểm sử dụng vượt quá giá trị đơn hàng.", null);
 
+            int tongDiemTru = diemSuDung + (quaTang?.DiemQuyDoi ?? 0);
+            if (tongDiemTru > kh.DiemTichLuy)
+                return (false, $"Khách hàng không đủ điểm. Cần {tongDiemTru} điểm, hiện có {kh.DiemTichLuy} điểm.", null);
+
             int diemCong = (int)(soTien / 1000);
 
-            kh.DiemTichLuy = kh.DiemTichLuy - diemSuDung + diemCong;
+            kh.DiemTichLuy = kh.DiemTichLuy - tongDiemTru + diemCong;
+
+            if (quaTang != null)
+            {
+                quaTang.SoLuong -= 1;
+                LuuQuaTang();
+            }
 
             var don = new DonHang
             {
@@ -177,6 +204,8 @@ namespace QuanLyKhachHang.Services
                 NgayTao = DateTime.Now,
                 DiemCong = diemCong,
                 DiemSuDung = diemSuDung,
+                QuaTangDoi = quaTang?.TenQua ?? string.Empty,
+                DiemDoiQua = quaTang?.DiemQuyDoi ?? 0,
                 TongDiemSauGiaoDich = kh.DiemTichLuy
             };
 
@@ -194,6 +223,47 @@ namespace QuanLyKhachHang.Services
 
             DanhSachDonHang.Remove(don);
             LuuDonHang();
+            return true;
+        }
+
+        // ================== QUÀ TẶNG: CRUD ==================
+
+        public string TaoMaQuaTangMoi()
+        {
+            int soThuTu = DanhSachQuaTang.Count == 0
+                ? 1
+                : DanhSachQuaTang
+                    .Select(q => int.TryParse(q.MaQua.Replace("Q", ""), out int n) ? n : 0)
+                    .DefaultIfEmpty(0)
+                    .Max() + 1;
+            return $"Q{soThuTu:D2}";
+        }
+
+        public void ThemQuaTang(QuaTang qua)
+        {
+            DanhSachQuaTang.Add(qua);
+            LuuQuaTang();
+        }
+
+        public bool SuaQuaTang(QuaTang quaMoi)
+        {
+            var qua = DanhSachQuaTang.FirstOrDefault(x => x.MaQua == quaMoi.MaQua);
+            if (qua == null) return false;
+
+            qua.TenQua = quaMoi.TenQua;
+            qua.DiemQuyDoi = quaMoi.DiemQuyDoi;
+            qua.SoLuong = quaMoi.SoLuong;
+            LuuQuaTang();
+            return true;
+        }
+
+        public bool XoaQuaTang(string maQua)
+        {
+            var qua = DanhSachQuaTang.FirstOrDefault(x => x.MaQua == maQua);
+            if (qua == null) return false;
+
+            DanhSachQuaTang.Remove(qua);
+            LuuQuaTang();
             return true;
         }
 

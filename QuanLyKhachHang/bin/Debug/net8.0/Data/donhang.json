@@ -8,6 +8,8 @@
     "DiemCong": 150,
     "DiemSuDung": 0,
     "TongDiemSauGiaoDich": 150,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 150000
   },
   {
@@ -19,6 +21,8 @@
     "DiemCong": 90,
     "DiemSuDung": 0,
     "TongDiemSauGiaoDich": 90,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 90000
   },
   {
@@ -30,6 +34,8 @@
     "DiemCong": 500,
     "DiemSuDung": 0,
     "TongDiemSauGiaoDich": 500,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 500000
   },
   {
@@ -41,6 +47,8 @@
     "DiemCong": 220,
     "DiemSuDung": 20,
     "TongDiemSauGiaoDich": 350,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 200000
   },
   {
@@ -52,6 +60,8 @@
     "DiemCong": 700,
     "DiemSuDung": 0,
     "TongDiemSauGiaoDich": 700,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 700000
   },
   {
@@ -63,6 +73,8 @@
     "DiemCong": 300,
     "DiemSuDung": 10,
     "TongDiemSauGiaoDich": 990,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 290000
   },
   {
@@ -74,6 +86,8 @@
     "DiemCong": 500,
     "DiemSuDung": 0,
     "TongDiemSauGiaoDich": 500,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 500000
   },
   {
@@ -85,6 +99,8 @@
     "DiemCong": 300,
     "DiemSuDung": 0,
     "TongDiemSauGiaoDich": 300,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 300000
   },
   {
@@ -96,6 +112,8 @@
     "DiemCong": 210,
     "DiemSuDung": 0,
     "TongDiemSauGiaoDich": 210,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 210000
   },
   {
@@ -107,6 +125,8 @@
     "DiemCong": 45,
     "DiemSuDung": 0,
     "TongDiemSauGiaoDich": 45,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 45000
   },
   {
@@ -118,6 +138,8 @@
     "DiemCong": 100,
     "DiemSuDung": 5,
     "TongDiemSauGiaoDich": 140,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 95000
   },
   {
@@ -129,6 +151,8 @@
     "DiemCong": 10,
     "DiemSuDung": 10,
     "TongDiemSauGiaoDich": 140,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 0
   },
   {
@@ -140,6 +164,73 @@
     "DiemCong": 10,
     "DiemSuDung": 1,
     "TongDiemSauGiaoDich": 149,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
     "ThanhTien": 9000
+  },
+  {
+    "MaDon": "DH014",
+    "MaKH": "KH002",
+    "TenKH": "Tr\u1EA7n Th\u1ECB B\u00ECnh",
+    "SoTien": 570000,
+    "NgayTao": "2026-08-17T07:48:21.011926+07:00",
+    "DiemCong": 570,
+    "DiemSuDung": 120,
+    "TongDiemSauGiaoDich": 570,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
+    "ThanhTien": 450000
+  },
+  {
+    "MaDon": "DH015",
+    "MaKH": "KH001",
+    "TenKH": "Nguy\u1EC5n V\u0103n An",
+    "SoTien": 9990000,
+    "NgayTao": "2026-08-17T08:13:57.550596+07:00",
+    "DiemCong": 9990,
+    "DiemSuDung": 300,
+    "TongDiemSauGiaoDich": 10040,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
+    "ThanhTien": 9690000
+  },
+  {
+    "MaDon": "DH016",
+    "MaKH": "KH001",
+    "TenKH": "Nguy\u1EC5n V\u0103n An",
+    "SoTien": 1000,
+    "NgayTao": "2026-08-17T09:39:21.667134+07:00",
+    "DiemCong": 1,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 9041,
+    "QuaTangDoi": "\u00C1o m\u01B0a",
+    "DiemDoiQua": 1000,
+    "ThanhTien": 1000
+  },
+  {
+    "MaDon": "DH017",
+    "MaKH": "KH006",
+    "TenKH": "\u0110\u1ED7 Th\u1ECB Giang",
+    "SoTien": 10000,
+    "NgayTao": "2026-08-17T09:40:23.248977+07:00",
+    "DiemCong": 10,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 20,
+    "QuaTangDoi": "N\u01B0\u1EDBc mu\u1ED1i",
+    "DiemDoiQua": 50,
+    "ThanhTien": 10000
+  },
+  {
+    "MaDon": "DH018",
+    "MaKH": "KH001",
+    "TenKH": "Nguy\u1EC5n V\u0103n An",
+    "SoTien": 10000,
+    "NgayTao": "2026-08-17T09:58:40.341682+07:00",
+    "DiemCong": 10,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 8051,
+    "QuaTangDoi": "\u00C1o m\u01B0a",
+    "DiemDoiQua": 1000,
+    "ThanhTien": 10000
   }
 ]

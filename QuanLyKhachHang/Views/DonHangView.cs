@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using QuanLyKhachHang.Helpers;
@@ -14,13 +15,13 @@ namespace QuanLyKhachHang.Views
     /// <summary>
     /// Màn hình Đơn hàng / Tích điểm:
     ///  - Bên trái: form tạo đơn hàng mới (chọn khách hàng, nhập số tiền, tuỳ chọn dùng điểm).
-    ///  - Bên phải: danh sách toàn bộ đơn hàng đã tạo có hỗ trợ sắp xếp.
+    ///  - Bên phải: danh sách toàn bộ đơn hàng của khách hàng đang được chọn có hỗ trợ sắp xếp.
     /// </summary>
     public class DonHangView : UserControl
     {
         private readonly DataService _data;
 
-        private readonly ComboBox _cboKhachHang = new();
+        private readonly AutoCompleteBox _cboKhachHang = new() { Watermark = "Nhập tên hoặc 3 số cuối SĐT...", FilterMode = AutoCompleteFilterMode.Custom };
         private readonly NumericUpDown _numSoTien = new() { Minimum = 0, Maximum = 1_000_000_000, FormatString = "N0", Increment = 10000 };
         private readonly NumericUpDown _numDiemSuDung = new() { Minimum = 0, Maximum = 1_000_000, FormatString = "0" };
         private readonly TextBlock _lblDiemHienCo = new();
@@ -34,6 +35,8 @@ namespace QuanLyKhachHang.Views
             IsVisible = false 
         };
         private readonly TextBlock _lblThanhTien = new();
+        private readonly ToggleButton _btnToggleQua = new() { Content = "🎁 Đổi Quà bằng Điểm", Margin = new Thickness(0, 5, 0, 5), HorizontalAlignment = HorizontalAlignment.Stretch };
+        private readonly ListBox _lbQuaTang = new() { IsVisible = false, MaxHeight = 120 };
         private readonly Button _btnTaoDon = new()
         {
             Content = "✅ Tạo đơn & cộng điểm",
@@ -48,6 +51,17 @@ namespace QuanLyKhachHang.Views
         private readonly ComboBox _cboSapXep = new() { Width = 170 };
         private readonly ListBox _listBoxDon = new();
 
+        private readonly TextBlock _lblTrong = new()
+{
+    Text = "Chưa có đơn hàng",
+    FontSize = 14,
+    Foreground = Brushes.Gray,
+    HorizontalAlignment = HorizontalAlignment.Center,
+    VerticalAlignment = VerticalAlignment.Center,
+    IsVisible = false
+};
+
+        
         private DonHang? _donDangChon;
 
         public DonHangView(DataService data)
@@ -64,7 +78,12 @@ namespace QuanLyKhachHang.Views
             panelTao.Children.Add(new TextBlock { Text = "Tạo đơn hàng mới", FontSize = 15, FontWeight = FontWeight.Bold });
 
             panelTao.Children.Add(TaoDong("Khách hàng:", _cboKhachHang));
-            _cboKhachHang.SelectionChanged += (s, e) => CapNhatDiemHienCo();
+            // Cập nhật điểm và lọc lại danh sách đơn hàng khi đổi khách hàng
+            _cboKhachHang.SelectionChanged += (s, e) => 
+            {
+                CapNhatDiemHienCo();
+                TaiLaiDuLieuDon();
+            };
 
             panelTao.Children.Add(TaoDong("Số tiền đơn hàng (đ):", _numSoTien));
             _numSoTien.ValueChanged += (s, e) => CapNhatUocTinh();
@@ -77,10 +96,17 @@ namespace QuanLyKhachHang.Views
             _lblDiemHienCo.Foreground = new SolidColorBrush(Color.Parse("#2563EB"));
             _lblDiemHienCo.FontWeight = FontWeight.Bold;
 
-            panelTao.Children.Add(TaoDong("Điểm muốn sử dụng:", _numDiemSuDung));
+            //panelTao.Children.Add(TaoDong("Điểm muốn sử dụng (trừ tiền):", _numDiemSuDung));
             _numDiemSuDung.ValueChanged += (s, e) => CapNhatUocTinh();
 
-            // Dòng thông báo lỗi điểm đỏ bôi đậm nằm dưới ô điểm muốn sử dụng và trên thành tiền
+            _btnToggleQua.Checked += (s, e) => _lbQuaTang.IsVisible = true;
+            _btnToggleQua.Unchecked += (s, e) => { _lbQuaTang.IsVisible = false; _lbQuaTang.SelectedItem = null; CapNhatUocTinh(); };
+            _lbQuaTang.SelectionChanged += (s, e) => CapNhatUocTinh();
+            
+            panelTao.Children.Add(_btnToggleQua);
+            panelTao.Children.Add(_lbQuaTang);
+
+            // Dòng thông báo lỗi điểm nằm dưới ô điểm muốn sử dụng và trên thành tiền
             panelTao.Children.Add(_lblThongBaoLoiDiem);
 
             _lblThanhTien.FontWeight = FontWeight.Bold;
@@ -120,20 +146,28 @@ namespace QuanLyKhachHang.Views
 
             _listBoxDon.SelectionChanged += (s, e) => _donDangChon = _listBoxDon.SelectedItem as DonHang;
             var khungBang = new Border { Background = Brushes.White, Height = 480 };
-            khungBang.Child = UiHelpers.TaoBang<DonHang>(
-                new List<DonHang>(),
-                new List<ColDef<DonHang>>
-                {
-                    new("Mã đơn", 0.8, d => d.MaDon),
-                    new("Khách hàng", 1.6, d => d.TenKH),
-                    new("Số tiền", 1.1, d => d.SoTien.ToString("N0")),
-                    new("Điểm cộng", 0.9, d => d.DiemCong.ToString()),
-                    new("Điểm dùng", 0.9, d => d.DiemSuDung.ToString()),
-                    new("Thành tiền", 1.1, d => d.ThanhTien.ToString("N0")),
-                    new("Ngày tạo", 1.4, d => d.NgayTao.ToString("dd/MM/yyyy HH:mm"))
-                },
-                _listBoxDon);
-            phaiGoc.Children.Add(khungBang);
+var gridBang = new Grid();
+
+var bang = UiHelpers.TaoBang<DonHang>(
+    new List<DonHang>(),
+    new List<ColDef<DonHang>>
+    {
+        new("Mã đơn", 0.8, d => d.MaDon),
+        new("Khách hàng", 1.6, d => d.TenKH),
+        new("Số tiền", 1.1, d => d.SoTien.ToString("N0")),
+        new("Điểm cộng", 0.9, d => d.DiemCong.ToString()),
+        new("Quà tặng", 1.2, d => string.IsNullOrEmpty(d.QuaTangDoi) ? "-" : $"{d.QuaTangDoi} (-{d.DiemDoiQua})"),
+        new("Điểm dùng", 0.9, d => d.DiemSuDung.ToString()),
+        new("Thành tiền", 1.1, d => d.ThanhTien.ToString("N0")),
+        new("Ngày tạo", 1.4, d => d.NgayTao.ToString("dd/MM/yyyy HH:mm"))
+    },
+    _listBoxDon);
+
+    gridBang.Children.Add(bang);
+gridBang.Children.Add(_lblTrong);
+
+khungBang.Child = gridBang;
+phaiGoc.Children.Add(khungBang);
 
             Grid.SetColumn(phaiGoc, 2);
 
@@ -144,7 +178,13 @@ namespace QuanLyKhachHang.Views
             Content = goc;
 
             NapDanhSachKhachHang();
+            NapDanhSachQua();
             TaiLaiDuLieuDon();
+        }
+
+        private void NapDanhSachQua()
+        {
+            _lbQuaTang.ItemsSource = _data.DanhSachQuaTang.Where(q => q.SoLuong > 0).ToList();
         }
 
         private StackPanel TaoDong(string nhan, Control input)
@@ -160,19 +200,33 @@ namespace QuanLyKhachHang.Views
         private void NapDanhSachKhachHang()
         {
             _cboKhachHang.ItemsSource = _data.DanhSachKhachHang
-                .Select(kh => $"{kh.MaKH} - {kh.HoTen}")
+                .Select(kh => $"{kh.MaKH} - {kh.HoTen} - {kh.SoDienThoai}")
                 .ToList();
+
+            _cboKhachHang.ItemFilter = (search, item) =>
+            {
+                if (string.IsNullOrWhiteSpace(search)) return true;
+                return item?.ToString()?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false;
+            };
+
             if (_cboKhachHang.ItemsSource is List<string> ds && ds.Count > 0)
-                _cboKhachHang.SelectedIndex = 0;
+                _cboKhachHang.SelectedItem = ds[0];
 
             CapNhatDiemHienCo();
         }
 
         private KhachHang? KhachHangDangChon()
         {
-            if (_cboKhachHang.SelectedIndex < 0 || _cboKhachHang.SelectedIndex >= _data.DanhSachKhachHang.Count)
-                return null;
-            return _data.DanhSachKhachHang[_cboKhachHang.SelectedIndex];
+            if (_cboKhachHang.SelectedItem is string selectedStr)
+            {
+                var parts = selectedStr.Split(" - ");
+                if (parts.Length > 0)
+                {
+                    var maKH = parts[0];
+                    return _data.DanhSachKhachHang.FirstOrDefault(k => k.MaKH == maKH);
+                }
+            }
+            return null;
         }
 
         private void CapNhatDiemHienCo()
@@ -191,14 +245,21 @@ namespace QuanLyKhachHang.Views
             var kh = KhachHangDangChon();
             int diemHienCo = kh?.DiemTichLuy ?? 0;
             decimal diemSuDung = _numDiemSuDung.Value ?? 0;
+            var qua = _lbQuaTang.SelectedItem as QuaTang;
+            int diemQua = qua?.DiemQuyDoi ?? 0;
 
             // Ràng buộc kiểm tra tính hợp lệ của điểm khi gõ phím
             bool laDiemAm = diemSuDung < 0;
-            bool vuotDiemHienCo = diemSuDung > diemHienCo;
+            bool vuotDiemHienCo = (diemSuDung + diemQua) > diemHienCo;
             bool vuotSoTienChoPhep = diemSuDung > diemCong; // 1 điểm = 1000đ
 
             if (laDiemAm || vuotDiemHienCo || vuotSoTienChoPhep)
             {
+                if (vuotDiemHienCo) 
+                    _lblThongBaoLoiDiem.Text = $"Không đủ điểm! Cần {diemSuDung + diemQua} (hiện có {diemHienCo})";
+                else 
+                    _lblThongBaoLoiDiem.Text = "Số điểm không hợp lệ";
+
                 _lblThongBaoLoiDiem.IsVisible = true;
                 _btnTaoDon.IsEnabled = false; // Khoá nút tạo đơn khi dữ liệu sai
             }
@@ -208,7 +269,7 @@ namespace QuanLyKhachHang.Views
                 _btnTaoDon.IsEnabled = true;
             }
 
-            decimal thanhTien = soTien - (diemSuDung * 1000);
+            decimal thanhTien = soTien - diemSuDung;
             if (thanhTien < 0) thanhTien = 0;
             _lblThanhTien.Text = $"Thành tiền phải trả: {thanhTien:N0} đ";
         }
@@ -223,7 +284,8 @@ namespace QuanLyKhachHang.Views
                 return;
             }
 
-            var (thanhCong, thongBao, _) = _data.TaoDonHang(kh.MaKH, _numSoTien.Value ?? 0, (int)(_numDiemSuDung.Value ?? 0));
+            var qua = _lbQuaTang.SelectedItem as QuaTang;
+            var (thanhCong, thongBao, _) = _data.TaoDonHang(kh.MaKH, _numSoTien.Value ?? 0, (int)(_numDiemSuDung.Value ?? 0), qua);
 
             if (!thanhCong)
             {
@@ -235,39 +297,55 @@ namespace QuanLyKhachHang.Views
 
             _numSoTien.Value = 0;
             _numDiemSuDung.Value = 0;
+            _btnToggleQua.IsChecked = false;
+            _lbQuaTang.SelectedItem = null;
+            NapDanhSachQua();
             NapDanhSachKhachHang();
             TaiLaiDuLieuDon();
         }
 
         private void TaiLaiDuLieuDon()
-        {
-            IEnumerable<DonHang> danhSach = _data.DanhSachDonHang;
+{
+    IEnumerable<DonHang> danhSach = _data.DanhSachDonHang;
 
-            // Xử lý sắp xếp tự động dựa theo lựa chọn trong ComboBox
-            switch (_cboSapXep.SelectedIndex)
-            {
-                case 0: // Mới nhất (Ngày)
-                    danhSach = danhSach.OrderByDescending(d => d.NgayTao);
-                    break;
-                case 1: // Cũ nhất (Ngày)
-                    danhSach = danhSach.OrderBy(d => d.NgayTao);
-                    break;
-                case 2: // Tên khách hàng (A-Z)
-                    danhSach = danhSach.OrderBy(d => d.TenKH);
-                    break;
-                case 3: // Số tiền (Cao - Thấp)
-                    danhSach = danhSach.OrderByDescending(d => d.SoTien);
-                    break;
-                case 4: // Số điểm đã dùng
-                    danhSach = danhSach.OrderByDescending(d => d.DiemSuDung);
-                    break;
-                default:
-                    danhSach = danhSach.OrderByDescending(d => d.NgayTao);
-                    break;
-            }
+    // Lọc theo khách hàng đang chọn
+    var kh = KhachHangDangChon();
+    if (kh != null)
+    {
+        danhSach = danhSach.Where(d => d.MaKH == kh.MaKH);
+    }
 
-            _listBoxDon.ItemsSource = danhSach.ToList();
-        }
+    // Xử lý sắp xếp
+    switch (_cboSapXep.SelectedIndex)
+    {
+        case 0:
+            danhSach = danhSach.OrderByDescending(d => d.NgayTao);
+            break;
+        case 1:
+            danhSach = danhSach.OrderBy(d => d.NgayTao);
+            break;
+        case 2:
+            danhSach = danhSach.OrderBy(d => d.TenKH);
+            break;
+        case 3:
+            danhSach = danhSach.OrderByDescending(d => d.SoTien);
+            break;
+        case 4:
+            danhSach = danhSach.OrderByDescending(d => d.DiemSuDung);
+            break;
+        default:
+            danhSach = danhSach.OrderByDescending(d => d.NgayTao);
+            break;
+    }
+
+    var dsKetQua = danhSach.ToList();
+
+    // KIỂM TRA: Nếu danh sách trống thì hiện dòng chữ "Chưa có đơn hàng"
+    _lblTrong.IsVisible = dsKetQua.Count == 0;
+
+    _listBoxDon.ItemsSource = null;
+    _listBoxDon.ItemsSource = dsKetQua;
+}
 
         private async void BtnXoaDon_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
@@ -285,19 +363,18 @@ namespace QuanLyKhachHang.Views
             if (dongY)
             {
                 _data.XoaDonHang(_donDangChon.MaDon);
+                _donDangChon = null;
+                _listBoxDon.SelectedItem = null;
                 TaiLaiDuLieuDon();
             }
         }
 
         public void ChonKhachHang(string maKH)
         {
-            for (int i = 0; i < _data.DanhSachKhachHang.Count; i++)
+            var kh = _data.DanhSachKhachHang.FirstOrDefault(k => k.MaKH == maKH);
+            if (kh != null)
             {
-                if (_data.DanhSachKhachHang[i].MaKH == maKH)
-                {
-                    _cboKhachHang.SelectedIndex = i;
-                    break;
-                }
+                _cboKhachHang.SelectedItem = $"{kh.MaKH} - {kh.HoTen} - {kh.SoDienThoai}";
             }
         }
     }
