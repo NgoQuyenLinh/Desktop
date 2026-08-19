@@ -1335,11 +1335,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj",
+      "projectUniqueName": "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/QuanLiCHThuoc/QuanLyKhachHang/QuanLyKhachHang.csproj",
       "projectName": "QuanLyKhachHang",
-      "projectPath": "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj",
+      "projectPath": "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/QuanLiCHThuoc/QuanLyKhachHang/QuanLyKhachHang.csproj",
       "packagesPath": "/Users/caotiendattx/.nuget/packages/",
-      "outputPath": "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/Desktop/QuanLyKhachHang/obj/",
+      "outputPath": "/Users/caotiendattx/Developer/LAB_DESKTOP/Destop_program/QuanLiCHThuoc/QuanLyKhachHang/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/caotiendattx/.nuget/NuGet/NuGet.Config"

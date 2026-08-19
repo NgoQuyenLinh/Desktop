@@ -26,13 +26,13 @@ namespace QuanLyKhachHang.Views
         private readonly NumericUpDown _numDiemSuDung = new() { Minimum = 0, Maximum = 1_000_000, FormatString = "0" };
         private readonly TextBlock _lblDiemHienCo = new();
         private readonly TextBlock _lblDiemSeCong = new();
-        private readonly TextBlock _lblThongBaoLoiDiem = new() 
-        { 
-            Text = "Số điểm không hợp lệ", 
-            Foreground = Brushes.Red, 
-            FontWeight = FontWeight.Bold, 
-            FontSize = 13, 
-            IsVisible = false 
+        private readonly TextBlock _lblThongBaoLoiDiem = new()
+        {
+            Text = "Số điểm không hợp lệ",
+            Foreground = Brushes.Red,
+            FontWeight = FontWeight.Bold,
+            FontSize = 13,
+            IsVisible = false
         };
         private readonly TextBlock _lblThanhTien = new();
         private readonly ToggleButton _btnToggleQua = new() { Content = "🎁 Đổi Quà bằng Điểm", Margin = new Thickness(0, 5, 0, 5), HorizontalAlignment = HorizontalAlignment.Stretch };
@@ -52,16 +52,16 @@ namespace QuanLyKhachHang.Views
         private readonly ListBox _listBoxDon = new();
 
         private readonly TextBlock _lblTrong = new()
-{
-    Text = "Chưa có đơn hàng",
-    FontSize = 14,
-    Foreground = Brushes.Gray,
-    HorizontalAlignment = HorizontalAlignment.Center,
-    VerticalAlignment = VerticalAlignment.Center,
-    IsVisible = false
-};
+        {
+            Text = "Chưa có đơn hàng",
+            FontSize = 14,
+            Foreground = Brushes.Gray,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            IsVisible = false
+        };
 
-        
+
         private DonHang? _donDangChon;
 
         public DonHangView(DataService data)
@@ -79,7 +79,7 @@ namespace QuanLyKhachHang.Views
 
             panelTao.Children.Add(TaoDong("Khách hàng:", _cboKhachHang));
             // Cập nhật điểm và lọc lại danh sách đơn hàng khi đổi khách hàng
-            _cboKhachHang.SelectionChanged += (s, e) => 
+            _cboKhachHang.SelectionChanged += (s, e) =>
             {
                 CapNhatDiemHienCo();
                 TaiLaiDuLieuDon();
@@ -102,7 +102,7 @@ namespace QuanLyKhachHang.Views
             _btnToggleQua.Checked += (s, e) => _lbQuaTang.IsVisible = true;
             _btnToggleQua.Unchecked += (s, e) => { _lbQuaTang.IsVisible = false; _lbQuaTang.SelectedItem = null; CapNhatUocTinh(); };
             _lbQuaTang.SelectionChanged += (s, e) => CapNhatUocTinh();
-            
+
             panelTao.Children.Add(_btnToggleQua);
             panelTao.Children.Add(_lbQuaTang);
 
@@ -123,21 +123,21 @@ namespace QuanLyKhachHang.Views
             var phaiGoc = new DockPanel();
 
             var hangTieuDe = new DockPanel { Margin = new Thickness(0, 0, 0, 10) };
-            
+
             var panelTraiTieuDe = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
             panelTraiTieuDe.Children.Add(new TextBlock { Text = "Danh sách đơn hàng", FontSize = 15, FontWeight = FontWeight.Bold, VerticalAlignment = VerticalAlignment.Center });
-            
+
             // Cấu hình bộ chọn Sắp xếp
             _cboSapXep.ItemsSource = new[] { "Mới nhất (Ngày)", "Cũ nhất (Ngày)", "Tên khách hàng (A-Z)", "Số tiền (Cao - Thấp)", "Số điểm đã dùng" };
             _cboSapXep.SelectedIndex = 0;
             _cboSapXep.SelectionChanged += (s, e) => TaiLaiDuLieuDon();
-            
+
             panelTraiTieuDe.Children.Add(new TextBlock { Text = " ↕ Sắp xếp:", VerticalAlignment = VerticalAlignment.Center, FontSize = 13 });
             panelTraiTieuDe.Children.Add(_cboSapXep);
 
             var btnXoaDon = new Button { Content = "🗑️ Xoá đơn đã chọn", Background = new SolidColorBrush(Color.Parse("#DC2626")), Foreground = Brushes.White, HorizontalAlignment = HorizontalAlignment.Right };
             btnXoaDon.Click += BtnXoaDon_Click;
-            
+
             DockPanel.SetDock(btnXoaDon, Dock.Right);
             hangTieuDe.Children.Add(btnXoaDon);
             hangTieuDe.Children.Add(panelTraiTieuDe);
@@ -146,12 +146,12 @@ namespace QuanLyKhachHang.Views
 
             _listBoxDon.SelectionChanged += (s, e) => _donDangChon = _listBoxDon.SelectedItem as DonHang;
             var khungBang = new Border { Background = Brushes.White, Height = 480 };
-var gridBang = new Grid();
+            var gridBang = new Grid();
 
-var bang = UiHelpers.TaoBang<DonHang>(
-    new List<DonHang>(),
-    new List<ColDef<DonHang>>
-    {
+            var bang = UiHelpers.TaoBang<DonHang>(
+                new List<DonHang>(),
+                new List<ColDef<DonHang>>
+                {
         new("Mã đơn", 0.8, d => d.MaDon),
         new("Khách hàng", 1.6, d => d.TenKH),
         new("Số tiền", 1.1, d => d.SoTien.ToString("N0")),
@@ -160,14 +160,14 @@ var bang = UiHelpers.TaoBang<DonHang>(
         new("Điểm dùng", 0.9, d => d.DiemSuDung.ToString()),
         new("Thành tiền", 1.1, d => d.ThanhTien.ToString("N0")),
         new("Ngày tạo", 1.4, d => d.NgayTao.ToString("dd/MM/yyyy HH:mm"))
-    },
-    _listBoxDon);
+                },
+                _listBoxDon);
 
-    gridBang.Children.Add(bang);
-gridBang.Children.Add(_lblTrong);
+            gridBang.Children.Add(bang);
+            gridBang.Children.Add(_lblTrong);
 
-khungBang.Child = gridBang;
-phaiGoc.Children.Add(khungBang);
+            khungBang.Child = gridBang;
+            phaiGoc.Children.Add(khungBang);
 
             Grid.SetColumn(phaiGoc, 2);
 
@@ -255,9 +255,9 @@ phaiGoc.Children.Add(khungBang);
 
             if (laDiemAm || vuotDiemHienCo || vuotSoTienChoPhep)
             {
-                if (vuotDiemHienCo) 
+                if (vuotDiemHienCo)
                     _lblThongBaoLoiDiem.Text = $"Không đủ điểm! Cần {diemSuDung + diemQua} (hiện có {diemHienCo})";
-                else 
+                else
                     _lblThongBaoLoiDiem.Text = "Số điểm không hợp lệ";
 
                 _lblThongBaoLoiDiem.IsVisible = true;
@@ -305,47 +305,47 @@ phaiGoc.Children.Add(khungBang);
         }
 
         private void TaiLaiDuLieuDon()
-{
-    IEnumerable<DonHang> danhSach = _data.DanhSachDonHang;
+        {
+            IEnumerable<DonHang> danhSach = _data.DanhSachDonHang;
 
-    // Lọc theo khách hàng đang chọn
-    var kh = KhachHangDangChon();
-    if (kh != null)
-    {
-        danhSach = danhSach.Where(d => d.MaKH == kh.MaKH);
-    }
+            // Lọc theo khách hàng đang chọn
+            var kh = KhachHangDangChon();
+            if (kh != null)
+            {
+                danhSach = danhSach.Where(d => d.MaKH == kh.MaKH);
+            }
 
-    // Xử lý sắp xếp
-    switch (_cboSapXep.SelectedIndex)
-    {
-        case 0:
-            danhSach = danhSach.OrderByDescending(d => d.NgayTao);
-            break;
-        case 1:
-            danhSach = danhSach.OrderBy(d => d.NgayTao);
-            break;
-        case 2:
-            danhSach = danhSach.OrderBy(d => d.TenKH);
-            break;
-        case 3:
-            danhSach = danhSach.OrderByDescending(d => d.SoTien);
-            break;
-        case 4:
-            danhSach = danhSach.OrderByDescending(d => d.DiemSuDung);
-            break;
-        default:
-            danhSach = danhSach.OrderByDescending(d => d.NgayTao);
-            break;
-    }
+            // Xử lý sắp xếp
+            switch (_cboSapXep.SelectedIndex)
+            {
+                case 0:
+                    danhSach = danhSach.OrderByDescending(d => d.NgayTao);
+                    break;
+                case 1:
+                    danhSach = danhSach.OrderBy(d => d.NgayTao);
+                    break;
+                case 2:
+                    danhSach = danhSach.OrderBy(d => d.TenKH);
+                    break;
+                case 3:
+                    danhSach = danhSach.OrderByDescending(d => d.SoTien);
+                    break;
+                case 4:
+                    danhSach = danhSach.OrderByDescending(d => d.DiemSuDung);
+                    break;
+                default:
+                    danhSach = danhSach.OrderByDescending(d => d.NgayTao);
+                    break;
+            }
 
-    var dsKetQua = danhSach.ToList();
+            var dsKetQua = danhSach.ToList();
 
-    // KIỂM TRA: Nếu danh sách trống thì hiện dòng chữ "Chưa có đơn hàng"
-    _lblTrong.IsVisible = dsKetQua.Count == 0;
+            // KIỂM TRA: Nếu danh sách trống thì hiện dòng chữ "Chưa có đơn hàng"
+            _lblTrong.IsVisible = dsKetQua.Count == 0;
 
-    _listBoxDon.ItemsSource = null;
-    _listBoxDon.ItemsSource = dsKetQua;
-}
+            _listBoxDon.ItemsSource = null;
+            _listBoxDon.ItemsSource = dsKetQua;
+        }
 
         private async void BtnXoaDon_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
