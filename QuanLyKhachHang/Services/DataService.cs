@@ -43,19 +43,42 @@ namespace QuanLyKhachHang.Services
 
             TaiDuLieu();
             KhoiTaoQuaTangMacDinh();
+            MigrateNgayTaoQuaTang();
         }
 
         private void KhoiTaoQuaTangMacDinh()
         {
             if (DanhSachQuaTang.Count == 0)
             {
-                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q01", TenQua = "Áo mưa", DiemQuyDoi = 1000, SoLuong = 10 });
-                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q02", TenQua = "Khẩu trang", DiemQuyDoi = 100, SoLuong = 50 });
-                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q03", TenQua = "Nước muối", DiemQuyDoi = 50, SoLuong = 100 });
-                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q04", TenQua = "Giấy", DiemQuyDoi = 50, SoLuong = 100 });
+                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q01", TenQua = "Áo mưa", DiemQuyDoi = 1000, SoLuong = 10, NgayTao = DateTime.Now });
+                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q02", TenQua = "Khẩu trang", DiemQuyDoi = 100, SoLuong = 50, NgayTao = DateTime.Now });
+                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q03", TenQua = "Nước muối", DiemQuyDoi = 50, SoLuong = 100, NgayTao = DateTime.Now });
+                DanhSachQuaTang.Add(new QuaTang { MaQua = "Q04", TenQua = "Giấy", DiemQuyDoi = 50, SoLuong = 100, NgayTao = DateTime.Now });
                 LuuQuaTang();
             }
         }
+
+        /// <summary>
+        /// Dữ liệu quà tặng cũ (tạo trước khi có trường NgayTao) khi đọc lên từ JSON
+        /// sẽ có NgayTao = mặc định (0001-01-01). Theo yêu cầu: coi các quà này như
+        /// vừa được tạo hôm nay để chúng xuất hiện trong nhóm "Quà trong tháng".
+        /// </summary>
+        private void MigrateNgayTaoQuaTang()
+        {
+            bool coThayDoi = false;
+            foreach (var qua in DanhSachQuaTang)
+            {
+                if (qua.NgayTao == default)
+                {
+                    qua.NgayTao = DateTime.Now;
+                    coThayDoi = true;
+                }
+            }
+
+            if (coThayDoi)
+                LuuQuaTang();
+        }
+
         // ================== ĐỌC / GHI FILE ==================
 
         public void TaiDuLieu()
@@ -143,6 +166,26 @@ namespace QuanLyKhachHang.Services
             ).ToList();
         }
 
+        /// <summary>
+        /// Tìm kiếm khách hàng theo số điện thoại kiểu real-time: chỉ cần số điện thoại
+        /// CHỨA chuỗi số vừa nhập (không cần đúng vị trí đầu/cuối). Trả về TOÀN BỘ
+        /// các khách hàng khớp để hiển thị dạng gợi ý, thay vì chỉ 1 kết quả duy nhất.
+        /// Dùng cho khung "Tạo hoá đơn nhanh" ở Trang chủ.
+        /// </summary>
+        public List<KhachHang> TimKhachHangTheoSoDienThoai(string chuoiSo)
+        {
+            if (string.IsNullOrWhiteSpace(chuoiSo))
+                return new List<KhachHang>();
+
+            chuoiSo = chuoiSo.Trim();
+
+            return DanhSachKhachHang
+                .Where(kh => !string.IsNullOrEmpty(kh.SoDienThoai) && kh.SoDienThoai.Contains(chuoiSo))
+                .OrderBy(kh => kh.SoDienThoai.IndexOf(chuoiSo, StringComparison.Ordinal))
+                .ThenBy(kh => kh.HoTen)
+                .ToList();
+        }
+
         // ================== ĐƠN HÀNG & TÍCH ĐIỂM ==================
 
         public string TaoMaDonHangMoi()
@@ -192,6 +235,7 @@ namespace QuanLyKhachHang.Services
             if (quaTang != null)
             {
                 quaTang.SoLuong -= 1;
+                quaTang.DangBan = true; // đã có khách đổi -> tự chuyển sang "Đang bán", vẫn chuyển tay lại được
                 LuuQuaTang();
             }
 
@@ -241,6 +285,9 @@ namespace QuanLyKhachHang.Services
 
         public void ThemQuaTang(QuaTang qua)
         {
+            if (qua.NgayTao == default)
+                qua.NgayTao = DateTime.Now;
+
             DanhSachQuaTang.Add(qua);
             LuuQuaTang();
         }
@@ -253,6 +300,7 @@ namespace QuanLyKhachHang.Services
             qua.TenQua = quaMoi.TenQua;
             qua.DiemQuyDoi = quaMoi.DiemQuyDoi;
             qua.SoLuong = quaMoi.SoLuong;
+            qua.DangBan = quaMoi.DangBan;
             LuuQuaTang();
             return true;
         }
@@ -265,6 +313,66 @@ namespace QuanLyKhachHang.Services
             DanhSachQuaTang.Remove(qua);
             LuuQuaTang();
             return true;
+        }
+
+        /// <summary>
+        /// Danh sách quà được thêm vào kho trong THÁNG HIỆN TẠI (theo NgayTao), có hỗ trợ
+        /// lọc theo từ khoá tên/mã quà. Dùng cho GroupBox "Quà trong tháng" bên KhoQuaView.
+        /// </summary>
+        public List<QuaTang> QuaTangTrongThang(string? tuKhoa = null)
+        {
+            var now = DateTime.Now;
+            var ds = DanhSachQuaTang.Where(q => q.NgayTao.Year == now.Year && q.NgayTao.Month == now.Month);
+
+            if (!string.IsNullOrWhiteSpace(tuKhoa))
+            {
+                var tk = tuKhoa.Trim().ToLower();
+                ds = ds.Where(q => q.TenQua.ToLower().Contains(tk) || q.MaQua.ToLower().Contains(tk));
+            }
+
+            return ds.OrderByDescending(q => q.NgayTao).ToList();
+        }
+
+        /// <summary>Danh sách quà đang ở trạng thái "Chưa bán" (QuaTang.DangBan == false).</summary>
+        public List<QuaTang> QuaTangChuaBan(string? tuKhoa = null)
+        {
+            var ds = DanhSachQuaTang.Where(q => !q.DangBan);
+
+            if (!string.IsNullOrWhiteSpace(tuKhoa))
+            {
+                var tk = tuKhoa.Trim().ToLower();
+                ds = ds.Where(q => q.TenQua.ToLower().Contains(tk) || q.MaQua.ToLower().Contains(tk));
+            }
+
+            return ds.OrderByDescending(q => q.NgayTao).ToList();
+        }
+
+        /// <summary>Danh sách quà đang ở trạng thái "Đang bán" (QuaTang.DangBan == true).</summary>
+        public List<QuaTang> QuaTangDangBan(string? tuKhoa = null)
+        {
+            var ds = DanhSachQuaTang.Where(q => q.DangBan);
+
+            if (!string.IsNullOrWhiteSpace(tuKhoa))
+            {
+                var tk = tuKhoa.Trim().ToLower();
+                ds = ds.Where(q => q.TenQua.ToLower().Contains(tk) || q.MaQua.ToLower().Contains(tk));
+            }
+
+            return ds.OrderByDescending(q => q.NgayTao).ToList();
+        }
+
+        /// <summary>
+        /// Chuyển trạng thái Chưa bán &lt;-&gt; Đang bán cho 1 quà, lưu file ngay.
+        /// Trả về trạng thái DangBan mới sau khi chuyển (true = vừa chuyển sang Đang bán).
+        /// </summary>
+        public bool ChuyenTrangThaiQuaTang(string maQua)
+        {
+            var qua = DanhSachQuaTang.FirstOrDefault(x => x.MaQua == maQua);
+            if (qua == null) return false;
+
+            qua.DangBan = !qua.DangBan;
+            LuuQuaTang();
+            return qua.DangBan;
         }
 
         // ================== THỐNG KÊ ==================
