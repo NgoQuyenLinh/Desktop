@@ -182,9 +182,14 @@ phaiGoc.Children.Add(khungBang);
             TaiLaiDuLieuDon();
         }
 
+        /// <summary>
+        /// Nạp danh sách quà cho khu "Đổi Quà bằng Điểm". Đồng bộ với Kho Quà: chỉ những
+        /// quà đã được đưa vào trạng thái "Đang tặng" (QuaTang.DangBan == true) VÀ còn hàng
+        /// mới hiện ra ở đây. Quà đang "Chưa tặng" hoặc đã "Đã tặng hết" sẽ không xuất hiện.
+        /// </summary>
         private void NapDanhSachQua()
         {
-            _lbQuaTang.ItemsSource = _data.DanhSachQuaTang.Where(q => q.SoLuong > 0).ToList();
+            _lbQuaTang.ItemsSource = _data.QuaTangCoTheDoi();
         }
 
         private StackPanel TaoDong(string nhan, Control input)

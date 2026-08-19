@@ -13,11 +13,14 @@ using QuanLyKhachHang.Services;
 namespace QuanLyKhachHang.Views
 {
     /// <summary>
-    /// Màn hình Quản lý Kho Quà - bố cục 2 GroupBox đặt cạnh nhau:
+    /// Màn hình Quản lý Kho Quà - bố cục:
     ///  - Trái  : "🗓️ Quà trong tháng" -> quà có NgayTao thuộc tháng/năm hiện tại (chỉ để xem).
-    ///  - Phải  : "🔁 Trạng thái bán quà" -> TabControl 2 tab "Chưa bán" / "Đang bán" dựa trên
+    ///  - Phải  : "🔁 Trạng thái tặng quà" -> TabControl 2 tab "Chưa tặng" / "Đang tặng" dựa trên
     ///            cờ thủ công QuaTang.DangBan. Người dùng chọn 1 quà rồi bấm nút chuyển để
-    ///            đẩy quà đó qua lại giữa 2 trạng thái bất cứ lúc nào.
+    ///            đẩy quà đó qua lại giữa 2 trạng thái bất cứ lúc nào. Quà đã hết hàng
+    ///            (SoLuong &lt;= 0) sẽ tự động không còn nằm ở 2 tab này nữa.
+    ///  - Dưới  : "🔴 Đã tặng hết" -> khu vực riêng cho quà hết hàng (SoLuong &lt;= 0),
+    ///            tách khỏi 2 trạng thái Chưa tặng / Đang tặng để dễ nhận biết cần nhập thêm.
     /// Nút Thêm / Sửa / Xoá dùng chung, thao tác trên quà đang được chọn ở BẤT KỲ bảng nào.
     /// </summary>
     public class KhoQuaView : UserControl
@@ -25,18 +28,20 @@ namespace QuanLyKhachHang.Views
         private readonly DataService _data;
 
         private readonly TextBox _txtTimThang = new() { Width = 260, Watermark = "Tìm trong tháng..." };
-        private readonly TextBox _txtTimChuaBan = new() { Width = 220, Watermark = "Tìm quà chưa bán..." };
-        private readonly TextBox _txtTimDangBan = new() { Width = 220, Watermark = "Tìm quà đang bán..." };
+        private readonly TextBox _txtTimChuaBan = new() { Width = 220, Watermark = "Tìm quà chưa tặng..." };
+        private readonly TextBox _txtTimDangBan = new() { Width = 220, Watermark = "Tìm quà đang tặng..." };
+        private readonly TextBox _txtTimHetHang = new() { Width = 260, Watermark = "Tìm quà đã hết hàng..." };
 
         private readonly ListBox _listBoxThang = new();
         private readonly ListBox _listBoxChuaBan = new();
         private readonly ListBox _listBoxDangBan = new();
+        private readonly ListBox _listBoxHetHang = new();
 
         private readonly TextBlock _lblDangChon = new() { FontSize = 12, Foreground = Brushes.DimGray };
 
         private readonly Button _btnChuyenSangDangBan = new()
         {
-            Content = "➡️ Chuyển sang Đang bán",
+            Content = "➡️ Chuyển sang Đang tặng",
             Background = new SolidColorBrush(Color.Parse("#0EA5E9")),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -45,7 +50,7 @@ namespace QuanLyKhachHang.Views
 
         private readonly Button _btnChuyenVeChuaBan = new()
         {
-            Content = "⬅️ Chuyển về Chưa bán",
+            Content = "⬅️ Chuyển về Chưa tặng",
             Background = new SolidColorBrush(Color.Parse("#64748B")),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -55,13 +60,20 @@ namespace QuanLyKhachHang.Views
         private QuaTang? _dangChon;
         private bool _dangDongBoChon; // cờ chống vòng lặp khi tự xoá lựa chọn ở bảng còn lại
 
+        /// <summary>
+        /// Nhãn trạng thái hiển thị dùng chung cho cột "Trạng thái" và dòng "Đang chọn".
+        /// Quà hết hàng (SoLuong &lt;= 0) luôn hiện "Đã tặng hết", bất kể cờ DangBan là gì.
+        /// </summary>
+        private static string TrangThaiText(QuaTang q) =>
+            q.SoLuong <= 0 ? "🔴 Đã tặng hết" : (q.DangBan ? "🟢 Đang tặng" : "⚪ Chưa tặng");
+
         private static List<ColDef<QuaTang>> TaoCotQuaTang() => new()
         {
             new("Mã Quà", 0.8, q => q.MaQua),
             new("Tên Quà", 1.8, q => q.TenQua),
             new("Điểm Đổi", 1, q => q.DiemQuyDoi.ToString()),
             new("Số Lượng", 1, q => q.SoLuong.ToString()),
-            new("Trạng thái", 1.1, q => q.DangBan ? "🟢 Đang bán" : "⚪ Chưa bán")
+            new("Trạng thái", 1.1, q => TrangThaiText(q))
         };
 
         public KhoQuaView(DataService data)
@@ -105,17 +117,24 @@ namespace QuanLyKhachHang.Views
             hangGroup.Children.Add(groupTrangThai);
             goc.Children.Add(hangGroup);
 
+            // ---- Khu vực riêng: "Đã tặng hết" (SoLuong <= 0), tách khỏi 2 trạng thái trên ----
+            var groupHetHang = TaoGroupBoxHetHang();
+            goc.Children.Add(groupHetHang);
+
             _txtTimThang.TextChanged += (s, e) => TaiLaiDuLieu();
             _txtTimChuaBan.TextChanged += (s, e) => TaiLaiDuLieu();
             _txtTimDangBan.TextChanged += (s, e) => TaiLaiDuLieu();
+            _txtTimHetHang.TextChanged += (s, e) => TaiLaiDuLieu();
 
-            _listBoxThang.SelectionChanged += (s, e) => ChonTu(_listBoxThang, _listBoxChuaBan, _listBoxDangBan);
-            _listBoxChuaBan.SelectionChanged += (s, e) => ChonTu(_listBoxChuaBan, _listBoxThang, _listBoxDangBan);
-            _listBoxDangBan.SelectionChanged += (s, e) => ChonTu(_listBoxDangBan, _listBoxThang, _listBoxChuaBan);
+            _listBoxThang.SelectionChanged += (s, e) => ChonTu(_listBoxThang, _listBoxChuaBan, _listBoxDangBan, _listBoxHetHang);
+            _listBoxChuaBan.SelectionChanged += (s, e) => ChonTu(_listBoxChuaBan, _listBoxThang, _listBoxDangBan, _listBoxHetHang);
+            _listBoxDangBan.SelectionChanged += (s, e) => ChonTu(_listBoxDangBan, _listBoxThang, _listBoxChuaBan, _listBoxHetHang);
+            _listBoxHetHang.SelectionChanged += (s, e) => ChonTu(_listBoxHetHang, _listBoxThang, _listBoxChuaBan, _listBoxDangBan);
 
             _listBoxThang.DoubleTapped += (s, e) => { if (_dangChon != null) _ = HienThiPopup(_dangChon, isMoi: false); };
             _listBoxChuaBan.DoubleTapped += (s, e) => { if (_dangChon != null) _ = HienThiPopup(_dangChon, isMoi: false); };
             _listBoxDangBan.DoubleTapped += (s, e) => { if (_dangChon != null) _ = HienThiPopup(_dangChon, isMoi: false); };
+            _listBoxHetHang.DoubleTapped += (s, e) => { if (_dangChon != null) _ = HienThiPopup(_dangChon, isMoi: false); };
 
             _btnChuyenSangDangBan.Click += (s, e) => ChuyenTrangThai();
             _btnChuyenVeChuaBan.Click += (s, e) => ChuyenTrangThai();
@@ -146,13 +165,13 @@ namespace QuanLyKhachHang.Views
             };
         }
 
-        /// <summary>GroupBox "Trạng thái bán quà" chứa TabControl 2 tab Chưa bán / Đang bán + nút chuyển đổi.</summary>
+        /// <summary>GroupBox "Trạng thái tặng quà" chứa TabControl 2 tab Chưa tặng / Đang tặng + nút chuyển đổi.</summary>
         private Border TaoGroupBoxTrangThai()
         {
             var noiDung = new StackPanel { Spacing = 10, Margin = new Thickness(14) };
-            noiDung.Children.Add(new TextBlock { Text = "🔁 Trạng thái bán quà", FontSize = 15, FontWeight = FontWeight.Bold });
+            noiDung.Children.Add(new TextBlock { Text = "🔁 Trạng thái tặng quà", FontSize = 15, FontWeight = FontWeight.Bold });
 
-            // ---- Tab "Chưa bán" ----
+            // ---- Tab "Chưa tặng" ----
             var panelChuaBan = new StackPanel { Spacing = 10, Margin = new Thickness(0, 10, 0, 0) };
             panelChuaBan.Children.Add(_txtTimChuaBan);
             var khungChuaBan = new Border { Background = Brushes.White, Height = 340, ClipToBounds = true };
@@ -160,9 +179,9 @@ namespace QuanLyKhachHang.Views
             panelChuaBan.Children.Add(khungChuaBan);
             panelChuaBan.Children.Add(_btnChuyenSangDangBan);
 
-            var tabChuaBan = new TabItem { Header = "⚪ Chưa bán", Content = panelChuaBan };
+            var tabChuaBan = new TabItem { Header = "⚪ Chưa tặng", Content = panelChuaBan };
 
-            // ---- Tab "Đang bán" ----
+            // ---- Tab "Đang tặng" ----
             var panelDangBan = new StackPanel { Spacing = 10, Margin = new Thickness(0, 10, 0, 0) };
             panelDangBan.Children.Add(_txtTimDangBan);
             var khungDangBan = new Border { Background = Brushes.White, Height = 340, ClipToBounds = true };
@@ -170,7 +189,7 @@ namespace QuanLyKhachHang.Views
             panelDangBan.Children.Add(khungDangBan);
             panelDangBan.Children.Add(_btnChuyenVeChuaBan);
 
-            var tabDangBan = new TabItem { Header = "🟢 Đang bán", Content = panelDangBan };
+            var tabDangBan = new TabItem { Header = "🟢 Đang tặng", Content = panelDangBan };
 
             var tabControl = new TabControl();
             tabControl.Items.Add(tabChuaBan);
@@ -181,6 +200,39 @@ namespace QuanLyKhachHang.Views
             {
                 Background = new SolidColorBrush(Color.Parse("#F9FAFB")),
                 BorderBrush = Brushes.LightGray,
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(6),
+                Child = noiDung
+            };
+        }
+
+        /// <summary>
+        /// Khu vực riêng "🔴 Đã tặng hết" — nằm tách biệt bên dưới, dành cho quà đã hết
+        /// hàng trong kho (SoLuong &lt;= 0). Chỉ xem/tìm kiếm + Sửa (để nhập thêm hàng) /
+        /// Xoá qua các nút dùng chung; không có nút chuyển trạng thái vì trạng thái này
+        /// được tính tự động theo số lượng, không phải cờ thủ công.
+        /// </summary>
+        private Border TaoGroupBoxHetHang()
+        {
+            var noiDung = new StackPanel { Spacing = 10, Margin = new Thickness(14) };
+            noiDung.Children.Add(new TextBlock { Text = "🔴 Đã tặng hết", FontSize = 15, FontWeight = FontWeight.Bold });
+            noiDung.Children.Add(new TextBlock
+            {
+                Text = "Những quà đã hết số lượng trong kho. Sửa quà và nhập thêm số lượng để đưa quà trở lại 2 trạng thái Chưa tặng / Đang tặng.",
+                FontSize = 12,
+                Foreground = Brushes.DimGray,
+                TextWrapping = TextWrapping.Wrap
+            });
+            noiDung.Children.Add(_txtTimHetHang);
+
+            var khungBang = new Border { Background = Brushes.White, Height = 260, ClipToBounds = true };
+            khungBang.Child = UiHelpers.TaoBang(new List<QuaTang>(), TaoCotQuaTang(), _listBoxHetHang);
+            noiDung.Children.Add(khungBang);
+
+            return new Border
+            {
+                Background = new SolidColorBrush(Color.Parse("#FEF2F2")),
+                BorderBrush = new SolidColorBrush(Color.Parse("#FCA5A5")),
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(6),
                 Child = noiDung
@@ -211,7 +263,7 @@ namespace QuanLyKhachHang.Views
             _dangDongBoChon = false;
 
             _dangChon = quaChon;
-            _lblDangChon.Text = $"Đang chọn: {quaChon.TenQua} (Mã {quaChon.MaQua}) — {(quaChon.DangBan ? "🟢 Đang bán" : "⚪ Chưa bán")}";
+            _lblDangChon.Text = $"Đang chọn: {quaChon.TenQua} (Mã {quaChon.MaQua}) — {TrangThaiText(quaChon)}";
         }
 
         private async void ChuyenTrangThai()
@@ -231,6 +283,7 @@ namespace QuanLyKhachHang.Views
             _listBoxThang.ItemsSource = _data.QuaTangTrongThang(_txtTimThang.Text);
             _listBoxChuaBan.ItemsSource = _data.QuaTangChuaBan(_txtTimChuaBan.Text);
             _listBoxDangBan.ItemsSource = _data.QuaTangDangBan(_txtTimDangBan.Text);
+            _listBoxHetHang.ItemsSource = _data.QuaTangDaHetHang(_txtTimHetHang.Text);
 
             if (_dangChon != null)
             {
@@ -239,7 +292,7 @@ namespace QuanLyKhachHang.Views
                 if (quaMoi != null)
                 {
                     _dangChon = quaMoi;
-                    _lblDangChon.Text = $"Đang chọn: {quaMoi.TenQua} (Mã {quaMoi.MaQua}) — {(quaMoi.DangBan ? "🟢 Đang bán" : "⚪ Chưa bán")}";
+                    _lblDangChon.Text = $"Đang chọn: {quaMoi.TenQua} (Mã {quaMoi.MaQua}) — {TrangThaiText(quaMoi)}";
                 }
             }
         }
@@ -295,7 +348,7 @@ namespace QuanLyKhachHang.Views
             var txtTenQua = new TextBox { Text = qua.TenQua, Watermark = "Tên Quà" };
             var numDiem = new NumericUpDown { Value = qua.DiemQuyDoi, Minimum = 0, FormatString = "0" };
             var numSL = new NumericUpDown { Value = qua.SoLuong, Minimum = 0, FormatString = "0" };
-            var chkDangBan = new CheckBox { Content = "Đang bán", IsChecked = qua.DangBan };
+            var chkDangBan = new CheckBox { Content = "Đang tặng", IsChecked = qua.DangBan };
 
             var btnLuu = new Button
             {

@@ -235,7 +235,7 @@ namespace QuanLyKhachHang.Services
             if (quaTang != null)
             {
                 quaTang.SoLuong -= 1;
-                quaTang.DangBan = true; // đã có khách đổi -> tự chuyển sang "Đang bán", vẫn chuyển tay lại được
+                quaTang.DangBan = true; // đã có khách đổi -> tự chuyển sang "Đang tặng", vẫn chuyển tay lại được
                 LuuQuaTang();
             }
 
@@ -333,24 +333,14 @@ namespace QuanLyKhachHang.Services
             return ds.OrderByDescending(q => q.NgayTao).ToList();
         }
 
-        /// <summary>Danh sách quà đang ở trạng thái "Chưa bán" (QuaTang.DangBan == false).</summary>
+        /// <summary>
+        /// Danh sách quà đang ở trạng thái "Chưa tặng" (QuaTang.DangBan == false)
+        /// VÀ vẫn còn hàng trong kho (SoLuong &gt; 0). Quà đã hết hàng không còn nằm
+        /// ở đây nữa mà chuyển sang nhóm riêng <see cref="QuaTangDaHetHang"/>.
+        /// </summary>
         public List<QuaTang> QuaTangChuaBan(string? tuKhoa = null)
         {
-            var ds = DanhSachQuaTang.Where(q => !q.DangBan);
-
-            if (!string.IsNullOrWhiteSpace(tuKhoa))
-            {
-                var tk = tuKhoa.Trim().ToLower();
-                ds = ds.Where(q => q.TenQua.ToLower().Contains(tk) || q.MaQua.ToLower().Contains(tk));
-            }
-
-            return ds.OrderByDescending(q => q.NgayTao).ToList();
-        }
-
-        /// <summary>Danh sách quà đang ở trạng thái "Đang bán" (QuaTang.DangBan == true).</summary>
-        public List<QuaTang> QuaTangDangBan(string? tuKhoa = null)
-        {
-            var ds = DanhSachQuaTang.Where(q => q.DangBan);
+            var ds = DanhSachQuaTang.Where(q => !q.DangBan && q.SoLuong > 0);
 
             if (!string.IsNullOrWhiteSpace(tuKhoa))
             {
@@ -362,8 +352,55 @@ namespace QuanLyKhachHang.Services
         }
 
         /// <summary>
-        /// Chuyển trạng thái Chưa bán &lt;-&gt; Đang bán cho 1 quà, lưu file ngay.
-        /// Trả về trạng thái DangBan mới sau khi chuyển (true = vừa chuyển sang Đang bán).
+        /// Danh sách quà đang ở trạng thái "Đang tặng" (QuaTang.DangBan == true)
+        /// VÀ vẫn còn hàng trong kho (SoLuong &gt; 0). Quà đã hết hàng không còn nằm
+        /// ở đây nữa mà chuyển sang nhóm riêng <see cref="QuaTangDaHetHang"/>.
+        /// </summary>
+        public List<QuaTang> QuaTangDangBan(string? tuKhoa = null)
+        {
+            var ds = DanhSachQuaTang.Where(q => q.DangBan && q.SoLuong > 0);
+
+            if (!string.IsNullOrWhiteSpace(tuKhoa))
+            {
+                var tk = tuKhoa.Trim().ToLower();
+                ds = ds.Where(q => q.TenQua.ToLower().Contains(tk) || q.MaQua.ToLower().Contains(tk));
+            }
+
+            return ds.OrderByDescending(q => q.NgayTao).ToList();
+        }
+
+        /// <summary>
+        /// Danh sách quà đã HẾT HÀNG trong kho (SoLuong &lt;= 0), bất kể trước đó đang
+        /// ở trạng thái "Chưa tặng" hay "Đang tặng". Tách thành khu vực riêng để người
+        /// dùng dễ nhận biết quà nào cần nhập thêm, không lẫn với 2 trạng thái còn hàng.
+        /// </summary>
+        public List<QuaTang> QuaTangDaHetHang(string? tuKhoa = null)
+        {
+            var ds = DanhSachQuaTang.Where(q => q.SoLuong <= 0);
+
+            if (!string.IsNullOrWhiteSpace(tuKhoa))
+            {
+                var tk = tuKhoa.Trim().ToLower();
+                ds = ds.Where(q => q.TenQua.ToLower().Contains(tk) || q.MaQua.ToLower().Contains(tk));
+            }
+
+            return ds.OrderByDescending(q => q.NgayTao).ToList();
+        }
+
+        /// <summary>
+        /// Danh sách quà ĐỦ ĐIỀU KIỆN để khách đổi bằng điểm ở màn hình Đơn hàng:
+        /// phải đang ở trạng thái "Đang tặng" (QuaTang.DangBan == true) bên Kho Quà
+        /// VÀ còn số lượng trong kho. Đây là điểm đồng bộ giữa Kho Quà và khu đổi quà
+        /// bằng điểm — quà chỉ hiện ra ở Đơn hàng khi đã được đưa vào "Đang tặng".
+        /// </summary>
+        public List<QuaTang> QuaTangCoTheDoi() =>
+            DanhSachQuaTang.Where(q => q.DangBan && q.SoLuong > 0).ToList();
+
+        /// <summary>
+        /// Chuyển trạng thái Chưa tặng &lt;-&gt; Đang tặng cho 1 quà, lưu file ngay.
+        /// Trả về trạng thái DangBan mới sau khi chuyển (true = vừa chuyển sang Đang tặng).
+        /// Lưu ý: nếu quà đã hết hàng (SoLuong &lt;= 0), quà vẫn nằm ở nhóm "Đã tặng hết"
+        /// bất kể cờ DangBan là gì, cho tới khi được nhập thêm hàng.
         /// </summary>
         public bool ChuyenTrangThaiQuaTang(string maQua)
         {
