@@ -20,7 +20,7 @@ Hiển thị các số liệu dạng card/box, ví dụ:
 - Dữ liệu được lấy từ cơ sở dữ liệu (SQLite hoặc Entity Framework).
 
 ## 4. Hình ảnh tham khảo
-![giao diện tại tab khách hàng](docs/imagess/Home-page.png)
+![Giao diện tab khách hàng](docs/imagess/Home-page.png)
 
-![link thiết kế](https://www.figma.com/design/fVQXhyNMupHoHtuxYFkHtN/CDThuoc?node-id=0-1&t=6Yv1w7r4Z5KnBSzq-1)
+**Link thiết kế trên Figma:** [CDThuoc](https://www.figma.com/design/fVQXhyNMupHoHtuxYFkHtN/CDThuoc?node-id=0-1&t=6Yv1w7r4Z5KnBSzq-1)
 
