@@ -29,7 +29,7 @@
     "DiemQuyDoi": 50,
     "SoLuong": 100,
     "NgayTao": "2026-08-19T14:53:42.8755003+07:00",
-    "DangBan": false
+    "DangBan": true
   },
   {
     "MaQua": "Q05",
@@ -37,6 +37,6 @@
     "DiemQuyDoi": 99999,
     "SoLuong": 2,
     "NgayTao": "2026-08-19T14:53:42.8755024+07:00",
-    "DangBan": true
+    "DangBan": false
   }
 ]

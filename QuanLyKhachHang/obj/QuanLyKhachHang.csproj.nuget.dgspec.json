@@ -1,35 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "H:\\CodePlace\\Git_Clone\\Desktop\\QuanLyKhachHang\\QuanLyKhachHang.csproj": {}
+    "/Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj": {}
   },
   "projects": {
-    "H:\\CodePlace\\Git_Clone\\Desktop\\QuanLyKhachHang\\QuanLyKhachHang.csproj": {
+    "/Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "H:\\CodePlace\\Git_Clone\\Desktop\\QuanLyKhachHang\\QuanLyKhachHang.csproj",
+        "projectUniqueName": "/Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj",
         "projectName": "QuanLyKhachHang",
-        "projectPath": "H:\\CodePlace\\Git_Clone\\Desktop\\QuanLyKhachHang\\QuanLyKhachHang.csproj",
-        "packagesPath": "C:\\Users\\Maxsys\\.nuget\\packages\\",
-        "outputPath": "H:\\CodePlace\\Git_Clone\\Desktop\\QuanLyKhachHang\\obj\\",
+        "projectPath": "/Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/QuanLyKhachHang.csproj",
+        "packagesPath": "/Users/caotiendattx/.nuget/packages/",
+        "outputPath": "/Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Maxsys\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/caotiendattx/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
+            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -44,10 +40,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net8.0": {
+          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
             "Avalonia": {
@@ -83,7 +80,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

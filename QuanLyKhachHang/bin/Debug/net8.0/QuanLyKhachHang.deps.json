@@ -19,7 +19,6 @@
       },
       "Avalonia/11.1.3": {
         "dependencies": {
-          "Avalonia.BuildServices": "0.0.29",
           "Avalonia.Remote.Protocol": "11.1.3",
           "MicroCom.Runtime": "0.11.0"
         },
@@ -75,21 +74,20 @@
           "runtimes/win-arm64/native/av_libglesv2.dll": {
             "rid": "win-arm64",
             "assetType": "native",
-            "fileVersion": "2.1.22045.0"
+            "fileVersion": "0.0.0.0"
           },
           "runtimes/win-x64/native/av_libglesv2.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "2.1.22045.0"
+            "fileVersion": "0.0.0.0"
           },
           "runtimes/win-x86/native/av_libglesv2.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "2.1.22045.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
-      "Avalonia.BuildServices/0.0.29": {},
       "Avalonia.Desktop/11.1.3": {
         "dependencies": {
           "Avalonia": "11.1.3",
@@ -159,10 +157,8 @@
           "Avalonia": "11.1.3",
           "HarfBuzzSharp": "7.3.0.2",
           "HarfBuzzSharp.NativeAssets.Linux": "7.3.0.2",
-          "HarfBuzzSharp.NativeAssets.WebAssembly": "7.3.0.2",
           "SkiaSharp": "2.88.8",
-          "SkiaSharp.NativeAssets.Linux": "2.88.8",
-          "SkiaSharp.NativeAssets.WebAssembly": "2.88.8"
+          "SkiaSharp.NativeAssets.Linux": "2.88.8"
         },
         "runtime": {
           "lib/net8.0/Avalonia.Skia.dll": {
@@ -185,8 +181,7 @@
       "Avalonia.Win32/11.1.3": {
         "dependencies": {
           "Avalonia": "11.1.3",
-          "Avalonia.Angle.Windows.Natives": "2.1.22045.20230930",
-          "System.Numerics.Vectors": "4.5.0"
+          "Avalonia.Angle.Windows.Natives": "2.1.22045.20230930"
         },
         "runtime": {
           "lib/net8.0/Avalonia.Win32.dll": {
@@ -256,7 +251,6 @@
           }
         }
       },
-      "HarfBuzzSharp.NativeAssets.WebAssembly/7.3.0.2": {},
       "HarfBuzzSharp.NativeAssets.Win32/7.3.0.2": {
         "runtimeTargets": {
           "runtimes/win-arm64/native/libHarfBuzzSharp.dll": {
@@ -332,7 +326,6 @@
           }
         }
       },
-      "SkiaSharp.NativeAssets.WebAssembly/2.88.8": {},
       "SkiaSharp.NativeAssets.Win32/2.88.8": {
         "runtimeTargets": {
           "runtimes/win-arm64/native/libSkiaSharp.dll": {
@@ -360,7 +353,6 @@
           }
         }
       },
-      "System.Numerics.Vectors/4.5.0": {},
       "Tmds.DBus.Protocol/0.16.0": {
         "dependencies": {
           "System.IO.Pipelines": "6.0.0"
@@ -393,13 +385,6 @@
       "sha512": "sha512-Bo3qOhKC1b84BIhiogndMdAzB3UrrESKK7hS769f5HWeoMw/pcd42US5KFYW2JJ4ZSTrXnP8mXwLTMzh+S+9Lg==",
       "path": "avalonia.angle.windows.natives/2.1.22045.20230930",
       "hashPath": "avalonia.angle.windows.natives.2.1.22045.20230930.nupkg.sha512"
-    },
-    "Avalonia.BuildServices/0.0.29": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-U4eJLQdoDNHXtEba7MZUCwrBErBTxFp6sUewXBOdAhU0Kwzwaa/EKFcYm8kpcysjzKtfB4S0S9n0uxKZFz/ikw==",
-      "path": "avalonia.buildservices/0.0.29",
-      "hashPath": "avalonia.buildservices.0.0.29.nupkg.sha512"
     },
     "Avalonia.Desktop/11.1.3": {
       "type": "package",
@@ -485,13 +470,6 @@
       "path": "harfbuzzsharp.nativeassets.macos/7.3.0.2",
       "hashPath": "harfbuzzsharp.nativeassets.macos.7.3.0.2.nupkg.sha512"
     },
-    "HarfBuzzSharp.NativeAssets.WebAssembly/7.3.0.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-pR6H16NOAjIhfXomYsgN5anGbOHSfIA8z0RoWEVx8vgLySxz9Jie4DnQ/paWTh5MTtBC8XKkTUI7uKMXcq/Pxw==",
-      "path": "harfbuzzsharp.nativeassets.webassembly/7.3.0.2",
-      "hashPath": "harfbuzzsharp.nativeassets.webassembly.7.3.0.2.nupkg.sha512"
-    },
     "HarfBuzzSharp.NativeAssets.Win32/7.3.0.2": {
       "type": "package",
       "serviceable": true,
@@ -527,13 +505,6 @@
       "path": "skiasharp.nativeassets.macos/2.88.8",
       "hashPath": "skiasharp.nativeassets.macos.2.88.8.nupkg.sha512"
     },
-    "SkiaSharp.NativeAssets.WebAssembly/2.88.8": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-S3qRo8c+gVYOyfrdf6FYnjx/ft+gPkb4dNY2IPv5Oy5yNBhDhXhKqHFr9h4+ne6ZU+7D4dbuRQqsIqCo8u1/DA==",
-      "path": "skiasharp.nativeassets.webassembly/2.88.8",
-      "hashPath": "skiasharp.nativeassets.webassembly.2.88.8.nupkg.sha512"
-    },
     "SkiaSharp.NativeAssets.Win32/2.88.8": {
       "type": "package",
       "serviceable": true,
@@ -547,13 +518,6 @@
       "sha512": "sha512-mXX66shZ4xLlI3vNLaJ0lt8OIZdmXTvIqXRdQX5HLVGSkLhINLsVhyZuX2UdRFnOGkqnwmMUs40pIIQ7mna4+A==",
       "path": "system.io.pipelines/6.0.0",
       "hashPath": "system.io.pipelines.6.0.0.nupkg.sha512"
-    },
-    "System.Numerics.Vectors/4.5.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ==",
-      "path": "system.numerics.vectors/4.5.0",
-      "hashPath": "system.numerics.vectors.4.5.0.nupkg.sha512"
     },
     "Tmds.DBus.Protocol/0.16.0": {
       "type": "package",
