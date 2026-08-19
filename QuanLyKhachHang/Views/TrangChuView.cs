@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using QuanLyKhachHang.Models;
@@ -21,15 +24,24 @@ namespace QuanLyKhachHang.Views
         private readonly TextBlock _txtTongDoanhThu = new();
         private readonly TextBlock _txtTongDiem = new();
 
-        private readonly TextBox _txtTimSdt = new() { Width = 200, Watermark = "Nhập 3 số đuôi SĐT..." };
+        // ---- Khung "Tạo hoá đơn nhanh": tìm khách hàng theo SĐT kiểu real-time ----
+        private readonly TextBox _txtTimSdt = new() { Width = 220, Watermark = "Nhập số điện thoại..." };
         private readonly TextBlock _lblThongBao = new() { FontSize = 12, IsVisible = false };
 
-        private readonly Button _btnThemKhach = new() 
-        { 
-            Content = "➕ Thêm khách hàng", 
-            Background = new SolidColorBrush(Color.Parse("#2563EB")), 
+        private readonly ListBox _lbGoiY = new()
+        {
+            IsVisible = false,
+            MaxHeight = 180,
+            Width = 420,
+            HorizontalAlignment = HorizontalAlignment.Left
+        };
+
+        private readonly Button _btnThemKhach = new()
+        {
+            Content = "➕ Thêm khách hàng",
+            Background = new SolidColorBrush(Color.Parse("#2563EB")),
             Foreground = Brushes.White,
-            IsVisible = false 
+            IsVisible = false
         };
 
         private readonly Button _btnTaoHoaDon = new()
@@ -87,17 +99,28 @@ namespace QuanLyKhachHang.Views
             panelNhanh.Children.Add(new TextBlock { Text = "⚡ Tạo hoá đơn nhanh", FontWeight = FontWeight.Bold, FontSize = 15 });
 
             var hangNhap = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
-            hangNhap.Children.Add(new TextBlock { Text = "Số đuôi SĐT:", VerticalAlignment = VerticalAlignment.Center });
+            hangNhap.Children.Add(new TextBlock { Text = "Số điện thoại:", VerticalAlignment = VerticalAlignment.Center });
             hangNhap.Children.Add(_txtTimSdt);
             hangNhap.Children.Add(_btnThemKhach);
             hangNhap.Children.Add(_btnTaoHoaDon);
 
+            // Hiển thị mỗi dòng gợi ý dạng "Mã KH - Họ tên - SĐT - Điểm" thay vì ToString() mặc định của KhachHang
+            _lbGoiY.ItemTemplate = new FuncDataTemplate<KhachHang>((kh, ns) =>
+                new TextBlock
+                {
+                    Text = kh == null ? string.Empty : $"{kh.MaKH}  •  {kh.HoTen}  •  {kh.SoDienThoai}  ({kh.DiemTichLuy} điểm)",
+                    Padding = new Thickness(8, 6, 8, 6)
+                });
+
             _txtTimSdt.TextChanged += TxtTimSdt_TextChanged;
+            _lbGoiY.SelectionChanged += LbGoiY_SelectionChanged;
+            _lbGoiY.DoubleTapped += LbGoiY_DoubleTapped;
             _btnThemKhach.Click += BtnThemKhach_Click;
             _btnTaoHoaDon.Click += BtnTaoHoaDon_Click;
 
             panelNhanh.Children.Add(hangNhap);
             panelNhanh.Children.Add(_lblThongBao);
+            panelNhanh.Children.Add(_lbGoiY);
 
             khungNhanh.Child = panelNhanh;
             goc.Children.Add(khungNhanh);
@@ -135,36 +158,77 @@ namespace QuanLyKhachHang.Views
             _txtTongDiem.Text = _data.DanhSachKhachHang.Sum(kh => kh.DiemTichLuy).ToString();
         }
 
+        /// <summary>
+        /// Tìm kiếm real-time: gõ đến đâu, đề xuất TOÀN BỘ khách hàng có SĐT
+        /// chứa đúng chuỗi số vừa nhập đến đó (VD: nhập "879" -> đề xuất mọi
+        /// khách hàng có "879" xuất hiện ở bất kỳ vị trí nào trong SĐT).
+        /// </summary>
         private void TxtTimSdt_TextChanged(object? sender, TextChangedEventArgs e)
         {
             string chuoiTim = _txtTimSdt.Text?.Trim() ?? string.Empty;
 
-            if (chuoiTim.Length >= 3)
+            // Mỗi lần gõ lại coi như chưa chọn khách hàng nào, tránh tạo nhầm hoá đơn cho lựa chọn cũ
+            _khachHangTimThay = null;
+            _btnTaoHoaDon.IsVisible = false;
+
+            if (chuoiTim.Length == 0)
             {
-                _khachHangTimThay = _data.DanhSachKhachHang.FirstOrDefault(k => k.SoDienThoai.EndsWith(chuoiTim));
-                if (_khachHangTimThay == null)
-                {
-                    _lblThongBao.Foreground = Brushes.Red;
-                    _lblThongBao.Text = "⚠️ Chưa có thông tin khách hàng, hãy đăng ký";
-                    _lblThongBao.IsVisible = true;
-                    _btnThemKhach.IsVisible = true;
-                    _btnTaoHoaDon.IsVisible = false;
-                }
-                else
-                {
-                    _lblThongBao.Foreground = Brushes.Green;
-                    _lblThongBao.Text = $"✓ Tìm thấy: {_khachHangTimThay.HoTen} - {_khachHangTimThay.SoDienThoai}";
-                    _lblThongBao.IsVisible = true;
-                    _btnThemKhach.IsVisible = false;
-                    _btnTaoHoaDon.IsVisible = true;
-                }
+                _lbGoiY.IsVisible = false;
+                _lbGoiY.ItemsSource = null;
+                _lblThongBao.IsVisible = false;
+                _btnThemKhach.IsVisible = false;
+                return;
+            }
+
+            var ketQua = _data.TimKhachHangTheoSoDienThoai(chuoiTim);
+
+            if (ketQua.Count == 0)
+            {
+                _lbGoiY.IsVisible = false;
+                _lbGoiY.ItemsSource = null;
+
+                _lblThongBao.Foreground = Brushes.Red;
+                _lblThongBao.Text = "⚠️ Chưa có khách hàng nào khớp số này, hãy đăng ký";
+                _lblThongBao.IsVisible = true;
+                _btnThemKhach.IsVisible = true;
             }
             else
             {
-                _khachHangTimThay = null;
-                _lblThongBao.IsVisible = false;
+                _lblThongBao.Foreground = Brushes.Green;
+                _lblThongBao.Text = $"✓ Tìm thấy {ketQua.Count} khách hàng khớp \"{chuoiTim}\" — chọn 1 người bên dưới:";
+                _lblThongBao.IsVisible = true;
                 _btnThemKhach.IsVisible = false;
+
+                _lbGoiY.ItemsSource = ketQua;
+                _lbGoiY.IsVisible = true;
+            }
+        }
+
+        /// <summary>Chọn 1 khách hàng trong danh sách gợi ý -> sẵn sàng để bấm "Tạo hoá đơn".</summary>
+        private void LbGoiY_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            _khachHangTimThay = _lbGoiY.SelectedItem as KhachHang;
+
+            if (_khachHangTimThay != null)
+            {
+                _lblThongBao.Foreground = Brushes.Green;
+                _lblThongBao.Text = $"✓ Đã chọn: {_khachHangTimThay.HoTen} - {_khachHangTimThay.SoDienThoai}";
+                _lblThongBao.IsVisible = true;
+                _btnTaoHoaDon.IsVisible = true;
+            }
+            else
+            {
                 _btnTaoHoaDon.IsVisible = false;
+            }
+        }
+
+        /// <summary>Double-click 1 gợi ý -> chuyển thẳng sang tạo hoá đơn cho khách hàng đó.</summary>
+        private void LbGoiY_DoubleTapped(object? sender, TappedEventArgs e)
+        {
+            if (_lbGoiY.SelectedItem is KhachHang kh)
+            {
+                _khachHangTimThay = kh;
+                _moTabAction?.Invoke(2, kh.MaKH);
             }
         }
 
@@ -193,7 +257,7 @@ namespace QuanLyKhachHang.Views
             if (_khachHangTimThay != null)
             {
                 // Chuyển sang Tab Đơn hàng (Index 2) và truyền MaKH
-                _moTabAction?.Invoke(2, _khachHangTimThay.MaKH); 
+                _moTabAction?.Invoke(2, _khachHangTimThay.MaKH);
             }
         }
 
