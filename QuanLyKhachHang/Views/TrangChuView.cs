@@ -159,6 +159,22 @@ namespace QuanLyKhachHang.Views
 
             goc.Children.Add(khungChua2BieuDo);
 
+
+
+            var ghiChuView = new GhiChuView(_data);
+            var khungDanhSach = new Border
+            {
+                Background = Brushes.White,
+                CornerRadius = new CornerRadius(6),
+                Padding = new Thickness(16),
+                Margin = new Thickness(0, 10, 0, 0),
+                BorderBrush = Brushes.LightGray,
+                BorderThickness = new Thickness(1)
+            };
+            khungDanhSach.Child = ghiChuView;
+
+            goc.Children.Add(khungDanhSach);
+
             Content = goc;
             CapNhatThongKe();
         }

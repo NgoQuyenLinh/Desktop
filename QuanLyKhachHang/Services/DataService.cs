@@ -435,5 +435,20 @@ namespace QuanLyKhachHang.Services
 
         public List<KhachHang> TopKhachHangDiemCao(int soLuong = 5) =>
             DanhSachKhachHang.OrderByDescending(kh => kh.DiemTichLuy).Take(soLuong).ToList();
+
+        public List<GhiChu> LayDanhSachGhiChu()
+        {
+            string path = "Data/ghichu.json";
+            if (!File.Exists(path)) return new List<GhiChu>();
+            string json = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<List<GhiChu>>(json) ?? new List<GhiChu>();
+        }
+
+        public void LuuDanhSachGhiChu(List<GhiChu> danhSach)
+        {
+            string path = "Data/ghichu.json";
+            string json = JsonSerializer.Serialize(danhSach, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(path, json);
+        }
     }
 }

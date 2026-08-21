@@ -1,6 +1,9 @@
+// Views/MainWindow.cs
+
 using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -104,11 +107,18 @@ namespace QuanLyKhachHang.Views
             Grid.SetColumn(khungSidebar, 0);
 
             // ---- Vùng nội dung ----
+
+            var scrollViewer = new ScrollViewer
+            {
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled, // Tắt cuộn ngang
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,       // Tự hiện thanh cuộn dọc khi nội dung dài
+                Content = _content
+            };
             var khungNoiDung = new Border
             {
                 Background = new SolidColorBrush(Color.Parse("#F3F4F6")),
                 Padding = new Thickness(20),
-                Child = _content
+                Child = scrollViewer
             };
             Grid.SetColumn(khungNoiDung, 1);
 
@@ -184,5 +194,11 @@ namespace QuanLyKhachHang.Views
             nut.Background = new SolidColorBrush(Color.Parse("#2563EB"));
             _btnDangChon = nut;
         }
+
+
+
+
+
+        
     }
 }
