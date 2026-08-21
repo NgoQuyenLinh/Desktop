@@ -9,6 +9,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using QuanLyKhachHang.Models;
 using QuanLyKhachHang.Services;
+using QuanLyKhachHang.Views;
 
 namespace QuanLyKhachHang.Views
 {
@@ -32,7 +33,7 @@ namespace QuanLyKhachHang.Views
 
         // ---- Khung "Tạo hoá đơn nhanh": tìm khách hàng theo SĐT kiểu real-time ----
         private readonly TextBox _txtTimSdt = new() { Width = 220, Watermark = "Nhập số điện thoại..." };
-        
+
         private readonly TextBlock _lblThongBao = new() { FontSize = 12, IsVisible = false };
 
         private readonly ListBox _lbGoiY = new()
@@ -43,7 +44,7 @@ namespace QuanLyKhachHang.Views
             HorizontalAlignment = HorizontalAlignment.Left
         };
 
-      
+
         private readonly Button _btnThemKhach = new()
         {
             Content = "➕ Thêm khách hàng",
@@ -136,7 +137,27 @@ namespace QuanLyKhachHang.Views
 
 
             //====================================== 3. KHUNG DASHBOARD BỔ SUNG (TÙY CHỌN) ======================================
-            goc.Children.Add(new BieuDoDoanhThuView());
+
+
+            var khungChua2BieuDo = new Grid
+            {
+                ColumnDefinitions = new ColumnDefinitions("*, *"), // Chia đều 2 cột bằng nhau
+                Margin = new Thickness(0, 10, 0, 0)
+            };
+
+            // 1. Biểu đồ đường doanh thu (Cột trái)
+            var bieuDoLine = new BieuDoDoanhThuLineView();
+            Grid.SetColumn(bieuDoLine, 0);
+            bieuDoLine.Margin = new Thickness(0, 0, 5, 0);
+            khungChua2BieuDo.Children.Add(bieuDoLine);
+
+            // 2. Biểu đồ tròn doanh thu (Cột phải)
+            var bieuDoTron = new BieuDoTron();
+            Grid.SetColumn(bieuDoTron, 1);
+            bieuDoTron.Margin = new Thickness(5, 0, 0, 0);
+            khungChua2BieuDo.Children.Add(bieuDoTron);
+
+            goc.Children.Add(khungChua2BieuDo);
 
             Content = goc;
             CapNhatThongKe();

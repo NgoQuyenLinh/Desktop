@@ -18,7 +18,7 @@ namespace QuanLyKhachHang.Views
         public string MaMau { get; set; } = "#2563EB";
     }
 
-    public class BieuDoDoanhThuView : UserControl
+    public class BieuDoTron : UserControl
     {
         private readonly PieChart _pieChart = new();
         private readonly StackPanel _panelChuThich = new() { Spacing = 12, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 0, 0) };
@@ -31,7 +31,7 @@ namespace QuanLyKhachHang.Views
             VerticalAlignment = VerticalAlignment.Center
         };
 
-        public BieuDoDoanhThuView()
+        public BieuDoTron()
         {
             var khungBieuDo = new Border
             {
