@@ -1,0 +1,32 @@
+[
+  {
+    "Id": "1",
+    "NoiDung": "Ki\u1EC3m tra h\u1EA1n s\u1EED d\u1EE5ng s\u1EA3n ph\u1EA9m",
+    "DaHoanThanh": true,
+    "MauSac": "#F97316"
+  },
+  {
+    "Id": "2",
+    "NoiDung": "Nh\u1EADp h\u00E0ng Vitamin C 500mg",
+    "DaHoanThanh": true,
+    "MauSac": "#3B82F6"
+  },
+  {
+    "Id": "3",
+    "NoiDung": "Thanh to\u00E1n h\u00F3a \u0111\u01A1n NCC AMC",
+    "DaHoanThanh": false,
+    "MauSac": "#10B981"
+  },
+  {
+    "Id": "4",
+    "NoiDung": "Ki\u1EC3m k\u00EA kho th\u00E1ng 8",
+    "DaHoanThanh": false,
+    "MauSac": "#8B5CF6"
+  },
+  {
+    "Id": "55007ffb-0a34-4034-b827-0710a50cb36c",
+    "NoiDung": "nh\u1EADp h\u00E0ng",
+    "DaHoanThanh": false,
+    "MauSac": "#2563EB"
+  }
+]

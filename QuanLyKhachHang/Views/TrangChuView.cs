@@ -9,6 +9,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using QuanLyKhachHang.Models;
 using QuanLyKhachHang.Services;
+using QuanLyKhachHang.Views;
 
 namespace QuanLyKhachHang.Views
 {
@@ -24,8 +25,54 @@ namespace QuanLyKhachHang.Views
         private readonly TextBlock _txtTongDoanhThu = new();
         private readonly TextBlock _txtTongDiem = new();
 
+
+        //  // ---- Khung Dashboard bổ sung ----
+        // private readonly TextBlock _txtKhachVip = new();
+        // private readonly TextBlock _txtKhachMoiThang = new();
+        // private readonly TextBlock _txtTyLeHoanThanh = new();
+
+
+        // khung tạo các ô thống kê 
+        private Border TaoTheNho(string tieuDe, TextBlock txtGiaTri, string tangTruong, string accentColor)
+        {
+            var lblTieuDe = new TextBlock
+            {
+                Text = tieuDe,
+                Foreground = new SolidColorBrush(Color.Parse("#6B7280")), // Xám trung tính
+                FontSize = 13,
+                Margin = new Thickness(0, 0, 0, 8)
+            };
+
+            txtGiaTri.FontSize = 24;
+            txtGiaTri.FontWeight = FontWeight.Bold;
+            txtGiaTri.Foreground = new SolidColorBrush(Color.Parse("#111827"));
+
+            var lblTangTruong = new TextBlock
+            {
+                Text = tangTruong,
+                Foreground = new SolidColorBrush(Color.Parse("#059669")), // Xanh lá đậm
+                FontSize = 12,
+                FontWeight = FontWeight.Medium,
+                Margin = new Thickness(0, 8, 0, 0)
+            };
+            var stack = new StackPanel { Children = { lblTieuDe, txtGiaTri, lblTangTruong } };
+
+            return new Border
+            {
+                Width = 280,
+                Padding = new Thickness(20),
+                Margin = new Thickness(0, 0, 15, 15),
+                Background = Brushes.White,
+                CornerRadius = new CornerRadius(16),
+                BorderBrush = new SolidColorBrush(Color.Parse("#E5E7EB")),
+                BorderThickness = new Thickness(1),
+                Child = stack
+            };
+        }
+
         // ---- Khung "Tạo hoá đơn nhanh": tìm khách hàng theo SĐT kiểu real-time ----
         private readonly TextBox _txtTimSdt = new() { Width = 220, Watermark = "Nhập số điện thoại..." };
+
         private readonly TextBlock _lblThongBao = new() { FontSize = 12, IsVisible = false };
 
         private readonly ListBox _lbGoiY = new()
@@ -35,6 +82,7 @@ namespace QuanLyKhachHang.Views
             Width = 420,
             HorizontalAlignment = HorizontalAlignment.Left
         };
+
 
         private readonly Button _btnThemKhach = new()
         {
@@ -72,16 +120,24 @@ namespace QuanLyKhachHang.Views
             });
 
             _cboThoiGian.ItemsSource = new[] { "Tất cả", "Hôm nay", "Tuần này", "Tháng này", "Năm nay" };
-            _cboThoiGian.SelectedIndex = 0;
+            _cboThoiGian.SelectedIndex = 2;
             _cboThoiGian.SelectionChanged += (s, e) => CapNhatThongKe();
             hangTieuDe.Children.Add(_cboThoiGian);
             goc.Children.Add(hangTieuDe);
 
-            var hangThe = new WrapPanel { Orientation = Orientation.Horizontal };
-            hangThe.Children.Add(TaoTheNho("👤 Tổng khách hàng", _txtTongKhach, "#2563EB"));
-            hangThe.Children.Add(TaoTheNho("🧾 Tổng đơn hàng", _txtTongDon, "#10B981"));
-            hangThe.Children.Add(TaoTheNho("💰 Tổng doanh thu", _txtTongDoanhThu, "#EA580C"));
-            hangThe.Children.Add(TaoTheNho("⭐ Tổng điểm hiện có", _txtTongDiem, "#9333EA"));
+            // var hangThe = new WrapPanel { Orientation = Orientation.Horizontal };
+            // hangThe.Children.Add(TaoTheNho("👤 Tổng khách hàng", _txtTongKhach, "#2563EB"));
+            // hangThe.Children.Add(TaoTheNho("🧾 Tổng đơn hàng", _txtTongDon, "#10B981"));
+            // hangThe.Children.Add(TaoTheNho("💰 Tổng doanh thu", _txtTongDoanhThu, "#EA580C"));
+            // hangThe.Children.Add(TaoTheNho("⭐ Tổng điểm hiện có", _txtTongDiem, "#9333EA"));
+
+            var hangThe = new WrapPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 20, 0, 0) };
+
+            hangThe.Children.Add(TaoTheNho("Doanh thu hôm nay", _txtTongDoanhThu, "↑ 15% so với hôm qua", "#2563EB"));
+            hangThe.Children.Add(TaoTheNho("Tổng hóa đơn", _txtTongDon, "↑ 10% so với hôm qua", "#10B981"));
+            hangThe.Children.Add(TaoTheNho("Tổng điểm tích lũy", _txtTongDiem, "↑ 5% so với hôm qua", "#8B5CF6"));
+            hangThe.Children.Add(TaoTheNho("Tổng khách hàng", _txtTongKhach, "↑ 2% so với hôm qua", "#F59E0B"));
+
             goc.Children.Add(hangThe);
 
             // ================= 2. KHUNG TẠO HÓA ĐƠN NHANH / TÌM SĐT =================
@@ -94,6 +150,7 @@ namespace QuanLyKhachHang.Views
                 BorderBrush = Brushes.LightGray,
                 BorderThickness = new Thickness(1)
             };
+
 
             var panelNhanh = new StackPanel { Spacing = 10 };
             panelNhanh.Children.Add(new TextBlock { Text = "⚡ Tạo hoá đơn nhanh", FontWeight = FontWeight.Bold, FontSize = 15 });
@@ -124,6 +181,46 @@ namespace QuanLyKhachHang.Views
 
             khungNhanh.Child = panelNhanh;
             goc.Children.Add(khungNhanh);
+
+
+            //====================================== 3. KHUNG DASHBOARD BỔ SUNG (TÙY CHỌN) ======================================
+
+
+            var khungChua2BieuDo = new Grid
+            {
+                ColumnDefinitions = new ColumnDefinitions("*, *"), // Chia đều 2 cột bằng nhau
+                Margin = new Thickness(0, 10, 0, 0)
+            };
+
+            // 1. Biểu đồ đường doanh thu (Cột trái)
+            var bieuDoLine = new BieuDoDoanhThuLineView();
+            Grid.SetColumn(bieuDoLine, 0);
+            bieuDoLine.Margin = new Thickness(0, 0, 5, 0);
+            khungChua2BieuDo.Children.Add(bieuDoLine);
+
+            // 2. Biểu đồ tròn doanh thu (Cột phải)
+            var bieuDoTron = new BieuDoTron();
+            Grid.SetColumn(bieuDoTron, 1);
+            bieuDoTron.Margin = new Thickness(5, 0, 0, 0);
+            khungChua2BieuDo.Children.Add(bieuDoTron);
+
+            goc.Children.Add(khungChua2BieuDo);
+
+
+
+            var ghiChuView = new GhiChuView(_data);
+            var khungDanhSach = new Border
+            {
+                Background = Brushes.White,
+                CornerRadius = new CornerRadius(6),
+                Padding = new Thickness(16),
+                Margin = new Thickness(0, 10, 0, 0),
+                BorderBrush = Brushes.LightGray,
+                BorderThickness = new Thickness(1)
+            };
+            khungDanhSach.Child = ghiChuView;
+
+            goc.Children.Add(khungDanhSach);
 
             Content = goc;
             CapNhatThongKe();
@@ -284,27 +381,27 @@ namespace QuanLyKhachHang.Views
             }
         }
 
-        private Border TaoTheNho(string tieuDe, TextBlock txtGiaTri, string maMau)
-        {
-            var mau = new SolidColorBrush(Color.Parse(maMau));
-            txtGiaTri.FontSize = 18;
-            txtGiaTri.FontWeight = FontWeight.Bold;
-            txtGiaTri.Foreground = mau;
+        // private Border TaoTheNho(string tieuDe, TextBlock txtGiaTri, string maMau)
+        // {
+        //     var mau = new SolidColorBrush(Color.Parse(maMau));
+        //     txtGiaTri.FontSize = 18;
+        //     txtGiaTri.FontWeight = FontWeight.Bold;
+        //     txtGiaTri.Foreground = mau;
 
-            var noiDung = new StackPanel { Margin = new Thickness(12, 8, 12, 8), Spacing = 6 };
-            noiDung.Children.Add(new TextBlock { Text = tieuDe, FontSize = 12, Foreground = Brushes.DimGray });
-            noiDung.Children.Add(txtGiaTri);
+        //     var noiDung = new StackPanel { Margin = new Thickness(12, 8, 12, 8), Spacing = 6 };
+        //     noiDung.Children.Add(new TextBlock { Text = tieuDe, FontSize = 12, Foreground = Brushes.DimGray });
+        //     noiDung.Children.Add(txtGiaTri);
 
-            return new Border
-            {
-                Width = 190,
-                Height = 75,
-                Background = Brushes.White,
-                BorderBrush = mau,
-                BorderThickness = new Thickness(3, 0, 0, 0),
-                Margin = new Thickness(0, 0, 10, 10),
-                Child = noiDung
-            };
-        }
+        //     return new Border
+        //     {
+        //         Width = 190,
+        //         Height = 75,
+        //         Background = Brushes.White,
+        //         BorderBrush = mau,
+        //         BorderThickness = new Thickness(3, 0, 0, 0),
+        //         Margin = new Thickness(0, 0, 10, 10),
+        //         Child = noiDung
+        //     };
+        // }
     }
 }

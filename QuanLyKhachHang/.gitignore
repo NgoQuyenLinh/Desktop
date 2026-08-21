@@ -1,0 +1,39 @@
+# =================================
+# .NET / C# Build & Temporary Files
+# =================================
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# =================================
+# Operating System Junk Files
+# =================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+~*
+
+# =================================
+# Published / Output Packages
+# =================================
+project.lock.json
+project.fragment.lock.json
+artifacts/
+publish/
