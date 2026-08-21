@@ -258,3 +258,7 @@ H:/CodePlace/Git_Clone/Desktop/QuanLyKhachHang/obj/Debug/net8.0/ref/QuanLyKhachH
 /Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/obj/Debug/net8.0/QuanLyKhachHang.pdb
 /Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/obj/Debug/net8.0/QuanLyKhachHang.genruntimeconfig.cache
 /Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/obj/Debug/net8.0/ref/QuanLyKhachHang.dll
+/Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/bin/Debug/net8.0/LiveChartsCore.dll
+/Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/bin/Debug/net8.0/LiveChartsCore.SkiaSharpView.dll
+/Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/bin/Debug/net8.0/LiveChartsCore.SkiaSharpView.Avalonia.dll
+/Users/caotiendattx/Developer/Quan_Li_Cua_Hang_Thuoc/Desktop/QuanLyKhachHang/bin/Debug/net8.0/SkiaSharp.HarfBuzz.dll

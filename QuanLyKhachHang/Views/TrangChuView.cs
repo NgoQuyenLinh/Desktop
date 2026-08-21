@@ -24,8 +24,15 @@ namespace QuanLyKhachHang.Views
         private readonly TextBlock _txtTongDoanhThu = new();
         private readonly TextBlock _txtTongDiem = new();
 
+
+        // ---- Khung Dashboard bổ sung ----
+        private readonly TextBlock _txtKhachVip = new();
+        private readonly TextBlock _txtKhachMoiThang = new();
+        private readonly TextBlock _txtTyLeHoanThanh = new();
+
         // ---- Khung "Tạo hoá đơn nhanh": tìm khách hàng theo SĐT kiểu real-time ----
         private readonly TextBox _txtTimSdt = new() { Width = 220, Watermark = "Nhập số điện thoại..." };
+        
         private readonly TextBlock _lblThongBao = new() { FontSize = 12, IsVisible = false };
 
         private readonly ListBox _lbGoiY = new()
@@ -36,6 +43,7 @@ namespace QuanLyKhachHang.Views
             HorizontalAlignment = HorizontalAlignment.Left
         };
 
+      
         private readonly Button _btnThemKhach = new()
         {
             Content = "➕ Thêm khách hàng",
@@ -95,6 +103,7 @@ namespace QuanLyKhachHang.Views
                 BorderThickness = new Thickness(1)
             };
 
+
             var panelNhanh = new StackPanel { Spacing = 10 };
             panelNhanh.Children.Add(new TextBlock { Text = "⚡ Tạo hoá đơn nhanh", FontWeight = FontWeight.Bold, FontSize = 15 });
 
@@ -124,6 +133,10 @@ namespace QuanLyKhachHang.Views
 
             khungNhanh.Child = panelNhanh;
             goc.Children.Add(khungNhanh);
+
+
+            //====================================== 3. KHUNG DASHBOARD BỔ SUNG (TÙY CHỌN) ======================================
+            goc.Children.Add(new BieuDoDoanhThuView());
 
             Content = goc;
             CapNhatThongKe();
