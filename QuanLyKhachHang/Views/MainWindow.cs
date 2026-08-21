@@ -1,7 +1,10 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using QuanLyKhachHang.Services;
 
 namespace QuanLyKhachHang.Views
@@ -14,7 +17,7 @@ namespace QuanLyKhachHang.Views
 
         public MainWindow()
         {
-            Title = "Phần mềm Quản lý Khách hàng & Tích điểm";
+            Title = "PHẦN MỀM QUẢN LÍ NHÀ THUỐC";
             Width = 1200;
             Height = 720;
             MinWidth = 1000;
@@ -22,31 +25,43 @@ namespace QuanLyKhachHang.Views
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             var grid = new Grid();
-            grid.ColumnDefinitions.Add(new ColumnDefinition(210, GridUnitType.Pixel));
+            // Thu nhỏ chiều rộng sidebar từ 220 xuống 70 pixel cho giống mẫu
+            grid.ColumnDefinitions.Add(new ColumnDefinition(70, GridUnitType.Pixel));
             grid.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star));
 
             // ---- Sidebar ----
-            var stackSidebar = new StackPanel();
-
-            var lblTieuDe = new TextBlock
+            var stackSidebar = new StackPanel
             {
-                Text = "🏬 QLKH & Tích điểm",
-                Foreground = Brushes.White,
-                FontSize = 14,
-                FontWeight = FontWeight.Bold,
-                Height = 70,
-                TextAlignment = TextAlignment.Center,
-                TextWrapping = TextWrapping.Wrap,
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center
+                Spacing = 8,
+                Margin = new Thickness(0, 15, 0, 0)
             };
 
-            var btnTrangChu = TaoNutMenu("🏠  Màn hình chính");
-            var btnKhachHang = TaoNutMenu("👤  Khách hàng");
-            var btnKhoQua = TaoNutMenu("🎁  Kho quà");
-            var btnDonHang = TaoNutMenu("🧾  Đơn hàng / Tích điểm");
-            var btnThongKe = TaoNutMenu("📊  Thống kê");
-            var btnThoat = TaoNutMenu("🚪  Thoát");
+            // 1. Logo / Avatar tròn ở trên cùng giống ảnh mẫu
+            var borderLogo = new Border
+            {
+                Width = 44,
+                Height = 44,
+                CornerRadius = new CornerRadius(22),
+                Background = new SolidColorBrush(Color.Parse("#3B82F6")),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 10),
+                Child = new Image
+                {
+                    Source = TaoBitmap("docs/imagess/Home-page.png"),
+                    Width = 22,
+                    Height = 22,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                }
+            };
+
+            // 2. Tạo các nút chỉ chứa icon căn giữa (không có chữ)
+            var btnTrangChu = TaoNutMenuIconOnly("docs/imagess/app.png");
+            var btnKhachHang = TaoNutMenuIconOnly("docs/imagess/khachHang.png");
+            var btnKhoQua = TaoNutMenuIconOnly("docs/imagess/khoQua.png");
+            var btnDonHang = TaoNutMenuIconOnly("docs/imagess/hoaDon.png");
+            var btnThongKe = TaoNutMenuIconOnly("docs/imagess/thongKe.png");
+            var btnThoat = TaoNutMenuIconOnly("docs/imagess/thoat.png");
 
             // Hàm tạo TrangChuView có hỗ trợ Callback chuyển tab
             TrangChuView TaoTrangChuView() => new TrangChuView(_data, (tabIndex, maKH) =>
@@ -73,7 +88,7 @@ namespace QuanLyKhachHang.Views
             btnThongKe.Click += (s, e) => HienThi(new ThongKeView(_data), btnThongKe);
             btnThoat.Click += (s, e) => Close();
 
-            stackSidebar.Children.Add(lblTieuDe);
+            stackSidebar.Children.Add(borderLogo);
             stackSidebar.Children.Add(btnTrangChu);
             stackSidebar.Children.Add(btnKhachHang);
             stackSidebar.Children.Add(btnKhoQua);
@@ -83,7 +98,7 @@ namespace QuanLyKhachHang.Views
 
             var khungSidebar = new Border
             {
-                Background = new SolidColorBrush(Color.Parse("#1F2937")),
+                Background = new SolidColorBrush(Color.Parse("#11182700")),
                 Child = stackSidebar
             };
             Grid.SetColumn(khungSidebar, 0);
@@ -105,20 +120,51 @@ namespace QuanLyKhachHang.Views
             HienThi(TaoTrangChuView(), btnTrangChu);
         }
 
-        private Button TaoNutMenu(string text)
+        // Hàm đọc ảnh thành Bitmap an toàn
+       private Bitmap? TaoBitmap(string relativePath)
         {
+            try
+            {
+                // Đường dẫn trực tiếp từ thư mục gốc của dự án/bin
+                string fullPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
+                if (System.IO.File.Exists(fullPath))
+                {
+                    return new Bitmap(fullPath);
+                }
+                
+                // Hoặc thử tìm trực tiếp đường dẫn tương đối
+                if (System.IO.File.Exists(relativePath))
+                {
+                    return new Bitmap(relativePath);
+                }
+            }
+            catch { }
+            return null;
+        }
+        // Hàm tạo nút menu dạng hình vuông bo góc, chỉ chứa icon ở chính giữa giống mẫu
+        private Button TaoNutMenuIconOnly(string imagePath)
+        {
+            var iconImg = new Image
+            {
+                Source = TaoBitmap(imagePath),
+                Width = 20,
+                Height = 20,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
             return new Button
             {
-                Content = text,
+                Content = iconImg,
+                Width = 48,
                 Height = 48,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
-                Padding = new Thickness(18, 0, 0, 0),
-                Background = new SolidColorBrush(Color.Parse("#1F2937")),
-                Foreground = new SolidColorBrush(Color.Parse("#D1D5DB")),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Background = new SolidColorBrush(Color.Parse("#11182700")),
                 BorderThickness = new Thickness(0),
-                CornerRadius = new CornerRadius(0),
-                FontSize = 14,
+                CornerRadius = new CornerRadius(10), // Bo tròn góc nút bấm đẹp như mẫu
+                Margin = new Thickness(0, 4, 0, 4),
                 Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
             };
         }
@@ -132,8 +178,9 @@ namespace QuanLyKhachHang.Views
         private void DanhDauNutDangChon(Button nut)
         {
             if (_btnDangChon != null)
-                _btnDangChon.Background = new SolidColorBrush(Color.Parse("#1F2937"));
+                _btnDangChon.Background = new SolidColorBrush(Color.Parse("#11182700"));
 
+            // Khi được chọn, nút sẽ chuyển sang màu xanh dương nổi bật giống hình mẫu
             nut.Background = new SolidColorBrush(Color.Parse("#2563EB"));
             _btnDangChon = nut;
         }
