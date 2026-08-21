@@ -129,6 +129,11 @@ namespace QuanLyKhachHang.Views
             CapNhatThongKe();
         }
 
+        /// <summary>
+        /// [COMMAND: XỬ LÝ GIAO DIỆN PHẦN THỐNG KÊ & BỘ LỌC]
+        /// Hàm này chạy khi ComboBox thời gian thay đổi hoặc khởi tạo form, 
+        /// dùng để lọc dữ liệu và hiển thị lên 4 thẻ tổng quan (Tổng khách, Tổng đơn, Doanh thu, Điểm).
+        /// </summary>
         private void CapNhatThongKe()
         {
             DateTime ngayHienTai = DateTime.Now;
@@ -159,9 +164,9 @@ namespace QuanLyKhachHang.Views
         }
 
         /// <summary>
-        /// Tìm kiếm real-time: gõ đến đâu, đề xuất TOÀN BỘ khách hàng có SĐT
-        /// chứa đúng chuỗi số vừa nhập đến đó (VD: nhập "879" -> đề xuất mọi
-        /// khách hàng có "879" xuất hiện ở bất kỳ vị trí nào trong SĐT).
+        /// [COMMAND: XỬ LÝ GIAO DIỆN Ô NHẬP SỐ ĐIỆN THOẠI (REAL-TIME SEARCH)]
+        /// Hàm này tự động chạy mỗi khi người dùng gõ ký tự vào ô "Số điện thoại" (_txtTimSdt).
+        /// Dùng để tìm kiếm khách hàng, hiển thị kết quả gợi ý hoặc bật nút "Thêm khách hàng" nếu chưa có.
         /// </summary>
         private void TxtTimSdt_TextChanged(object? sender, TextChangedEventArgs e)
         {
@@ -204,7 +209,11 @@ namespace QuanLyKhachHang.Views
             }
         }
 
-        /// <summary>Chọn 1 khách hàng trong danh sách gợi ý -> sẵn sàng để bấm "Tạo hoá đơn".</summary>
+        /// <summary>
+        /// [COMMAND: XỬ LÝ GIAO DIỆN CHỌN DÒNG TRONG DANH SÁCH GỢI Ý]
+        /// Hàm này chạy khi người dùng click chọn 1 khách hàng cụ thể trong khung danh sách gợi ý bên dưới ô SĐT,
+        /// giúp kích hoạt hiển thị nút "Tạo hoá đơn".
+        /// </summary>
         private void LbGoiY_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             _khachHangTimThay = _lbGoiY.SelectedItem as KhachHang;
@@ -222,7 +231,11 @@ namespace QuanLyKhachHang.Views
             }
         }
 
-        /// <summary>Double-click 1 gợi ý -> chuyển thẳng sang tạo hoá đơn cho khách hàng đó.</summary>
+        /// <summary>
+        /// [COMMAND: XỬ LÝ GIAO DIỆN NHẤP ĐÚP (DOUBLE-CLICK) VÀO GỢI Ý]
+        /// Hàm này chạy khi người dùng nhấp đúp chuột vào một khách hàng trong danh sách gợi ý,
+        /// giúp chuyển thẳng qua màn hình/tab tạo hoá đơn cho khách hàng đó.
+        /// </summary>
         private void LbGoiY_DoubleTapped(object? sender, TappedEventArgs e)
         {
             if (_lbGoiY.SelectedItem is KhachHang kh)
@@ -232,6 +245,11 @@ namespace QuanLyKhachHang.Views
             }
         }
 
+        /// <summary>
+        /// [COMMAND: XỬ LÝ GIAO DIỆN NÚT "THÊM KHÁCH HÀNG"]
+        /// Hàm này chạy khi người dùng bấm nút "➕ Thêm khách hàng" (hiện lên lúc không tìm thấy SĐT),
+        /// mở cửa sổ popup/dialog để thêm mới khách hàng vào hệ thống.
+        /// </summary>
         private async void BtnThemKhach_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             var cuaSo = new KhachHangEditWindow(_data.TaoMaKhachHangMoi());
@@ -252,6 +270,11 @@ namespace QuanLyKhachHang.Views
             }
         }
 
+        /// <summary>
+        /// [COMMAND: XỬ LÝ GIAO DIỆN NÚT "TẠO HOÁ ĐƠN"]
+        /// Hàm này chạy khi người dùng bấm nút "🧾 Tạo hoá đơn" sau khi đã chọn khách hàng thành công từ gợi ý,
+        /// giúp điều hướng sang Tab Đơn hàng kèm theo mã khách hàng vừa chọn.
+        /// </summary>
         private void BtnTaoHoaDon_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             if (_khachHangTimThay != null)
