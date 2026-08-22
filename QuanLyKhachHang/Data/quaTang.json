@@ -1,0 +1,162 @@
+[
+  {
+    "MaQua": "Q001",
+    "TenQua": "Túi vải bảo vệ môi trường",
+    "DiemQuyDoi": 100,
+    "SoLuong": 50,
+    "NgayTao": "2026-08-01T08:00:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q002",
+    "TenQua": "Ly thủy tinh chia vạch cao cấp",
+    "DiemQuyDoi": 150,
+    "SoLuong": 35,
+    "NgayTao": "2026-08-02T09:30:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q003",
+    "TenQua": "Hộp đựng thuốc phân chia ngày",
+    "DiemQuyDoi": 200,
+    "SoLuong": 40,
+    "NgayTao": "2026-08-03T10:15:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q004",
+    "TenQua": "Áo mưa tiện lợi đơm nút",
+    "DiemQuyDoi": 250,
+    "SoLuong": 25,
+    "NgayTao": "2026-08-05T14:20:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q005",
+    "TenQua": "Bình giữ nhiệt inox 500ml",
+    "DiemQuyDoi": 500,
+    "SoLuong": 15,
+    "NgayTao": "2026-08-08T11:00:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q006",
+    "TenQua": "Dù cầm tay gấp gọn chống UV",
+    "DiemQuyDoi": 400,
+    "SoLuong": 20,
+    "NgayTao": "2026-08-10T16:45:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q007",
+    "TenQua": "Nhiệt kế hồng ngoại đo trán",
+    "DiemQuyDoi": 1200,
+    "SoLuong": 8,
+    "NgayTao": "2026-08-12T09:00:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q008",
+    "TenQua": "Cân sức khỏe điện tử",
+    "DiemQuyDoi": 1000,
+    "SoLuong": 10,
+    "NgayTao": "2026-08-14T13:30:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q009",
+    "TenQua": "Bộ cắt móng tay cá nhân 7 món",
+    "DiemQuyDoi": 300,
+    "SoLuong": 30,
+    "NgayTao": "2026-08-15T10:00:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q010",
+    "TenQua": "Khăn mặt sợi tre cao cấp",
+    "DiemQuyDoi": 80,
+    "SoLuong": 60,
+    "NgayTao": "2026-08-16T15:10:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q011",
+    "TenQua": "Máy massage cầm tay mini",
+    "DiemQuyDoi": 1500,
+    "SoLuong": 5,
+    "NgayTao": "2026-07-10T08:30:00",
+    "DangBan": false
+  },
+  {
+    "MaQua": "Q012",
+    "TenQua": "Vòng tay thông minh theo dõi nhịp tim",
+    "DiemQuyDoi": 2000,
+    "SoLuong": 4,
+    "NgayTao": "2026-07-15T14:00:00",
+    "DangBan": false
+  },
+  {
+    "MaQua": "Q013",
+    "TenQua": "Gối gáy cao su non đi du lịch",
+    "DiemQuyDoi": 450,
+    "SoLuong": 18,
+    "NgayTao": "2026-07-20T11:20:00",
+    "DangBan": false
+  },
+  {
+    "MaQua": "Q014",
+    "TenQua": "Nồi chiên không dầu 5L",
+    "DiemQuyDoi": 5000,
+    "SoLuong": 2,
+    "NgayTao": "2026-07-25T09:45:00",
+    "DangBan": false
+  },
+  {
+    "MaQua": "Q015",
+    "TenQua": "Ấm siêu tốc đun nước 1.8L",
+    "DiemQuyDoi": 800,
+    "SoLuong": 12,
+    "NgayTao": "2026-08-18T16:00:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q016",
+    "TenQua": "Bàn chải đánh răng điện cầm tay",
+    "DiemQuyDoi": 900,
+    "SoLuong": 7,
+    "NgayTao": "2026-08-19T10:30:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q017",
+    "TenQua": "Nước rửa tay sát khuẩn 500ml",
+    "DiemQuyDoi": 50,
+    "SoLuong": 100,
+    "NgayTao": "2026-08-20T08:15:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q018",
+    "TenQua": "Máy phun sương tạo ẩm phòng ngủ",
+    "DiemQuyDoi": 750,
+    "SoLuong": 9,
+    "NgayTao": "2026-08-21T13:40:00",
+    "DangBan": false
+  },
+  {
+    "MaQua": "Q019",
+    "TenQua": "Thảm tập Yoga chống trượt",
+    "DiemQuyDoi": 600,
+    "SoLuong": 11,
+    "NgayTao": "2026-08-22T09:10:00",
+    "DangBan": false
+  },
+  {
+    "MaQua": "Q020",
+    "TenQua": "Bộ hộp đựng thực phẩm Lock&Lock 3 món",
+    "DiemQuyDoi": 350,
+    "SoLuong": 22,
+    "NgayTao": "2026-08-22T15:00:00",
+    "DangBan": true
+  }
+]

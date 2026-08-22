@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -6,25 +8,14 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using QuanLyKhachHang.Helpers;
 using QuanLyKhachHang.Models;
 using QuanLyKhachHang.Services;
-using Avalonia.Media.Imaging;
-using System;
+using Avalonia.Controls.Primitives;
 
 namespace QuanLyKhachHang.Views
 {
-    /// <summary>
-    /// Màn hình Quản lý Kho Quà - bố cục:
-    ///  - Trái  : "🗓️ Quà trong tháng" -> quà có NgayTao thuộc tháng/năm hiện tại (chỉ để xem).
-    ///  - Phải  : "🔁 Trạng thái tặng quà" -> TabControl 2 tab "Chưa tặng" / "Đang tặng" dựa trên
-    ///            cờ thủ công QuaTang.DangBan. Người dùng chọn 1 quà rồi bấm nút chuyển để
-    ///            đẩy quà đó qua lại giữa 2 trạng thái bất cứ lúc nào. Quà đã hết hàng
-    ///            (SoLuong &lt;= 0) sẽ tự động không còn nằm ở 2 tab này nữa.
-    ///  - Dưới  : "🔴 Đã tặng hết" -> khu vực riêng cho quà hết hàng (SoLuong &lt;= 0),
-    ///            tách khỏi 2 trạng thái Chưa tặng / Đang tặng để dễ nhận biết cần nhập thêm.
-    /// Nút Thêm / Sửa / Xoá dùng chung, thao tác trên quà đang được chọn ở BẤT KỲ bảng nào.
-    /// </summary>
     public class KhoQuaView : UserControl
     {
         private readonly DataService _data;
@@ -47,7 +38,8 @@ namespace QuanLyKhachHang.Views
             Background = new SolidColorBrush(Color.Parse("#0EA5E9")),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Margin = new Thickness(0, 6, 0, 0)
+            Margin = new Thickness(0, 6, 0, 0),
+            Cursor = new Cursor(StandardCursorType.Hand)
         };
 
         private readonly Button _btnChuyenVeChuaBan = new()
@@ -56,16 +48,13 @@ namespace QuanLyKhachHang.Views
             Background = new SolidColorBrush(Color.Parse("#64748B")),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Margin = new Thickness(0, 6, 0, 0)
+            Margin = new Thickness(0, 6, 0, 0),
+            Cursor = new Cursor(StandardCursorType.Hand)
         };
 
         private QuaTang? _dangChon;
-        private bool _dangDongBoChon; // cờ chống vòng lặp khi tự xoá lựa chọn ở bảng còn lại
+        private bool _dangDongBoChon; 
 
-        /// <summary>
-        /// Nhãn trạng thái hiển thị dùng chung cho cột "Trạng thái" và dòng "Đang chọn".
-        /// Quà hết hàng (SoLuong &lt;= 0) luôn hiện "Đã tặng hết", bất kể cờ DangBan là gì.
-        /// </summary>
         private static string TrangThaiText(QuaTang q) =>
             q.SoLuong <= 0 ? "🔴 Đã tặng hết" : (q.DangBan ? "🟢 Đang tặng" : "⚪ Chưa tặng");
 
@@ -73,24 +62,26 @@ namespace QuanLyKhachHang.Views
         {
             new("Mã Quà", 0.8, q => q.MaQua),
             new("Tên Quà", 1.8, q => q.TenQua),
-            new("Điểm Đổi", 1, q => q.DiemQuyDoi.ToString()),
-            new("Số Lượng", 1, q => q.SoLuong.ToString()),
+            new("Điểm Đổi", 1, q => q.DiemQuyDoi.ToString("N0")),
+            new("Số Lượng", 1, q => q.SoLuong.ToString("N0")),
             new("Trạng thái", 1.1, q => TrangThaiText(q))
         };
 
         public KhoQuaView(DataService data)
         {
             _data = data;
+            Background = new SolidColorBrush(Color.Parse("#F8FAFC"));
 
-            var goc = new StackPanel { Spacing = 12 };
+            var goc = new StackPanel { Spacing = 12, Margin = new Thickness(15) };
 
-            // ---- Tiêu đề + thanh nút thao tác dùng chung ----
+            // ---- Tiêu đề + thanh nút thao tác dùng chung (Dùng Image Icon) ----
             var hangTieuDe = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 15, VerticalAlignment = VerticalAlignment.Center };
-            hangTieuDe.Children.Add(new TextBlock { Text = "Quản lý Kho Quà", FontSize = 20, FontWeight = FontWeight.Bold, VerticalAlignment = VerticalAlignment.Center });
+            hangTieuDe.Children.Add(new TextBlock { Text = "Quản lý Kho Quà", FontSize = 22, FontWeight = FontWeight.Bold, VerticalAlignment = VerticalAlignment.Center, Foreground = new SolidColorBrush(Color.Parse("#1E293B")) });
 
             var btnThem = TaoNut("Thêm", "docs/imagess/thêm.png", "#2563EB");
-            var btnSua = TaoNut("Sửa", "docs/imagess/sửa.png", "#EAB308");
+            var btnSua = TaoNut("Sửa", "docs/imagess/edit.png", "#EAB308");
             var btnXoa = TaoNut("Xoá", "docs/imagess/trash.png", "#DC2626");
+            
             btnThem.Click += BtnThem_Click;
             btnSua.Click += BtnSua_Click;
             btnXoa.Click += BtnXoa_Click;
@@ -106,10 +97,7 @@ namespace QuanLyKhachHang.Views
             // ---- 2 GroupBox đặt song song ----
             var hangGroup = new Grid { ColumnDefinitions = new ColumnDefinitions("*,16,*") };
 
-            var groupThang = TaoGroupBoxDon(
-                "🗓️ Quà trong tháng",
-                _txtTimThang,
-                _listBoxThang);
+            var groupThang = TaoGroupBoxDon("🗓️ Quà nhập trong tháng", _txtTimThang, _listBoxThang);
             Grid.SetColumn(groupThang, 0);
 
             var groupTrangThai = TaoGroupBoxTrangThai();
@@ -119,7 +107,7 @@ namespace QuanLyKhachHang.Views
             hangGroup.Children.Add(groupTrangThai);
             goc.Children.Add(hangGroup);
 
-            // ---- Khu vực riêng: "Đã tặng hết" (SoLuong <= 0), tách khỏi 2 trạng thái trên ----
+            // ---- Khu vực riêng: "Đã tặng hết" ----
             var groupHetHang = TaoGroupBoxHetHang();
             goc.Children.Add(groupHetHang);
 
@@ -138,118 +126,22 @@ namespace QuanLyKhachHang.Views
             _listBoxDangBan.DoubleTapped += (s, e) => { if (_dangChon != null) _ = HienThiPopup(_dangChon, isMoi: false); };
             _listBoxHetHang.DoubleTapped += (s, e) => { if (_dangChon != null) _ = HienThiPopup(_dangChon, isMoi: false); };
 
-            _btnChuyenSangDangBan.Click += (s, e) => ChuyenTrangThai();
-            _btnChuyenVeChuaBan.Click += (s, e) => ChuyenTrangThai();
+            _btnChuyenSangDangBan.Click += (s, e) => ChuyenTrangThai(true);
+            _btnChuyenVeChuaBan.Click += (s, e) => ChuyenTrangThai(false);
 
-            Content = goc;
+            Content = new ScrollViewer { Content = goc, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
             TaiLaiDuLieu();
         }
 
-        /// <summary>Border mô phỏng GroupBox đơn giản chỉ có 1 bảng (dùng cho "Quà trong tháng").</summary>
-        private Border TaoGroupBoxDon(string tieuDe, TextBox oTim, ListBox listBox)
-        {
-            var noiDung = new StackPanel { Spacing = 10, Margin = new Thickness(14) };
-
-            noiDung.Children.Add(new TextBlock { Text = tieuDe, FontSize = 15, FontWeight = FontWeight.Bold });
-            noiDung.Children.Add(oTim);
-
-            var khungBang = new Border { Background = Brushes.White, Height = 420, ClipToBounds = true };
-            khungBang.Child = UiHelpers.TaoBang(new List<QuaTang>(), TaoCotQuaTang(), listBox);
-            noiDung.Children.Add(khungBang);
-
-            return new Border
-            {
-                Background = new SolidColorBrush(Color.Parse("#F9FAFB")),
-                BorderBrush = Brushes.LightGray,
-                BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(6),
-                Child = noiDung
-            };
-        }
-
-        /// <summary>GroupBox "Trạng thái tặng quà" chứa TabControl 2 tab Chưa tặng / Đang tặng + nút chuyển đổi.</summary>
-        private Border TaoGroupBoxTrangThai()
-        {
-            var noiDung = new StackPanel { Spacing = 10, Margin = new Thickness(14) };
-            noiDung.Children.Add(new TextBlock { Text = "🔁 Trạng thái tặng quà", FontSize = 15, FontWeight = FontWeight.Bold });
-
-            // ---- Tab "Chưa tặng" ----
-            var panelChuaBan = new StackPanel { Spacing = 10, Margin = new Thickness(0, 10, 0, 0) };
-            panelChuaBan.Children.Add(_txtTimChuaBan);
-            var khungChuaBan = new Border { Background = Brushes.White, Height = 340, ClipToBounds = true };
-            khungChuaBan.Child = UiHelpers.TaoBang(new List<QuaTang>(), TaoCotQuaTang(), _listBoxChuaBan);
-            panelChuaBan.Children.Add(khungChuaBan);
-            panelChuaBan.Children.Add(_btnChuyenSangDangBan);
-
-            var tabChuaBan = new TabItem { Header = "⚪ Chưa tặng", Content = panelChuaBan };
-
-            // ---- Tab "Đang tặng" ----
-            var panelDangBan = new StackPanel { Spacing = 10, Margin = new Thickness(0, 10, 0, 0) };
-            panelDangBan.Children.Add(_txtTimDangBan);
-            var khungDangBan = new Border { Background = Brushes.White, Height = 340, ClipToBounds = true };
-            khungDangBan.Child = UiHelpers.TaoBang(new List<QuaTang>(), TaoCotQuaTang(), _listBoxDangBan);
-            panelDangBan.Children.Add(khungDangBan);
-            panelDangBan.Children.Add(_btnChuyenVeChuaBan);
-
-            var tabDangBan = new TabItem { Header = "🟢 Đang tặng", Content = panelDangBan };
-
-            var tabControl = new TabControl();
-            tabControl.Items.Add(tabChuaBan);
-            tabControl.Items.Add(tabDangBan);
-            noiDung.Children.Add(tabControl);
-
-            return new Border
-            {
-                Background = new SolidColorBrush(Color.Parse("#F9FAFB")),
-                BorderBrush = Brushes.LightGray,
-                BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(6),
-                Child = noiDung
-            };
-        }
-
-        /// <summary>
-        /// Khu vực riêng "🔴 Đã tặng hết" — nằm tách biệt bên dưới, dành cho quà đã hết
-        /// hàng trong kho (SoLuong &lt;= 0). Chỉ xem/tìm kiếm + Sửa (để nhập thêm hàng) /
-        /// Xoá qua các nút dùng chung; không có nút chuyển trạng thái vì trạng thái này
-        /// được tính tự động theo số lượng, không phải cờ thủ công.
-        /// </summary>
-        private Border TaoGroupBoxHetHang()
-        {
-            var noiDung = new StackPanel { Spacing = 10, Margin = new Thickness(14) };
-            noiDung.Children.Add(new TextBlock { Text = "🔴 Đã tặng hết", FontSize = 15, FontWeight = FontWeight.Bold });
-            noiDung.Children.Add(new TextBlock
-            {
-                Text = "Những quà đã hết số lượng trong kho. Sửa quà và nhập thêm số lượng để đưa quà trở lại 2 trạng thái Chưa tặng / Đang tặng.",
-                FontSize = 12,
-                Foreground = Brushes.DimGray,
-                TextWrapping = TextWrapping.Wrap
-            });
-            noiDung.Children.Add(_txtTimHetHang);
-
-            var khungBang = new Border { Background = Brushes.White, Height = 260, ClipToBounds = true };
-            khungBang.Child = UiHelpers.TaoBang(new List<QuaTang>(), TaoCotQuaTang(), _listBoxHetHang);
-            noiDung.Children.Add(khungBang);
-
-            return new Border
-            {
-                Background = new SolidColorBrush(Color.Parse("#FEF2F2")),
-                BorderBrush = new SolidColorBrush(Color.Parse("#FCA5A5")),
-                BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(6),
-                Child = noiDung
-            };
-        }
+        // ================= HÀM TẠO UI =================
 
         private static Bitmap? TaoBitmap(string duongDan)
         {
             try
             {
                 string pathFull = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, duongDan);
-                if (File.Exists(pathFull))
-                    return new Bitmap(pathFull);
-                if (File.Exists(duongDan))
-                    return new Bitmap(duongDan);
+                if (File.Exists(pathFull)) return new Bitmap(pathFull);
+                if (File.Exists(duongDan)) return new Bitmap(duongDan);
             }
             catch { }
             return null;
@@ -257,34 +149,11 @@ namespace QuanLyKhachHang.Views
 
         private Button TaoNut(string text, string imagePath, string maMau)
         {
-            var stack = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 6,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-
+            var stack = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             var bmp = TaoBitmap(imagePath);
-            if (bmp != null)
-            {
-                stack.Children.Add(new Image
-                {
-                    Source = bmp,
-                    Width = 18,
-                    Height = 18,
-                    VerticalAlignment = VerticalAlignment.Center
-                });
-            }
-
-            stack.Children.Add(new TextBlock
-            {
-                Text = text,
-                FontSize = 13,
-                FontWeight = FontWeight.SemiBold,
-                Foreground = Brushes.White,
-                VerticalAlignment = VerticalAlignment.Center
-            });
+            if (bmp != null) stack.Children.Add(new Image { Source = bmp, Width = 18, Height = 18, VerticalAlignment = VerticalAlignment.Center });
+            
+            stack.Children.Add(new TextBlock { Text = text, FontSize = 13, FontWeight = FontWeight.SemiBold, Foreground = Brushes.White, VerticalAlignment = VerticalAlignment.Center });
 
             return new Button
             {
@@ -296,11 +165,67 @@ namespace QuanLyKhachHang.Views
             };
         }
 
-        /// <summary>Khi chọn 1 dòng ở bảng này, bỏ chọn ở 2 bảng kia để tránh nhầm lẫn "đang chọn quà nào".</summary>
+        private Border TaoGroupBoxDon(string tieuDe, TextBox oTim, ListBox listBox)
+        {
+            var noiDung = new StackPanel { Spacing = 10, Margin = new Thickness(14) };
+            noiDung.Children.Add(new TextBlock { Text = tieuDe, FontSize = 16, FontWeight = FontWeight.Bold, Foreground = new SolidColorBrush(Color.Parse("#1E293B")) });
+            noiDung.Children.Add(oTim);
+
+            var khungBang = new Border { Background = Brushes.White, Height = 420, ClipToBounds = true, BorderBrush = new SolidColorBrush(Color.Parse("#E2E8F0")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(6) };
+            khungBang.Child = UiHelpers.TaoBang(new List<QuaTang>(), TaoCotQuaTang(), listBox);
+            noiDung.Children.Add(khungBang);
+
+            return new Border { Background = Brushes.White, BorderBrush = new SolidColorBrush(Color.Parse("#E2E8F0")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(8), Child = noiDung };
+        }
+
+        private Border TaoGroupBoxTrangThai()
+        {
+            var noiDung = new StackPanel { Spacing = 10, Margin = new Thickness(14) };
+            noiDung.Children.Add(new TextBlock { Text = "🔁 Trạng thái tặng quà", FontSize = 16, FontWeight = FontWeight.Bold, Foreground = new SolidColorBrush(Color.Parse("#1E293B")) });
+
+            var panelChuaBan = new StackPanel { Spacing = 10, Margin = new Thickness(0, 10, 0, 0) };
+            panelChuaBan.Children.Add(_txtTimChuaBan);
+            var khungChuaBan = new Border { Background = Brushes.White, Height = 340, ClipToBounds = true, BorderBrush = new SolidColorBrush(Color.Parse("#E2E8F0")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(6) };
+            khungChuaBan.Child = UiHelpers.TaoBang(new List<QuaTang>(), TaoCotQuaTang(), _listBoxChuaBan);
+            panelChuaBan.Children.Add(khungChuaBan);
+            panelChuaBan.Children.Add(_btnChuyenSangDangBan);
+            var tabChuaBan = new TabItem { Header = "⚪ Chưa tặng", Content = panelChuaBan };
+
+            var panelDangBan = new StackPanel { Spacing = 10, Margin = new Thickness(0, 10, 0, 0) };
+            panelDangBan.Children.Add(_txtTimDangBan);
+            var khungDangBan = new Border { Background = Brushes.White, Height = 340, ClipToBounds = true, BorderBrush = new SolidColorBrush(Color.Parse("#E2E8F0")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(6) };
+            khungDangBan.Child = UiHelpers.TaoBang(new List<QuaTang>(), TaoCotQuaTang(), _listBoxDangBan);
+            panelDangBan.Children.Add(khungDangBan);
+            panelDangBan.Children.Add(_btnChuyenVeChuaBan);
+            var tabDangBan = new TabItem { Header = "🟢 Đang tặng", Content = panelDangBan };
+
+            var tabControl = new TabControl();
+            tabControl.Items.Add(tabChuaBan);
+            tabControl.Items.Add(tabDangBan);
+            noiDung.Children.Add(tabControl);
+
+            return new Border { Background = Brushes.White, BorderBrush = new SolidColorBrush(Color.Parse("#E2E8F0")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(8), Child = noiDung };
+        }
+
+        private Border TaoGroupBoxHetHang()
+        {
+            var noiDung = new StackPanel { Spacing = 10, Margin = new Thickness(14) };
+            noiDung.Children.Add(new TextBlock { Text = "🔴 Đã tặng hết", FontSize = 16, FontWeight = FontWeight.Bold, Foreground = new SolidColorBrush(Color.Parse("#991B1B")) });
+            noiDung.Children.Add(new TextBlock { Text = "Những quà đã hết số lượng trong kho. Cần sửa và nhập thêm số lượng để tiếp tục tặng.", FontSize = 12.5, Foreground = new SolidColorBrush(Color.Parse("#EF4444")), TextWrapping = TextWrapping.Wrap });
+            noiDung.Children.Add(_txtTimHetHang);
+
+            var khungBang = new Border { Background = Brushes.White, Height = 260, ClipToBounds = true, BorderBrush = new SolidColorBrush(Color.Parse("#FECACA")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(6) };
+            khungBang.Child = UiHelpers.TaoBang(new List<QuaTang>(), TaoCotQuaTang(), _listBoxHetHang);
+            noiDung.Children.Add(khungBang);
+
+            return new Border { Background = new SolidColorBrush(Color.Parse("#FEF2F2")), BorderBrush = new SolidColorBrush(Color.Parse("#FCA5A5")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(8), Child = noiDung };
+        }
+
+        // ================= XỬ LÝ LOGIC & ĐỌC DỮ LIỆU TỪ FILE =================
+
         private void ChonTu(ListBox nguon, params ListBox[] conLai)
         {
             if (_dangDongBoChon) return;
-
             var quaChon = nguon.SelectedItem as QuaTang;
             if (quaChon == null) return;
 
@@ -312,7 +237,52 @@ namespace QuanLyKhachHang.Views
             _lblDangChon.Text = $"Đang chọn: {quaChon.TenQua} (Mã {quaChon.MaQua}) — {TrangThaiText(quaChon)}";
         }
 
-        private async void ChuyenTrangThai()
+        /// <summary>
+        /// TRỰC TIẾP LỌC DỮ LIỆU TỪ _data.DanhSachQuaTang ĐỂ ĐẢM BẢO HIỂN THỊ ĐÚNG FILE JSON
+        /// </summary>
+        private void TaiLaiDuLieu()
+        {
+            // Đảm bảo lấy danh sách mới nhất từ DataService
+            var ds = _data.DanhSachQuaTang ?? new List<QuaTang>();
+            var now = DateTime.Now;
+
+            // 1. Quà trong tháng
+            string tThang = _txtTimThang.Text?.ToLower() ?? "";
+            _listBoxThang.ItemsSource = ds.Where(q => q.NgayTao.Month == now.Month && q.NgayTao.Year == now.Year &&
+                                                (q.TenQua.ToLower().Contains(tThang) || q.MaQua.ToLower().Contains(tThang))).ToList();
+
+            // 2. Quà chưa tặng (Còn hàng và Đang tắt DangBan)
+            string tChua = _txtTimChuaBan.Text?.ToLower() ?? "";
+            _listBoxChuaBan.ItemsSource = ds.Where(q => q.SoLuong > 0 && !q.DangBan &&
+                                                  (q.TenQua.ToLower().Contains(tChua) || q.MaQua.ToLower().Contains(tChua))).ToList();
+
+            // 3. Quà đang tặng (Còn hàng và Đang bật DangBan)
+            string tDang = _txtTimDangBan.Text?.ToLower() ?? "";
+            _listBoxDangBan.ItemsSource = ds.Where(q => q.SoLuong > 0 && q.DangBan &&
+                                                  (q.TenQua.ToLower().Contains(tDang) || q.MaQua.ToLower().Contains(tDang))).ToList();
+
+            // 4. Quà đã hết hàng (Số lượng <= 0)
+            string tHet = _txtTimHetHang.Text?.ToLower() ?? "";
+            _listBoxHetHang.ItemsSource = ds.Where(q => q.SoLuong <= 0 &&
+                                                  (q.TenQua.ToLower().Contains(tHet) || q.MaQua.ToLower().Contains(tHet))).ToList();
+
+            if (_dangChon != null)
+            {
+                var quaMoi = ds.FirstOrDefault(q => q.MaQua == _dangChon.MaQua);
+                if (quaMoi != null)
+                {
+                    _dangChon = quaMoi;
+                    _lblDangChon.Text = $"Đang chọn: {quaMoi.TenQua} (Mã {quaMoi.MaQua}) — {TrangThaiText(quaMoi)}";
+                }
+                else
+                {
+                    _dangChon = null;
+                    _lblDangChon.Text = "Chưa chọn quà nào.";
+                }
+            }
+        }
+
+        private async void ChuyenTrangThai(bool sangDangBan)
         {
             if (_dangChon == null)
             {
@@ -320,27 +290,15 @@ namespace QuanLyKhachHang.Views
                 return;
             }
 
-            _data.ChuyenTrangThaiQuaTang(_dangChon.MaQua);
-            TaiLaiDuLieu();
-        }
-
-        private void TaiLaiDuLieu()
-        {
-            _listBoxThang.ItemsSource = _data.QuaTangTrongThang(_txtTimThang.Text);
-            _listBoxChuaBan.ItemsSource = _data.QuaTangChuaBan(_txtTimChuaBan.Text);
-            _listBoxDangBan.ItemsSource = _data.QuaTangDangBan(_txtTimDangBan.Text);
-            _listBoxHetHang.ItemsSource = _data.QuaTangDaHetHang(_txtTimHetHang.Text);
-
-            if (_dangChon != null)
+            if (_dangChon.SoLuong <= 0)
             {
-                // đồng bộ lại nhãn "đang chọn" phòng khi trạng thái vừa đổi
-                var quaMoi = _data.DanhSachQuaTang.FirstOrDefault(q => q.MaQua == _dangChon.MaQua);
-                if (quaMoi != null)
-                {
-                    _dangChon = quaMoi;
-                    _lblDangChon.Text = $"Đang chọn: {quaMoi.TenQua} (Mã {quaMoi.MaQua}) — {TrangThaiText(quaMoi)}";
-                }
+                await ThongBaoWindow.ThongBao(TopLevel.GetTopLevel(this) as Window, "Thông báo", "Quà này đã hết hàng, vui lòng Sửa số lượng trước khi chuyển trạng thái.");
+                return;
             }
+
+            _dangChon.DangBan = sangDangBan;
+            _data.SuaQuaTang(_dangChon); // Lưu xuống file JSON thông qua DataService
+            TaiLaiDuLieu();
         }
 
         private async void BtnThem_Click(object? sender, RoutedEventArgs e)
@@ -384,7 +342,7 @@ namespace QuanLyKhachHang.Views
             {
                 Title = isMoi ? "Thêm Quà Tặng" : "Sửa Quà Tặng",
                 Width = 350,
-                Height = 280,
+                Height = 300,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 CanResize = false
             };
@@ -394,14 +352,16 @@ namespace QuanLyKhachHang.Views
             var txtTenQua = new TextBox { Text = qua.TenQua, Watermark = "Tên Quà" };
             var numDiem = new NumericUpDown { Value = qua.DiemQuyDoi, Minimum = 0, FormatString = "0" };
             var numSL = new NumericUpDown { Value = qua.SoLuong, Minimum = 0, FormatString = "0" };
-            var chkDangBan = new CheckBox { Content = "Đang tặng", IsChecked = qua.DangBan };
+            var chkDangBan = new CheckBox { Content = "Trạng thái: Đang tặng", IsChecked = qua.DangBan };
 
             var btnLuu = new Button
             {
-                Content = "💾 Lưu",
-                Background = new SolidColorBrush(Color.Parse("#16A34A")),
+                Content = "💾 Lưu thay đổi",
+                Background = new SolidColorBrush(Color.Parse("#10B981")),
                 Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Right
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Cursor = new Cursor(StandardCursorType.Hand),
+                Padding = new Thickness(12, 8)
             };
 
             panel.Children.Add(new TextBlock { Text = "Tên quà:" });

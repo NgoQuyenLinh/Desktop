@@ -386,5 +386,243 @@
     ],
     "QuaTangDoi": "Túi vải",
     "DiemDoiQua": 300
+  },
+  
+  {
+    "MaDon": "DH018",
+    "MaKH": "KH001",
+    "TenKH": "Nguyễn Văn An",
+    "SoTien": 380000,
+    "NgayTao": "2026-08-22T08:15:00",
+    "DiemCong": 380,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 850,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T034",
+        "TenThuoc": "Glucosamine 1500mg Bổ khớp",
+        "SoLuong": 1,
+        "DonGia": 340000
+      },
+      {
+        "MaThuoc": "T019",
+        "TenThuoc": "Băng cá nhân Urgo (Hộp 102 miếng)",
+        "SoLuong": 1,
+        "DonGia": 42000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH019",
+    "MaKH": "KH003",
+    "TenKH": "Lê Hoàng Nam",
+    "SoTien": 850000,
+    "NgayTao": "2026-08-22T09:30:00",
+    "DiemCong": 850,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 1760,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T017",
+        "TenThuoc": "Máy đo huyết áp Omron",
+        "SoLuong": 1,
+        "DonGia": 850000
+      }
+    ],
+    "QuaTangDoi": "Bình giữ nhiệt cao cấp",
+    "DiemDoiQua": 500
+  },
+  {
+    "MaDon": "DH020",
+    "MaKH": "KH005",
+    "TenKH": "Vũ Minh Đức",
+    "SoTien": 216000,
+    "NgayTao": "2026-08-22T10:45:00",
+    "DiemCong": 216,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 826,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T029",
+        "TenThuoc": "Viên ngâm ho Strepsils",
+        "SoLuong": 3,
+        "DonGia": 36000
+      },
+      {
+        "MaThuoc": "T026",
+        "TenThuoc": "Efferalgan 500mg (Sủi)",
+        "SoLuong": 2,
+        "DonGia": 48000
+      },
+      {
+        "MaThuoc": "T012",
+        "TenThuoc": "Panadol Extra",
+        "SoLuong": 1,
+        "DonGia": 16000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH021",
+    "MaKH": "KH007",
+    "TenKH": "Bùi Tiến Dũng",
+    "SoTien": 520000,
+    "NgayTao": "2026-08-22T11:20:00",
+    "DiemCong": 520,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 1010,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T020",
+        "TenThuoc": "Máy đo đường huyết Accu-Chek",
+        "SoLuong": 1,
+        "DonGia": 520000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH022",
+    "MaKH": "KH009",
+    "TenKH": "Đỗ Quang Vinh",
+    "SoTien": 180000,
+    "NgayTao": "2026-08-22T14:10:00",
+    "DiemCong": 180,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 950,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T025",
+        "TenThuoc": "Losartan 50mg",
+        "SoLuong": 5,
+        "DonGia": 28000
+      },
+      {
+        "MaThuoc": "T021",
+        "TenThuoc": "Amlodipine 5mg",
+        "SoLuong": 2,
+        "DonGia": 18000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH023",
+    "MaKH": "KH002",
+    "TenKH": "Trần Thị Bích",
+    "SoTien": 620000,
+    "NgayTao": "2026-08-22T15:35:00",
+    "DiemCong": 620,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 1100,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T035",
+        "TenThuoc": "Viên uống Collagen Youtheory",
+        "SoLuong": 1,
+        "DonGia": 620000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH024",
+    "MaKH": "KH004",
+    "TenKH": "Phạm Thị Thu",
+    "SoTien": 160000,
+    "NgayTao": "2026-08-22T16:50:00",
+    "DiemCong": 160,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 812,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T018",
+        "TenThuoc": "Nhiệt kế điện tử Microlife",
+        "SoLuong": 1,
+        "DonGia": 160000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH025",
+    "MaKH": "KH010",
+    "TenKH": "Ngô Mỹ Linh",
+    "SoTien": 330000,
+    "NgayTao": "2026-08-22T18:05:00",
+    "DiemCong": 330,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 512,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T031",
+        "TenThuoc": "Dầu cá Omega 3 Fish Oil",
+        "SoLuong": 1,
+        "DonGia": 210000
+      },
+      {
+        "MaThuoc": "T006",
+        "TenThuoc": "Cetirizine 10mg",
+        "SoLuong": 10,
+        "DonGia": 12000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH026",
+    "MaKH": "KH006",
+    "TenKH": "Đặng Ngọc Ánh",
+    "SoTien": 290000,
+    "NgayTao": "2026-08-22T19:30:00",
+    "DiemCong": 290,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 618,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T024",
+        "TenThuoc": "Cefuroxime 500mg",
+        "SoLuong": 4,
+        "DonGia": 45000
+      },
+      {
+        "MaThuoc": "T030",
+        "TenThuoc": "Kem bôi da Yoosun Rau má",
+        "SoLuong": 5,
+        "DonGia": 22000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH027",
+    "MaKH": "KH008",
+    "TenKH": "Hoàng Thị Thảo",
+    "SoTien": 750000,
+    "NgayTao": "2026-08-22T20:15:00",
+    "DiemCong": 750,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 1160,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T033",
+        "TenThuoc": "Sâm Alipas Cường Lực",
+        "SoLuong": 1,
+        "DonGia": 750000
+      }
+    ],
+    "QuaTangDoi": "Hộp đựng thuốc phân chia ngày",
+    "DiemDoiQua": 300
   }
+
 ]
