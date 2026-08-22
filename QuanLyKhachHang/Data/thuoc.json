@@ -2,6 +2,7 @@
   {
     "MaThuoc": "T001",
     "TenThuoc": "Paracetamol 500mg",
+    "LoaiThuoc": "Thuốc không kê đơn",
     "DonGia": 10000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -9,6 +10,7 @@
   {
     "MaThuoc": "T002",
     "TenThuoc": "Amoxicillin 500mg",
+    "LoaiThuoc": "Thuốc kê đơn",
     "DonGia": 25000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -16,6 +18,7 @@
   {
     "MaThuoc": "T003",
     "TenThuoc": "Vitamin C 500mg",
+    "LoaiThuoc": "Thực phẩm chức năng",
     "DonGia": 15000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -23,6 +26,7 @@
   {
     "MaThuoc": "T004",
     "TenThuoc": "Ibuprofen 400mg",
+    "LoaiThuoc": "Thuốc không kê đơn",
     "DonGia": 18000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -30,6 +34,7 @@
   {
     "MaThuoc": "T005",
     "TenThuoc": "Omeprazole 20mg",
+    "LoaiThuoc": "Thuốc kê đơn",
     "DonGia": 20000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -37,6 +42,7 @@
   {
     "MaThuoc": "T006",
     "TenThuoc": "Cetirizine 10mg",
+    "LoaiThuoc": "Thuốc không kê đơn",
     "DonGia": 12000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -44,6 +50,7 @@
   {
     "MaThuoc": "T007",
     "TenThuoc": "Siro ho Prospan",
+    "LoaiThuoc": "Thuốc không kê đơn",
     "DonGia": 30000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -51,6 +58,7 @@
   {
     "MaThuoc": "T008",
     "TenThuoc": "Bổ gan Hepa",
+    "LoaiThuoc": "Thực phẩm chức năng",
     "DonGia": 45000,
     "ConHang": false,
     "NgayTao": "2026-08-21T10:00:00"
@@ -58,6 +66,7 @@
   {
     "MaThuoc": "T009",
     "TenThuoc": "Men vi sinh Enterogermina",
+    "LoaiThuoc": "Thực phẩm chức năng",
     "DonGia": 28000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -65,6 +74,7 @@
   {
     "MaThuoc": "T010",
     "TenThuoc": "Thuốc nhỏ mắt V.Rohto",
+    "LoaiThuoc": "Thuốc không kê đơn",
     "DonGia": 35000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -72,6 +82,7 @@
   {
     "MaThuoc": "T011",
     "TenThuoc": "Kẽm Zinc 20mg",
+    "LoaiThuoc": "Thực phẩm chức năng",
     "DonGia": 22000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -79,6 +90,7 @@
   {
     "MaThuoc": "T012",
     "TenThuoc": "Panadol Extra",
+    "LoaiThuoc": "Thuốc không kê đơn",
     "DonGia": 16000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -86,6 +98,7 @@
   {
     "MaThuoc": "T013",
     "TenThuoc": "Smecta",
+    "LoaiThuoc": "Thuốc không kê đơn",
     "DonGia": 14000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -93,6 +106,7 @@
   {
     "MaThuoc": "T014",
     "TenThuoc": "ORS Oresol",
+    "LoaiThuoc": "Thuốc không kê đơn",
     "DonGia": 8000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
@@ -100,8 +114,169 @@
   {
     "MaThuoc": "T015",
     "TenThuoc": "Dung dịch sát khuẩn",
+    "LoaiThuoc": "Thiết bị y tế",
     "DonGia": 50000,
     "ConHang": true,
     "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T016",
+    "TenThuoc": "Khẩu trang y tế 4 lớp (Hộp 50 cái)",
+    "LoaiThuoc": "Thiết bị y tế",
+    "DonGia": 35000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T017",
+    "TenThuoc": "Máy đo huyết áp Omron",
+    "LoaiThuoc": "Thiết bị y tế",
+    "DonGia": 850000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T018",
+    "TenThuoc": "Nhiệt kế điện tử Microlife",
+    "LoaiThuoc": "Thiết bị y tế",
+    "DonGia": 160000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T019",
+    "TenThuoc": "Băng cá nhân Urgo (Hộp 102 miếng)",
+    "LoaiThuoc": "Thiết bị y tế",
+    "DonGia": 42000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T020",
+    "TenThuoc": "Máy đo đường huyết Accu-Chek",
+    "LoaiThuoc": "Thiết bị y tế",
+    "DonGia": 520000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T021",
+    "TenThuoc": "Amlodipine 5mg",
+    "LoaiThuoc": "Thuốc kê đơn",
+    "DonGia": 18000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T022",
+    "TenThuoc": "Metformin 850mg",
+    "LoaiThuoc": "Thuốc kê đơn",
+    "DonGia": 24000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T023",
+    "TenThuoc": "Atorvastatin 10mg",
+    "LoaiThuoc": "Thuốc kê đơn",
+    "DonGia": 32000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T024",
+    "TenThuoc": "Cefuroxime 500mg",
+    "LoaiThuoc": "Thuốc kê đơn",
+    "DonGia": 45000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T025",
+    "TenThuoc": "Losartan 50mg",
+    "LoaiThuoc": "Thuốc kê đơn",
+    "DonGia": 28000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T026",
+    "TenThuoc": "Efferalgan 500mg (Sủi)",
+    "LoaiThuoc": "Thuốc không kê đơn",
+    "DonGia": 48000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T027",
+    "TenThuoc": "Dầu gió xanh Thiên Thảo",
+    "LoaiThuoc": "Thuốc không kê đơn",
+    "DonGia": 25000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T028",
+    "TenThuoc": "Nước muối sinh lý Physiodose",
+    "LoaiThuoc": "Thuốc không kê đơn",
+    "DonGia": 130000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T029",
+    "TenThuoc": "Viên ngâm ho Strepsils",
+    "LoaiThuoc": "Thuốc không kê đơn",
+    "DonGia": 36000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T030",
+    "TenThuoc": "Kem bôi da Yoosun Rau má",
+    "LoaiThuoc": "Thuốc không kê đơn",
+    "DonGia": 22000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T031",
+    "TenThuoc": "Dầu cá Omega 3 Fish Oil",
+    "LoaiThuoc": "Thực phẩm chức năng",
+    "DonGia": 210000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T032",
+    "TenThuoc": "Canxi D3 Ostelin",
+    "LoaiThuoc": "Thực phẩm chức năng",
+    "DonGia": 280000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T033",
+    "TenThuoc": "Sâm Alipas Cường Lực",
+    "LoaiThuoc": "Thực phẩm chức năng",
+    "DonGia": 750000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T034",
+    "TenThuoc": "Glucosamine 1500mg Bổ khớp",
+    "LoaiThuoc": "Thực phẩm chức năng",
+    "DonGia": 340000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
+  },
+  {
+    "MaThuoc": "T035",
+    "TenThuoc": "Viên uống Collagen Youtheory",
+    "LoaiThuoc": "Thực phẩm chức năng",
+    "DonGia": 620000,
+    "ConHang": true,
+    "NgayTao": "2026-08-22T10:00:00"
   }
 ]

@@ -79,6 +79,7 @@ namespace QuanLyKhachHang.Views
                 {
                     new("Mã thuốc", 0.8, t => t.MaThuoc),
                     new("Tên thuốc", 2, t => t.TenThuoc),
+                    new("Loại thuốc", 1.5, t => string.IsNullOrEmpty(t.LoaiThuoc) ? "Chưa phân loại" : t.LoaiThuoc),
                     new("Đơn giá", 1.1, t => t.DonGia.ToString("N0") + "đ"),
                     new("Tình trạng hàng", 1.2, t => TrangThaiText(t))
                 },
@@ -157,14 +158,13 @@ namespace QuanLyKhachHang.Views
                 TaiLaiDuLieu();
             }
         }
-
         private async System.Threading.Tasks.Task HienThiPopup(Thuoc thuoc, bool isMoi)
         {
             var popup = new Window
             {
                 Title = isMoi ? "Thêm Thuốc" : "Sửa Thuốc",
-                Width = 350,
-                Height = 280,
+                Width = 380,
+                Height = 350, // Tăng chiều cao để đủ chỗ cho ComboBox
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 CanResize = false
             };
@@ -172,6 +172,24 @@ namespace QuanLyKhachHang.Views
             var panel = new StackPanel { Spacing = 10, Margin = new Thickness(15) };
 
             var txtTenThuoc = new TextBox { Text = thuoc.TenThuoc, Watermark = "Tên thuốc" };
+
+            // ComboBox chọn Loại thuốc
+            var cboLoaiThuoc = new ComboBox
+            {
+                ItemsSource = new[] { "Thuốc kê đơn", "Thuốc không kê đơn", "Thực phẩm chức năng", "Thiết bị y tế" },
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+
+            // Mặc định chọn Loại thuốc hiện tại nếu đang Sửa
+            if (!string.IsNullOrEmpty(thuoc.LoaiThuoc))
+            {
+                cboLoaiThuoc.SelectedItem = thuoc.LoaiThuoc;
+            }
+            else
+            {
+                cboLoaiThuoc.SelectedIndex = 1; // Mặc định là "Thuốc không kê đơn"
+            }
+
             var numDonGia = new NumericUpDown { Value = thuoc.DonGia, Minimum = 0, Increment = 1000, FormatString = "N0" };
             var chkConHang = new CheckBox { Content = "Còn hàng", IsChecked = thuoc.ConHang };
 
@@ -185,6 +203,8 @@ namespace QuanLyKhachHang.Views
 
             panel.Children.Add(new TextBlock { Text = "Tên thuốc:" });
             panel.Children.Add(txtTenThuoc);
+            panel.Children.Add(new TextBlock { Text = "Loại thuốc:" });
+            panel.Children.Add(cboLoaiThuoc); // <--- THÊM COMBOBOX VÀO GIAO DIỆN POPUP
             panel.Children.Add(new TextBlock { Text = "Đơn giá (đ):" });
             panel.Children.Add(numDonGia);
             panel.Children.Add(chkConHang);
@@ -197,6 +217,7 @@ namespace QuanLyKhachHang.Views
                 if (string.IsNullOrWhiteSpace(txtTenThuoc.Text)) return;
 
                 thuoc.TenThuoc = txtTenThuoc.Text;
+                thuoc.LoaiThuoc = cboLoaiThuoc.SelectedItem?.ToString() ?? "Thuốc không kê đơn"; // <--- LƯU LOẠI THUỐC
                 thuoc.DonGia = numDonGia.Value ?? 0;
                 thuoc.ConHang = chkConHang.IsChecked ?? false;
 

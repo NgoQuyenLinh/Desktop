@@ -11,6 +11,7 @@ namespace QuanLyKhachHang.Models
     {
         public string MaThuoc { get; set; } = string.Empty;
         public string TenThuoc { get; set; } = string.Empty;
+        public string LoaiThuoc { get; set; } = string.Empty;
 
         /// <summary>Đơn giá / số tiền của 1 đơn vị thuốc.</summary>
         public decimal DonGia { get; set; }

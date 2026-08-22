@@ -32,8 +32,8 @@ namespace QuanLyKhachHang.Views
         // private readonly TextBlock _txtTyLeHoanThanh = new();
 
 
-        // khung tạo các ô thống kê 
-        private Border TaoTheNho(string tieuDe, TextBlock txtGiaTri, string tangTruong, string accentColor)
+        // Khung tạo các ô thống kê gọn nhẹ (Đã bỏ phần nhãn tăng giảm)
+        private Border TaoTheNho(string tieuDe, TextBlock txtGiaTri)
         {
             var lblTieuDe = new TextBlock
             {
@@ -47,15 +47,7 @@ namespace QuanLyKhachHang.Views
             txtGiaTri.FontWeight = FontWeight.Bold;
             txtGiaTri.Foreground = new SolidColorBrush(Color.Parse("#111827"));
 
-            var lblTangTruong = new TextBlock
-            {
-                Text = tangTruong,
-                Foreground = new SolidColorBrush(Color.Parse("#059669")), // Xanh lá đậm
-                FontSize = 12,
-                FontWeight = FontWeight.Medium,
-                Margin = new Thickness(0, 8, 0, 0)
-            };
-            var stack = new StackPanel { Children = { lblTieuDe, txtGiaTri, lblTangTruong } };
+            var stack = new StackPanel { Children = { lblTieuDe, txtGiaTri } };
 
             return new Border
             {
@@ -69,6 +61,44 @@ namespace QuanLyKhachHang.Views
                 Child = stack
             };
         }
+
+        // // Code hàm TaoTheNho cũ có hiển thị nhãn tăng giảm
+        // private Border TaoTheNho(string tieuDe, TextBlock txtGiaTri, string tangTruong, string accentColor)
+        // {
+        //     var lblTieuDe = new TextBlock
+        //     {
+        //         Text = tieuDe,
+        //         Foreground = new SolidColorBrush(Color.Parse("#6B7280")), // Xám trung tính
+        //         FontSize = 13,
+        //         Margin = new Thickness(0, 0, 0, 8)
+        //     };
+        //
+        //     txtGiaTri.FontSize = 24;
+        //     txtGiaTri.FontWeight = FontWeight.Bold;
+        //     txtGiaTri.Foreground = new SolidColorBrush(Color.Parse("#111827"));
+        //
+        //     var lblTangTruong = new TextBlock
+        //     {
+        //         Text = tangTruong,
+        //         Foreground = new SolidColorBrush(Color.Parse("#059669")), // Xanh lá đậm
+        //         FontSize = 12,
+        //         FontWeight = FontWeight.Medium,
+        //         Margin = new Thickness(0, 8, 0, 0)
+        //     };
+        //     var stack = new StackPanel { Children = { lblTieuDe, txtGiaTri, lblTangTruong } };
+        //
+        //     return new Border
+        //     {
+        //         Width = 280,
+        //         Padding = new Thickness(20),
+        //         Margin = new Thickness(0, 0, 15, 15),
+        //         Background = Brushes.White,
+        //         CornerRadius = new CornerRadius(16),
+        //         BorderBrush = new SolidColorBrush(Color.Parse("#E5E7EB")),
+        //         BorderThickness = new Thickness(1),
+        //         Child = stack
+        //     };
+        // }
 
         // ---- Khung "Tạo hoá đơn nhanh": tìm khách hàng theo SĐT kiểu real-time ----
         private readonly TextBox _txtTimSdt = new() { Width = 220, Watermark = "Nhập số điện thoại..." };
@@ -109,7 +139,7 @@ namespace QuanLyKhachHang.Views
 
             var goc = new StackPanel { Spacing = 16, Margin = new Thickness(10) };
 
-            // ================= 1. BỘ LỌC VÀ THẺ THỐNG KÊ =================
+            // ================= 1. BỘ LỌC VÀ THỂ THỐNG KÊ =================
             var hangTieuDe = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 15 };
             hangTieuDe.Children.Add(new TextBlock
             {
@@ -120,23 +150,24 @@ namespace QuanLyKhachHang.Views
             });
 
             _cboThoiGian.ItemsSource = new[] { "Tất cả", "Hôm nay", "Tuần này", "Tháng này", "Năm nay" };
-            _cboThoiGian.SelectedIndex = 2;
+            _cboThoiGian.SelectedIndex = 2; // Mặc định là Tuần này
             _cboThoiGian.SelectionChanged += (s, e) => CapNhatThongKe();
             hangTieuDe.Children.Add(_cboThoiGian);
             goc.Children.Add(hangTieuDe);
 
-            // var hangThe = new WrapPanel { Orientation = Orientation.Horizontal };
-            // hangThe.Children.Add(TaoTheNho("👤 Tổng khách hàng", _txtTongKhach, "#2563EB"));
-            // hangThe.Children.Add(TaoTheNho("🧾 Tổng đơn hàng", _txtTongDon, "#10B981"));
-            // hangThe.Children.Add(TaoTheNho("💰 Tổng doanh thu", _txtTongDoanhThu, "#EA580C"));
-            // hangThe.Children.Add(TaoTheNho("⭐ Tổng điểm hiện có", _txtTongDiem, "#9333EA"));
-
+            // Gắn giao diện 4 thẻ thống kê không có phần phần trăm tăng giảm
             var hangThe = new WrapPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 20, 0, 0) };
 
-            hangThe.Children.Add(TaoTheNho("Doanh thu hôm nay", _txtTongDoanhThu, "↑ 15% so với hôm qua", "#2563EB"));
-            hangThe.Children.Add(TaoTheNho("Tổng hóa đơn", _txtTongDon, "↑ 10% so với hôm qua", "#10B981"));
-            hangThe.Children.Add(TaoTheNho("Tổng điểm tích lũy", _txtTongDiem, "↑ 5% so với hôm qua", "#8B5CF6"));
-            hangThe.Children.Add(TaoTheNho("Tổng khách hàng", _txtTongKhach, "↑ 2% so với hôm qua", "#F59E0B"));
+            hangThe.Children.Add(TaoTheNho("Tổng doanh thu", _txtTongDoanhThu));
+            hangThe.Children.Add(TaoTheNho("Tổng hóa đơn", _txtTongDon));
+            hangThe.Children.Add(TaoTheNho("Tổng điểm tích lũy", _txtTongDiem));
+            hangThe.Children.Add(TaoTheNho("Tổng khách hàng", _txtTongKhach));
+
+            // // Code cũ dạng tĩnh
+            // hangThe.Children.Add(TaoTheNho("Tổng doanh thu ", _txtTongDoanhThu, "↑ 15% so với hôm qua", "#2563EB"));
+            // hangThe.Children.Add(TaoTheNho("Tổng hóa đơn", _txtTongDon, "↑ 10% so với hôm qua", "#10B981"));
+            // hangThe.Children.Add(TaoTheNho("Tổng điểm tích lũy", _txtTongDiem, "↑ 5% so với hôm qua", "#8B5CF6"));
+            // hangThe.Children.Add(TaoTheNho("Tổng khách hàng", _txtTongKhach, "↑ 2% so với hôm qua", "#F59E0B"));
 
             goc.Children.Add(hangThe);
 
@@ -153,7 +184,7 @@ namespace QuanLyKhachHang.Views
 
 
             var panelNhanh = new StackPanel { Spacing = 10 };
-            panelNhanh.Children.Add(new TextBlock { Text = "⚡ Tạo hoá đơn nhanh", FontWeight = FontWeight.Bold, FontSize = 15 });
+            panelNhanh.Children.Add(new TextBlock { Text = "Tạo hoá đơn nhanh", FontWeight = FontWeight.Bold, FontSize = 15 });
 
             var hangNhap = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
             hangNhap.Children.Add(new TextBlock { Text = "Số điện thoại:", VerticalAlignment = VerticalAlignment.Center });
@@ -193,13 +224,13 @@ namespace QuanLyKhachHang.Views
             };
 
             // 1. Biểu đồ đường doanh thu (Cột trái)
-            var bieuDoLine = new BieuDoDoanhThuLineView();
+            var bieuDoLine = new BieuDoDoanhThuLineView(_data);
             Grid.SetColumn(bieuDoLine, 0);
             bieuDoLine.Margin = new Thickness(0, 0, 5, 0);
             khungChua2BieuDo.Children.Add(bieuDoLine);
 
             // 2. Biểu đồ tròn doanh thu (Cột phải)
-            var bieuDoTron = new BieuDoTron();
+            var bieuDoTron = new BieuDoTron(_data);
             Grid.SetColumn(bieuDoTron, 1);
             bieuDoTron.Margin = new Thickness(5, 0, 0, 0);
             khungChua2BieuDo.Children.Add(bieuDoTron);
@@ -228,37 +259,152 @@ namespace QuanLyKhachHang.Views
 
         /// <summary>
         /// [COMMAND: XỬ LÝ GIAO DIỆN PHẦN THỐNG KÊ & BỘ LỌC]
-        /// Hàm này chạy khi ComboBox thời gian thay đổi hoặc khởi tạo form, 
-        /// dùng để lọc dữ liệu và hiển thị lên 4 thẻ tổng quan (Tổng khách, Tổng đơn, Doanh thu, Điểm).
+        /// Hàm này lọc dữ liệu thực tế từ _data theo khoảng thời gian được chọn trong _cboThoiGian:
+        /// - SelectedIndex = 0: Tất cả hóa đơn
+        /// - SelectedIndex = 1: Các hóa đơn trong Hôm nay
+        /// - SelectedIndex = 2: Các hóa đơn trong Tuần này
+        /// - SelectedIndex = 3: Các hóa đơn trong Tháng này
+        /// - SelectedIndex = 4: Các hóa đơn trong Năm nay
         /// </summary>
         private void CapNhatThongKe()
         {
             DateTime ngayHienTai = DateTime.Now;
+
             var donHangLoc = _data.DanhSachDonHang.AsEnumerable();
 
             switch (_cboThoiGian.SelectedIndex)
             {
-                case 1:
-                    donHangLoc = donHangLoc.Where(d => d.NgayTao.Date == ngayHienTai.Date);
-                    break;
-                case 2:
-                    var dauTuan = ngayHienTai.Date.AddDays(-(int)ngayHienTai.DayOfWeek + (int)DayOfWeek.Monday);
-                    donHangLoc = donHangLoc.Where(d => d.NgayTao.Date >= dauTuan);
-                    break;
-                case 3:
-                    donHangLoc = donHangLoc.Where(d => d.NgayTao.Month == ngayHienTai.Month && d.NgayTao.Year == ngayHienTai.Year);
-                    break;
-                case 4:
-                    donHangLoc = donHangLoc.Where(d => d.NgayTao.Year == ngayHienTai.Year);
+                case 1: // Hôm nay
+                    {
+                        DateTime dauNgay = ngayHienTai.Date;
+                        DateTime dauNgayMai = dauNgay.AddDays(1);
+
+                        donHangLoc = donHangLoc.Where(d =>
+                            d.NgayTao >= dauNgay &&
+                            d.NgayTao < dauNgayMai
+                        );
+
+                        break;
+                    }
+
+                case 2: // Tuần này: Thứ 2 -> Chủ nhật
+                    {
+                        int soNgayTuThuHai =
+                            ((int)ngayHienTai.DayOfWeek + 6) % 7;
+
+                        DateTime dauTuan =
+                            ngayHienTai.Date.AddDays(-soNgayTuThuHai);
+
+                        DateTime dauTuanSau =
+                            dauTuan.AddDays(7);
+
+                        donHangLoc = donHangLoc.Where(d =>
+                            d.NgayTao >= dauTuan &&
+                            d.NgayTao < dauTuanSau
+                        );
+
+                        break;
+                    }
+
+                case 3: // Tháng này
+                    {
+                        DateTime dauThang =
+                            new DateTime(ngayHienTai.Year, ngayHienTai.Month, 1);
+
+                        DateTime dauThangSau =
+                            dauThang.AddMonths(1);
+
+                        donHangLoc = donHangLoc.Where(d =>
+                            d.NgayTao >= dauThang &&
+                            d.NgayTao < dauThangSau
+                        );
+
+                        break;
+                    }
+
+                case 4: // Năm nay
+                    {
+                        DateTime dauNam =
+                            new DateTime(ngayHienTai.Year, 1, 1);
+
+                        DateTime dauNamSau =
+                            dauNam.AddYears(1);
+
+                        donHangLoc = donHangLoc.Where(d =>
+                            d.NgayTao >= dauNam &&
+                            d.NgayTao < dauNamSau
+                        );
+
+                        break;
+                    }
+
+                case 0: // Tất cả
+                default:
                     break;
             }
 
             var danhSachDon = donHangLoc.ToList();
-            _txtTongKhach.Text = _data.DanhSachKhachHang.Count.ToString();
-            _txtTongDon.Text = danhSachDon.Count.ToString();
-            _txtTongDoanhThu.Text = $"{danhSachDon.Sum(d => d.ThanhTien):N0} đ";
-            _txtTongDiem.Text = _data.DanhSachKhachHang.Sum(kh => kh.DiemTichLuy).ToString();
+
+            // Tổng doanh thu
+            _txtTongDoanhThu.Text =
+                $"{danhSachDon.Sum(d => d.ThanhTien):N0} đ";
+
+            // Tổng hóa đơn
+            _txtTongDon.Text =
+                danhSachDon.Count.ToString("N0");
+
+            // Tổng điểm tích lũy từ các hóa đơn
+            _txtTongDiem.Text =
+                danhSachDon.Sum(d => d.DiemCong).ToString("N0");
+
+            // Tổng khách hàng
+            if (_cboThoiGian.SelectedIndex == 0)
+            {
+                // Tất cả khách hàng trong hệ thống
+                _txtTongKhach.Text =
+                    _data.DanhSachKhachHang.Count.ToString("N0");
+            }
+            else
+            {
+                // Khách hàng có phát sinh đơn trong khoảng thời gian
+                _txtTongKhach.Text =
+                    danhSachDon
+                        .Select(d => d.MaKH)
+                        .Distinct()
+                        .Count()
+                        .ToString("N0");
+            }
         }
+
+        // // Code hàm CapNhatThongKe cũ
+        // private void CapNhatThongKe()
+        // {
+        //     DateTime ngayHienTai = DateTime.Now;
+        //     var donHangLoc = _data.DanhSachDonHang.AsEnumerable();
+        //
+        //     switch (_cboThoiGian.SelectedIndex)
+        //     {
+        //         case 1:
+        //             donHangLoc = donHangLoc.Where(d => d.NgayTao.Date == ngayHienTai.Date);
+        //             break;
+        //         case 2:
+        //             var dauTuan = ngayHienTai.Date.AddDays(-(int)ngayHienTai.DayOfWeek + (int)DayOfWeek.Monday);
+        //             donHangLoc = donHangLoc.Where(d => d.NgayTao.Date >= dauTuan);
+        //             break;
+        //         case 3:
+        //             donHangLoc = donHangLoc.Where(d => d.NgayTao.Month == ngayHienTai.Month && d.NgayTao.Year == ngayHienTai.Year);
+        //             break;
+        //         case 4:
+        //             donHangLoc = donHangLoc.Where(d => d.NgayTao.Year == ngayHienTai.Year);
+        //             break;
+        //     }
+        //
+        //     var danhSachDon = donHangLoc.ToList();
+        //     _txtTongKhach.Text = _data.DanhSachKhachHang.Count.ToString();
+        //     _txtTongDon.Text = danhSachDon.Count.ToString();
+        //     _txtTongDoanhThu.Text = $"{danhSachDon.Sum(d => d.ThanhTien):N0} đ";
+        //     _txtTongDiem.Text = _data.DanhSachKhachHang.Sum(kh => kh.DiemTichLuy).ToString();
+        // }
 
         /// <summary>
         /// [COMMAND: XỬ LÝ GIAO DIỆN Ô NHẬP SỐ ĐIỆN THOẠI (REAL-TIME SEARCH)]
