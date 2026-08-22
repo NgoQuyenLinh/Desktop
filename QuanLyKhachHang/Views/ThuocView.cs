@@ -10,7 +10,8 @@ using Avalonia.VisualTree;
 using QuanLyKhachHang.Helpers;
 using QuanLyKhachHang.Models;
 using QuanLyKhachHang.Services;
-
+using Avalonia.Media.Imaging;
+using System;
 namespace QuanLyKhachHang.Views
 {
     /// <summary>
@@ -50,9 +51,9 @@ namespace QuanLyKhachHang.Views
             var hangTimKiem = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
             _txtTimKiem.TextChanged += (s, e) => TaiLaiDuLieu(); // tìm kiếm tức thời
 
-            var btnThem = TaoNut("➕ Thêm", "#2563EB");
-            var btnSua = TaoNut("✏️ Sửa", "#EAB308");
-            var btnXoa = TaoNut("🗑️ Xoá", "#DC2626");
+            var btnThem = TaoNut("Thêm", "docs/imagess/thêm.png", "#2563EB");
+            var btnSua = TaoNut("Sửa", "docs/imagess/sửa.png", "#EAB308");
+            var btnXoa = TaoNut("Xoá", "docs/imagess/trash.png", "#DC2626");
             btnThem.Click += BtnThem_Click;
             btnSua.Click += BtnSua_Click;
             btnXoa.Click += BtnXoa_Click;
@@ -90,14 +91,58 @@ namespace QuanLyKhachHang.Views
             TaiLaiDuLieu();
         }
 
-        private Button TaoNut(string text, string maMau)
+        private static Bitmap? TaoBitmap(string duongDan)
         {
+            try
+            {
+                string pathFull = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, duongDan);
+                if (File.Exists(pathFull))
+                    return new Bitmap(pathFull);
+                if (File.Exists(duongDan))
+                    return new Bitmap(duongDan);
+            }
+            catch { }
+            return null;
+        }
+
+        private Button TaoNut(string text, string imagePath, string maMau)
+        {
+            var stack = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 6,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            var bmp = TaoBitmap(imagePath);
+            if (bmp != null)
+            {
+                stack.Children.Add(new Image
+                {
+                    Source = bmp,
+                    Width = 18,
+                    Height = 18,
+                    VerticalAlignment = VerticalAlignment.Center
+                });
+            }
+
+            stack.Children.Add(new TextBlock
+            {
+                Text = text,
+                FontSize = 13,
+                FontWeight = FontWeight.SemiBold,
+                Foreground = Brushes.White,
+                VerticalAlignment = VerticalAlignment.Center
+            });
+
             return new Button
             {
-                Content = text,
-                Width = 100,
+                Content = stack,
+                Padding = new Thickness(12, 8),
                 Background = new SolidColorBrush(Color.Parse(maMau)),
-                Foreground = Brushes.White
+                CornerRadius = new CornerRadius(8),
+                Cursor = new Cursor(StandardCursorType.Hand)
             };
         }
 

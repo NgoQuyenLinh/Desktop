@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -6,9 +8,13 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.VisualTree;
 using QuanLyKhachHang.Helpers;
 using QuanLyKhachHang.Models;
 using QuanLyKhachHang.Services;
+using Avalonia.Media.Imaging;
+using System;
 
 namespace QuanLyKhachHang.Views
 {
@@ -42,9 +48,11 @@ namespace QuanLyKhachHang.Views
             var hangTimKiem = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
             _txtTimKiem.TextChanged += (s, e) => TaiLaiDuLieu(); // tìm kiếm tức thời
 
-            var btnThem = TaoNut("➕ Thêm", "#2563EB");
-            var btnSua = TaoNut("✏️ Sửa", "#EAB308");
-            var btnXoa = TaoNut("🗑️ Xoá", "#DC2626");
+            // Sử dụng hình ảnh từ thư mục docs/imagess/
+            var btnThem = TaoNut("Thêm", "docs/imagess/thêm.png", "#2563EB");
+            var btnSua = TaoNut("Sửa", "docs/imagess/sửa.png", "#EAB308");
+            var btnXoa = TaoNut("Xoá", "docs/imagess/trash.png", "#DC2626");
+
             btnThem.Click += BtnThem_Click;
             btnSua.Click += BtnSua_Click;
             btnXoa.Click += BtnXoa_Click;
@@ -77,14 +85,64 @@ namespace QuanLyKhachHang.Views
             TaiLaiDuLieu();
         }
 
-        private Button TaoNut(string text, string maMau)
+        /// <summary>
+        /// Hàm load Bitmap an toàn từ file ảnh
+        /// </summary>
+        private static Bitmap? TaoBitmap(string duongDan)
         {
+            try
+            {
+                string pathFull = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, duongDan);
+                if (File.Exists(pathFull))
+                    return new Bitmap(pathFull);
+                if (File.Exists(duongDan))
+                    return new Bitmap(duongDan);
+            }
+            catch { }
+            return null;
+        }
+
+        /// <summary>
+        /// Hàm tạo nút bấm có biểu tượng Image + Chuỗi tên thao tác
+        /// </summary>
+        private Button TaoNut(string text, string imagePath, string maMau)
+        {
+            var stack = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 6,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            var bmp = TaoBitmap(imagePath);
+            if (bmp != null)
+            {
+                stack.Children.Add(new Image
+                {
+                    Source = bmp,
+                    Width = 18,
+                    Height = 18,
+                    VerticalAlignment = VerticalAlignment.Center
+                });
+            }
+
+            stack.Children.Add(new TextBlock
+            {
+                Text = text,
+                FontSize = 13,
+                FontWeight = FontWeight.SemiBold,
+                Foreground = Brushes.White,
+                VerticalAlignment = VerticalAlignment.Center
+            });
+
             return new Button
             {
-                Content = text,
-                Width = 100,
+                Content = stack,
+                Padding = new Thickness(12, 8),
                 Background = new SolidColorBrush(Color.Parse(maMau)),
-                Foreground = Brushes.White
+                CornerRadius = new CornerRadius(8),
+                Cursor = new Cursor(StandardCursorType.Hand)
             };
         }
 
@@ -97,7 +155,6 @@ namespace QuanLyKhachHang.Views
         private async void BtnThem_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             var cuaSo = new KhachHangEditWindow(_data.TaoMaKhachHangMoi());
-            //await cuaSo.ShowDialog(TopLevel.GetTopLevel(this) as Window);
             if (TopLevel.GetTopLevel(this) is Window parentWindow)
             {
                 await cuaSo.ShowDialog(parentWindow);
@@ -122,7 +179,6 @@ namespace QuanLyKhachHang.Views
             }
 
             var cuaSo = new KhachHangEditWindow(_dangChon.MaKH, _dangChon);
-            //await cuaSo.ShowDialog(TopLevel.GetTopLevel(this) as Window);
             if (TopLevel.GetTopLevel(this) is Window parentWindow)
             {
                 await cuaSo.ShowDialog(parentWindow);
@@ -152,10 +208,8 @@ namespace QuanLyKhachHang.Views
             if (dongY)
             {
                 _data.XoaKhachHang(_dangChon.MaKH);
-
                 TaiLaiDuLieu();
             }
-            //TaiLaiDuLieu();
         }
 
         private async void ListBox_DoubleTapped(object? sender, TappedEventArgs e)
@@ -208,7 +262,6 @@ namespace QuanLyKhachHang.Views
             txtHoTen.KeyDown += (s, ev) => { if (ev.Key == Key.Enter) LuuVaDong(); };
             txtSdt.KeyDown += (s, ev) => { if (ev.Key == Key.Enter) LuuVaDong(); };
 
-            // Sửa cảnh báo null reference tại đây
             if (TopLevel.GetTopLevel(this) is Window parentWindow)
             {
                 await editPopup.ShowDialog(parentWindow);
