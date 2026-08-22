@@ -1,0 +1,329 @@
+[
+  {
+    "MaDon": "DH001",
+    "MaKH": "KH001",
+    "TenKH": "Nguy\u1EC5n V\u0103n An",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T001",
+        "TenThuoc": "Paracetamol 500mg",
+        "SoLuong": 5,
+        "DonGia": 10000,
+        "ThanhTien": 50000
+      },
+      {
+        "MaThuoc": "T005",
+        "TenThuoc": "Omeprazole 20mg",
+        "SoLuong": 5,
+        "DonGia": 20000,
+        "ThanhTien": 100000
+      }
+    ],
+    "SoTien": 150000,
+    "NgayTao": "2026-08-21T09:00:00",
+    "DiemCong": 150,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 150,
+    "QuaTangDoi": "Kh\u1EA9u trang",
+    "DiemDoiQua": 100,
+    "ThanhTien": 150000
+  },
+  {
+    "MaDon": "DH002",
+    "MaKH": "KH002",
+    "TenKH": "Tr\u1EA7n Th\u1ECB B\u00ECnh",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T001",
+        "TenThuoc": "Paracetamol 500mg",
+        "SoLuong": 3,
+        "DonGia": 10000,
+        "ThanhTien": 30000
+      },
+      {
+        "MaThuoc": "T007",
+        "TenThuoc": "Siro ho Prospan",
+        "SoLuong": 2,
+        "DonGia": 30000,
+        "ThanhTien": 60000
+      }
+    ],
+    "SoTien": 90000,
+    "NgayTao": "2026-08-20T14:30:00",
+    "DiemCong": 90,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 90,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
+    "ThanhTien": 90000
+  },
+  {
+    "MaDon": "DH003",
+    "MaKH": "KH003",
+    "TenKH": "L\u00EA Ho\u00E0ng C\u01B0\u1EDDng",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T015",
+        "TenThuoc": "Dung d\u1ECBch s\u00E1t khu\u1EA9n",
+        "SoLuong": 6,
+        "DonGia": 50000,
+        "ThanhTien": 300000
+      },
+      {
+        "MaThuoc": "T002",
+        "TenThuoc": "Amoxicillin 500mg",
+        "SoLuong": 8,
+        "DonGia": 25000,
+        "ThanhTien": 200000
+      }
+    ],
+    "SoTien": 500000,
+    "NgayTao": "2026-08-18T10:15:00",
+    "DiemCong": 500,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 500,
+    "QuaTangDoi": "N\u01B0\u1EDBc mu\u1ED1i",
+    "DiemDoiQua": 50,
+    "ThanhTien": 500000
+  },
+  {
+    "MaDon": "DH004",
+    "MaKH": "KH001",
+    "TenKH": "Nguy\u1EC5n V\u0103n An",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T001",
+        "TenThuoc": "Paracetamol 500mg",
+        "SoLuong": 10,
+        "DonGia": 10000,
+        "ThanhTien": 100000
+      },
+      {
+        "MaThuoc": "T005",
+        "TenThuoc": "Omeprazole 20mg",
+        "SoLuong": 6,
+        "DonGia": 20000,
+        "ThanhTien": 120000
+      }
+    ],
+    "SoTien": 220000,
+    "NgayTao": "2026-08-16T16:00:00",
+    "DiemCong": 220,
+    "DiemSuDung": 20,
+    "TongDiemSauGiaoDich": 350,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
+    "ThanhTien": 200000
+  },
+  {
+    "MaDon": "DH005",
+    "MaKH": "KH005",
+    "TenKH": "Ho\u00E0ng V\u0103n Em",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T015",
+        "TenThuoc": "Dung d\u1ECBch s\u00E1t khu\u1EA9n",
+        "SoLuong": 8,
+        "DonGia": 50000,
+        "ThanhTien": 400000
+      },
+      {
+        "MaThuoc": "T007",
+        "TenThuoc": "Siro ho Prospan",
+        "SoLuong": 10,
+        "DonGia": 30000,
+        "ThanhTien": 300000
+      }
+    ],
+    "SoTien": 700000,
+    "NgayTao": "2026-08-14T11:00:00",
+    "DiemCong": 700,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 700,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
+    "ThanhTien": 700000
+  },
+  {
+    "MaDon": "DH006",
+    "MaKH": "KH005",
+    "TenKH": "Ho\u00E0ng V\u0103n Em",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T015",
+        "TenThuoc": "Dung d\u1ECBch s\u00E1t khu\u1EA9n",
+        "SoLuong": 4,
+        "DonGia": 50000,
+        "ThanhTien": 200000
+      },
+      {
+        "MaThuoc": "T002",
+        "TenThuoc": "Amoxicillin 500mg",
+        "SoLuong": 4,
+        "DonGia": 25000,
+        "ThanhTien": 100000
+      }
+    ],
+    "SoTien": 300000,
+    "NgayTao": "2026-08-12T09:45:00",
+    "DiemCong": 300,
+    "DiemSuDung": 10,
+    "TongDiemSauGiaoDich": 990,
+    "QuaTangDoi": "S\u1ED5 tay",
+    "DiemDoiQua": 150,
+    "ThanhTien": 290000
+  },
+  {
+    "MaDon": "DH007",
+    "MaKH": "KH009",
+    "TenKH": "Ng\u00F4 V\u0103n Khoa",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T015",
+        "TenThuoc": "Dung d\u1ECBch s\u00E1t khu\u1EA9n",
+        "SoLuong": 6,
+        "DonGia": 50000,
+        "ThanhTien": 300000
+      },
+      {
+        "MaThuoc": "T002",
+        "TenThuoc": "Amoxicillin 500mg",
+        "SoLuong": 8,
+        "DonGia": 25000,
+        "ThanhTien": 200000
+      }
+    ],
+    "SoTien": 500000,
+    "NgayTao": "2026-08-10T15:20:00",
+    "DiemCong": 500,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 500,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
+    "ThanhTien": 500000
+  },
+  {
+    "MaDon": "DH008",
+    "MaKH": "KH010",
+    "TenKH": "\u0110\u1EB7ng Th\u1ECB Lan",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T015",
+        "TenThuoc": "Dung d\u1ECBch s\u00E1t khu\u1EA9n",
+        "SoLuong": 4,
+        "DonGia": 50000,
+        "ThanhTien": 200000
+      },
+      {
+        "MaThuoc": "T005",
+        "TenThuoc": "Omeprazole 20mg",
+        "SoLuong": 5,
+        "DonGia": 20000,
+        "ThanhTien": 100000
+      }
+    ],
+    "SoTien": 300000,
+    "NgayTao": "2026-08-08T13:10:00",
+    "DiemCong": 300,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 300,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
+    "ThanhTien": 300000
+  },
+  {
+    "MaDon": "DH009",
+    "MaKH": "KH007",
+    "TenKH": "V\u0169 Minh H\u1EA3i",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T007",
+        "TenThuoc": "Siro ho Prospan",
+        "SoLuong": 3,
+        "DonGia": 30000,
+        "ThanhTien": 90000
+      },
+      {
+        "MaThuoc": "T005",
+        "TenThuoc": "Omeprazole 20mg",
+        "SoLuong": 6,
+        "DonGia": 20000,
+        "ThanhTien": 120000
+      }
+    ],
+    "SoTien": 210000,
+    "NgayTao": "2026-08-05T10:30:00",
+    "DiemCong": 210,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 210,
+    "QuaTangDoi": "T\u00FAi v\u1EA3i",
+    "DiemDoiQua": 300,
+    "ThanhTien": 210000
+  },
+  {
+    "MaDon": "DH010",
+    "MaKH": "KH004",
+    "TenKH": "Ph\u1EA1m Th\u1ECB Dung",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T003",
+        "TenThuoc": "Vitamin C 500mg",
+        "SoLuong": 3,
+        "DonGia": 15000,
+        "ThanhTien": 45000
+      }
+    ],
+    "SoTien": 45000,
+    "NgayTao": "2026-08-02T08:40:00",
+    "DiemCong": 45,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 45,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
+    "ThanhTien": 45000
+  },
+  {
+    "MaDon": "DH011",
+    "MaKH": "KH001",
+    "TenKH": "Nguy\u1EC5n V\u0103n An",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T011",
+        "TenThuoc": "K\u1EBDm Zinc 20mg",
+        "SoLuong": 3,
+        "DonGia": 22000,
+        "ThanhTien": 66000
+      }
+    ],
+    "SoTien": 66000,
+    "NgayTao": "2026-08-21T19:46:29.8103815+07:00",
+    "DiemCong": 66,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 416,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
+    "ThanhTien": 66000
+  },
+  {
+    "MaDon": "DH012",
+    "MaKH": "KH004",
+    "TenKH": "Ph\u1EA1m Th\u1ECB Dung",
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T009",
+        "TenThuoc": "Men vi sinh Enterogermina",
+        "SoLuong": 1,
+        "DonGia": 28000,
+        "ThanhTien": 28000
+      }
+    ],
+    "SoTien": 28000,
+    "NgayTao": "2026-08-21T19:48:28.5282641+07:00",
+    "DiemCong": 28,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 73,
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0,
+    "ThanhTien": 28000
+  }
+]

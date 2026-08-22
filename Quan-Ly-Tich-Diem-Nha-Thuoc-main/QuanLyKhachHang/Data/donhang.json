@@ -1,0 +1,256 @@
+[
+  {
+    "MaDon": "DH001",
+    "MaKH": "KH001",
+    "TenKH": "Nguyễn Văn An",
+    "SoTien": 150000,
+    "NgayTao": "2026-08-21T09:00:00",
+    "DiemCong": 150,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 150,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T001",
+        "TenThuoc": "Paracetamol 500mg",
+        "SoLuong": 5,
+        "DonGia": 10000
+      },
+      {
+        "MaThuoc": "T005",
+        "TenThuoc": "Omeprazole 20mg",
+        "SoLuong": 5,
+        "DonGia": 20000
+      }
+    ],
+    "QuaTangDoi": "Khẩu trang",
+    "DiemDoiQua": 100
+  },
+  {
+    "MaDon": "DH002",
+    "MaKH": "KH002",
+    "TenKH": "Trần Thị Bình",
+    "SoTien": 90000,
+    "NgayTao": "2026-08-20T14:30:00",
+    "DiemCong": 90,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 90,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T001",
+        "TenThuoc": "Paracetamol 500mg",
+        "SoLuong": 3,
+        "DonGia": 10000
+      },
+      {
+        "MaThuoc": "T007",
+        "TenThuoc": "Siro ho Prospan",
+        "SoLuong": 2,
+        "DonGia": 30000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH003",
+    "MaKH": "KH003",
+    "TenKH": "Lê Hoàng Cường",
+    "SoTien": 500000,
+    "NgayTao": "2026-08-18T10:15:00",
+    "DiemCong": 500,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 500,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T015",
+        "TenThuoc": "Dung dịch sát khuẩn",
+        "SoLuong": 6,
+        "DonGia": 50000
+      },
+      {
+        "MaThuoc": "T002",
+        "TenThuoc": "Amoxicillin 500mg",
+        "SoLuong": 8,
+        "DonGia": 25000
+      }
+    ],
+    "QuaTangDoi": "Nước muối",
+    "DiemDoiQua": 50
+  },
+  {
+    "MaDon": "DH004",
+    "MaKH": "KH001",
+    "TenKH": "Nguyễn Văn An",
+    "SoTien": 220000,
+    "NgayTao": "2026-08-16T16:00:00",
+    "DiemCong": 220,
+    "DiemSuDung": 20,
+    "TongDiemSauGiaoDich": 350,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T001",
+        "TenThuoc": "Paracetamol 500mg",
+        "SoLuong": 10,
+        "DonGia": 10000
+      },
+      {
+        "MaThuoc": "T005",
+        "TenThuoc": "Omeprazole 20mg",
+        "SoLuong": 6,
+        "DonGia": 20000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH005",
+    "MaKH": "KH005",
+    "TenKH": "Hoàng Văn Em",
+    "SoTien": 700000,
+    "NgayTao": "2026-08-14T11:00:00",
+    "DiemCong": 700,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 700,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T015",
+        "TenThuoc": "Dung dịch sát khuẩn",
+        "SoLuong": 8,
+        "DonGia": 50000
+      },
+      {
+        "MaThuoc": "T007",
+        "TenThuoc": "Siro ho Prospan",
+        "SoLuong": 10,
+        "DonGia": 30000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH006",
+    "MaKH": "KH005",
+    "TenKH": "Hoàng Văn Em",
+    "SoTien": 300000,
+    "NgayTao": "2026-08-12T09:45:00",
+    "DiemCong": 300,
+    "DiemSuDung": 10,
+    "TongDiemSauGiaoDich": 990,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T015",
+        "TenThuoc": "Dung dịch sát khuẩn",
+        "SoLuong": 4,
+        "DonGia": 50000
+      },
+      {
+        "MaThuoc": "T002",
+        "TenThuoc": "Amoxicillin 500mg",
+        "SoLuong": 4,
+        "DonGia": 25000
+      }
+    ],
+    "QuaTangDoi": "Sổ tay",
+    "DiemDoiQua": 150
+  },
+  {
+    "MaDon": "DH007",
+    "MaKH": "KH009",
+    "TenKH": "Ngô Văn Khoa",
+    "SoTien": 500000,
+    "NgayTao": "2026-08-10T15:20:00",
+    "DiemCong": 500,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 500,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T015",
+        "TenThuoc": "Dung dịch sát khuẩn",
+        "SoLuong": 6,
+        "DonGia": 50000
+      },
+      {
+        "MaThuoc": "T002",
+        "TenThuoc": "Amoxicillin 500mg",
+        "SoLuong": 8,
+        "DonGia": 25000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH008",
+    "MaKH": "KH010",
+    "TenKH": "Đặng Thị Lan",
+    "SoTien": 300000,
+    "NgayTao": "2026-08-08T13:10:00",
+    "DiemCong": 300,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 300,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T015",
+        "TenThuoc": "Dung dịch sát khuẩn",
+        "SoLuong": 4,
+        "DonGia": 50000
+      },
+      {
+        "MaThuoc": "T005",
+        "TenThuoc": "Omeprazole 20mg",
+        "SoLuong": 5,
+        "DonGia": 20000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  },
+  {
+    "MaDon": "DH009",
+    "MaKH": "KH007",
+    "TenKH": "Vũ Minh Hải",
+    "SoTien": 210000,
+    "NgayTao": "2026-08-05T10:30:00",
+    "DiemCong": 210,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 210,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T007",
+        "TenThuoc": "Siro ho Prospan",
+        "SoLuong": 3,
+        "DonGia": 30000
+      },
+      {
+        "MaThuoc": "T005",
+        "TenThuoc": "Omeprazole 20mg",
+        "SoLuong": 6,
+        "DonGia": 20000
+      }
+    ],
+    "QuaTangDoi": "Túi vải",
+    "DiemDoiQua": 300
+  },
+  {
+    "MaDon": "DH010",
+    "MaKH": "KH004",
+    "TenKH": "Phạm Thị Dung",
+    "SoTien": 45000,
+    "NgayTao": "2026-08-02T08:40:00",
+    "DiemCong": 45,
+    "DiemSuDung": 0,
+    "TongDiemSauGiaoDich": 45,
+    "DanhSachThuoc": [
+      {
+        "MaThuoc": "T003",
+        "TenThuoc": "Vitamin C 500mg",
+        "SoLuong": 3,
+        "DonGia": 15000
+      }
+    ],
+    "QuaTangDoi": "",
+    "DiemDoiQua": 0
+  }
+]

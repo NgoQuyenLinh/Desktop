@@ -1,0 +1,50 @@
+[
+  {
+    "MaQua": "Q01",
+    "TenQua": "Áo mưa",
+    "DiemQuyDoi": 1000,
+    "SoLuong": 10,
+    "NgayTao": "2026-08-01T10:00:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q02",
+    "TenQua": "Khẩu trang",
+    "DiemQuyDoi": 100,
+    "SoLuong": 50,
+    "NgayTao": "2026-08-01T10:00:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q03",
+    "TenQua": "Nước muối",
+    "DiemQuyDoi": 50,
+    "SoLuong": 100,
+    "NgayTao": "2026-08-01T10:00:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q04",
+    "TenQua": "Giấy",
+    "DiemQuyDoi": 50,
+    "SoLuong": 100,
+    "NgayTao": "2026-08-01T10:00:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q05",
+    "TenQua": "Túi vải",
+    "DiemQuyDoi": 300,
+    "SoLuong": 20,
+    "NgayTao": "2026-08-01T10:00:00",
+    "DangBan": true
+  },
+  {
+    "MaQua": "Q06",
+    "TenQua": "Sổ tay",
+    "DiemQuyDoi": 150,
+    "SoLuong": 30,
+    "NgayTao": "2026-08-01T10:00:00",
+    "DangBan": true
+  }
+]
