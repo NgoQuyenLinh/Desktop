@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace QuanLyKhachHang.Models
 {
@@ -12,6 +13,15 @@ namespace QuanLyKhachHang.Models
         public string MaDon { get; set; } = string.Empty;
         public string MaKH { get; set; } = string.Empty;
         public string TenKH { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Danh sách các loại thuốc trong đơn hàng này (1 đơn có thể chứa nhiều loại thuốc).
+        /// Đơn hàng cũ (tạo trước khi có chức năng Quản lý thuốc) sẽ có danh sách rỗng;
+        /// khi đó SoTien vẫn giữ nguyên giá trị đã lưu trước đó để không phá vỡ lịch sử cũ.
+        /// </summary>
+        public List<ChiTietDonHang> DanhSachThuoc { get; set; } = new();
+
+        /// <summary>Tổng tiền đơn hàng (bằng tổng Thành tiền của các thuốc trong DanhSachThuoc).</summary>
         public decimal SoTien { get; set; }
         public DateTime NgayTao { get; set; }
         public int DiemCong { get; set; }

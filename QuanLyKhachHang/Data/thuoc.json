@@ -1,0 +1,107 @@
+[
+  {
+    "MaThuoc": "T001",
+    "TenThuoc": "Paracetamol 500mg",
+    "DonGia": 10000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T002",
+    "TenThuoc": "Amoxicillin 500mg",
+    "DonGia": 25000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T003",
+    "TenThuoc": "Vitamin C 500mg",
+    "DonGia": 15000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T004",
+    "TenThuoc": "Ibuprofen 400mg",
+    "DonGia": 18000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T005",
+    "TenThuoc": "Omeprazole 20mg",
+    "DonGia": 20000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T006",
+    "TenThuoc": "Cetirizine 10mg",
+    "DonGia": 12000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T007",
+    "TenThuoc": "Siro ho Prospan",
+    "DonGia": 30000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T008",
+    "TenThuoc": "Bổ gan Hepa",
+    "DonGia": 45000,
+    "ConHang": false,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T009",
+    "TenThuoc": "Men vi sinh Enterogermina",
+    "DonGia": 28000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T010",
+    "TenThuoc": "Thuốc nhỏ mắt V.Rohto",
+    "DonGia": 35000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T011",
+    "TenThuoc": "Kẽm Zinc 20mg",
+    "DonGia": 22000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T012",
+    "TenThuoc": "Panadol Extra",
+    "DonGia": 16000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T013",
+    "TenThuoc": "Smecta",
+    "DonGia": 14000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T014",
+    "TenThuoc": "ORS Oresol",
+    "DonGia": 8000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  },
+  {
+    "MaThuoc": "T015",
+    "TenThuoc": "Dung dịch sát khuẩn",
+    "DonGia": 50000,
+    "ConHang": true,
+    "NgayTao": "2026-08-21T10:00:00"
+  }
+]

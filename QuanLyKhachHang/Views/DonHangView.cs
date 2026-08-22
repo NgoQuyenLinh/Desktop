@@ -4,6 +4,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Layout;
 using Avalonia.Media;
 using QuanLyKhachHang.Helpers;
@@ -13,374 +14,476 @@ using QuanLyKhachHang.Services;
 namespace QuanLyKhachHang.Views
 {
     /// <summary>
-    /// Màn hình Đơn hàng / Tích điểm:
-    ///  - Bên trái: form tạo đơn hàng mới (chọn khách hàng, nhập số tiền, tuỳ chọn dùng điểm).
-    ///  - Bên phải: danh sách toàn bộ đơn hàng của khách hàng đang được chọn có hỗ trợ sắp xếp.
+    /// Màn hình tạo đơn hàng theo bố cục tối ưu:
+    /// Thông tin khách hàng -> chọn thuốc / quà -> lịch sử -> tổng kết giao dịch.
     /// </summary>
     public class DonHangView : UserControl
     {
         private readonly DataService _data;
 
-        private readonly AutoCompleteBox _cboKhachHang = new() { Watermark = "Nhập tên hoặc 3 số cuối SĐT...", FilterMode = AutoCompleteFilterMode.Custom };
-        private readonly NumericUpDown _numSoTien = new() { Minimum = 0, Maximum = 1_000_000_000, FormatString = "N0", Increment = 10000 };
-        private readonly NumericUpDown _numDiemSuDung = new() { Minimum = 0, Maximum = 1_000_000, FormatString = "0" };
-        private readonly TextBlock _lblDiemHienCo = new();
-        private readonly TextBlock _lblDiemSeCong = new();
-        private readonly TextBlock _lblThongBaoLoiDiem = new() 
-        { 
-            Text = "Số điểm không hợp lệ", 
-            Foreground = Brushes.Red, 
-            FontWeight = FontWeight.Bold, 
-            FontSize = 13, 
-            IsVisible = false 
+        private readonly AutoCompleteBox _cboKhachHang = new()
+{
+    HorizontalAlignment = HorizontalAlignment.Stretch,
+    Watermark = "Nhập mã KH, tên hoặc SĐT...",
+    FilterMode = AutoCompleteFilterMode.Custom
+};
+        private readonly TextBlock _txtMaKH = new() { Text = "-", FontWeight = FontWeight.SemiBold };
+        private readonly TextBlock _txtTenKH = new() { Text = "-", FontWeight = FontWeight.SemiBold };
+        private readonly TextBlock _txtSdt = new() { Text = "-", FontWeight = FontWeight.SemiBold };
+        private readonly TextBlock _txtDiem = new() { Text = "0 điểm", FontWeight = FontWeight.Bold, Foreground = new SolidColorBrush(Color.Parse("#B7791F")) };
+private readonly AutoCompleteBox _cboThuoc = new()
+{
+    HorizontalAlignment = HorizontalAlignment.Stretch,
+    Watermark = "Nhập mã thuốc hoặc tên thuốc...",
+    FilterMode = AutoCompleteFilterMode.Custom
+};
+        private readonly NumericUpDown _numSLThuoc = new() { Minimum = 1, Maximum = 10000, Value = 1, FormatString = "0" };
+        private readonly TextBlock _txtDonGiaThuoc = new() { Text = "0 đ", FontWeight = FontWeight.SemiBold };
+        private readonly ListBox _lbThuoc = new();
+
+        private readonly ComboBox _cboQua = new() { HorizontalAlignment = HorizontalAlignment.Stretch };
+        private readonly TextBlock _txtDiemQua = new() { Text = "0 điểm", FontWeight = FontWeight.SemiBold };
+        private readonly ListBox _lbQuaDaChon = new();
+
+        private readonly List<ChiTietDonHang> _thuocDangChon = new();
+        private QuaTang? _quaDangChon;
+
+        private readonly ListBox _lbLichSu = new();
+        private readonly TextBlock _txtKhongCoLichSu = new()
+        {
+            Text = "Khách hàng chưa có lịch sử mua hàng. Chọn thời gian bên dưới để xem giao dịch.",
+            Foreground = Brushes.Gray,
+            TextWrapping = TextWrapping.Wrap,
+            IsVisible = false,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness(12)
         };
-        private readonly TextBlock _lblThanhTien = new();
-        private readonly ToggleButton _btnToggleQua = new() { Content = "🎁 Đổi Quà bằng Điểm", Margin = new Thickness(0, 5, 0, 5), HorizontalAlignment = HorizontalAlignment.Stretch };
-        private readonly ListBox _lbQuaTang = new() { IsVisible = false, MaxHeight = 120 };
+
+        private readonly RadioButton _rbNgay = new() { Content = "Ngày", GroupName = "lichsu", IsChecked = true };
+        private readonly RadioButton _rbThang = new() { Content = "Tháng", GroupName = "lichsu" };
+        private readonly RadioButton _rbNam = new() { Content = "Năm", GroupName = "lichsu" };
+
+        private readonly TextBlock _txtTongTien = new() { FontWeight = FontWeight.Bold };
+        private readonly TextBlock _txtDiemCong = new() { FontWeight = FontWeight.Bold };
+        private readonly TextBlock _txtTongDiemDoi = new() { FontWeight = FontWeight.Bold };
+        private readonly TextBlock _txtDiemSau = new() { FontWeight = FontWeight.Bold, FontSize = 18, Foreground = new SolidColorBrush(Color.Parse("#2563EB")) };
+        private readonly TextBox _txtGhiChu = new() { Watermark = "Nhập ghi chú (nếu có)...", AcceptsReturn = true, MinHeight = 58 };
+
         private readonly Button _btnTaoDon = new()
         {
-            Content = "✅ Tạo đơn & cộng điểm",
-            Background = new SolidColorBrush(Color.Parse("#2563EB")),
+            Content = "✓  Xác nhận tạo đơn hàng",
+            Height = 44,
+            Background = new SolidColorBrush(Color.Parse("#15803D")),
             Foreground = Brushes.White,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            HorizontalContentAlignment = HorizontalAlignment.Center,
-            Height = 38
+            FontWeight = FontWeight.Bold,
+            HorizontalAlignment = HorizontalAlignment.Stretch
         };
-
-        // UI Sắp xếp bên phải
-        private readonly ComboBox _cboSapXep = new() { Width = 170 };
-        private readonly ListBox _listBoxDon = new();
-
-        private readonly TextBlock _lblTrong = new()
-{
-    Text = "Chưa có đơn hàng",
-    FontSize = 14,
-    Foreground = Brushes.Gray,
-    HorizontalAlignment = HorizontalAlignment.Center,
-    VerticalAlignment = VerticalAlignment.Center,
-    IsVisible = false
-};
-
-        
-        private DonHang? _donDangChon;
 
         public DonHangView(DataService data)
         {
             _data = data;
+            Background = new SolidColorBrush(Color.Parse("#F4F7FB"));
 
-            var goc = new StackPanel { Spacing = 12 };
-            goc.Children.Add(new TextBlock { Text = "Đơn hàng & Tích điểm", FontSize = 20, FontWeight = FontWeight.Bold });
+            var content = new StackPanel { Margin = new Thickness(18), Spacing = 12 };
 
-            var hang = new Grid { ColumnDefinitions = new ColumnDefinitions("330,25,*") };
+            var title = new StackPanel { Spacing = 2 };
+            title.Children.Add(new TextBlock { Text = "🛒  Tạo đơn hàng", FontSize = 26, FontWeight = FontWeight.Bold, Foreground = new SolidColorBrush(Color.Parse("#1F2937")) });
+            title.Children.Add(new TextBlock { Text = "Tạo đơn mới, bán thuốc, cộng điểm và đổi quà cho khách hàng", Foreground = Brushes.Gray });
+            content.Children.Add(title);
 
-            // ---- Khung tạo đơn hàng bên trái ----
-            var panelTao = new StackPanel { Margin = new Thickness(16), Spacing = 12 };
-            panelTao.Children.Add(new TextBlock { Text = "Tạo đơn hàng mới", FontSize = 15, FontWeight = FontWeight.Bold });
+            // THÔNG TIN KHÁCH HÀNG
+            var customerCard = Card("👤  Thông tin khách hàng");
+            var customerGrid = new Grid { ColumnDefinitions = new ColumnDefinitions("2.1*,1*,1.4*,1.3*,1.2*"), Margin = new Thickness(0, 8, 0, 0) };
+            customerGrid.Children.Add(Field("Chọn / tìm khách hàng", _cboKhachHang, 0));
+            customerGrid.Children.Add(InfoField("Mã khách hàng", _txtMaKH, 1));
+            customerGrid.Children.Add(InfoField("Họ và tên", _txtTenKH, 2));
+            customerGrid.Children.Add(InfoField("Số điện thoại", _txtSdt, 3));
+            customerGrid.Children.Add(InfoField("Điểm hiện có", _txtDiem, 4));
+            ((StackPanel)customerCard.Child!).Children.Add(customerGrid);
+            content.Children.Add(customerCard);
 
-            panelTao.Children.Add(TaoDong("Khách hàng:", _cboKhachHang));
-            // Cập nhật điểm và lọc lại danh sách đơn hàng khi đổi khách hàng
-            _cboKhachHang.SelectionChanged += (s, e) => 
+            var middle = new Grid { ColumnDefinitions = new ColumnDefinitions("1.25*,0.85*") };
+
+            // CHỌN THUỐC
+            var medicineCard = Card("💊  1. Chọn thuốc đã mua");
+            var medStack = new StackPanel { Spacing = 9 };
+            var medInput = new Grid { ColumnDefinitions = new ColumnDefinitions("2*,0.8*,0.9*,1.2*") };
+            medInput.Children.Add(Field("Tên thuốc", _cboThuoc, 0));
+            medInput.Children.Add(Field("Số lượng", _numSLThuoc, 1));
+            medInput.Children.Add(InfoField("Đơn giá", _txtDonGiaThuoc, 2));
+            var btnThemThuoc = new Button { Content = "+ Thêm vào danh sách", Background = new SolidColorBrush(Color.Parse("#2563EB")), Foreground = Brushes.White, VerticalAlignment = VerticalAlignment.Bottom, Height = 36 };
+            btnThemThuoc.Click += BtnThemThuoc_Click;
+            Grid.SetColumn(btnThemThuoc, 3);
+            medInput.Children.Add(btnThemThuoc);
+            medStack.Children.Add(medInput);
+
+            var medTable = new List<ColDef<ChiTietDonHang>>
             {
-                CapNhatDiemHienCo();
-                TaiLaiDuLieuDon();
+                new("STT", .45, x => (_thuocDangChon.IndexOf(x) + 1).ToString()),
+                new("Tên thuốc", 1.8, x => x.TenThuoc),
+                new("Đơn giá", .9, x => $"{x.DonGia:N0} đ"),
+                new("Số lượng", .8, x => x.SoLuong.ToString()),
+                new("Thành tiền", 1, x => $"{x.ThanhTien:N0} đ"),
+                new("Thao tác", .65, x => "Chọn để xoá")
             };
+            var tableBorder = new Border { Height = 205, BorderBrush = new SolidColorBrush(Color.Parse("#E5E7EB")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(6), Child = UiHelpers.TaoBang(new List<ChiTietDonHang>(), medTable, _lbThuoc) };
+            medStack.Children.Add(tableBorder);
+            var btnXoaThuoc = new Button { Content = "🗑 Xóa thuốc đang chọn", HorizontalAlignment = HorizontalAlignment.Left, Foreground = new SolidColorBrush(Color.Parse("#DC2626")) };
+            btnXoaThuoc.Click += (_, _) =>
+            {
+                if (_lbThuoc.SelectedItem is ChiTietDonHang ct) { _thuocDangChon.Remove(ct); CapNhatThuoc(); }
+            };
+            medStack.Children.Add(btnXoaThuoc);
+            ((StackPanel)medicineCard.Child!).Children.Add(medStack);
+            Grid.SetColumn(medicineCard, 0);
+            middle.Children.Add(medicineCard);
 
-            panelTao.Children.Add(TaoDong("Số tiền đơn hàng (đ):", _numSoTien));
-            _numSoTien.ValueChanged += (s, e) => CapNhatUocTinh();
+            // QUÀ
+            var giftCard = Card("🎁  2. Chọn quà muốn đổi (tùy chọn)");
+            var giftStack = new StackPanel { Spacing = 9 };
+            var giftInput = new Grid { ColumnDefinitions = new ColumnDefinitions("2*,1*")};
+            giftInput.Children.Add(Field("Tên quà", _cboQua, 0));
+            giftInput.Children.Add(InfoField("Điểm cần đổi", _txtDiemQua, 1));
+            giftStack.Children.Add(giftInput);
+            var btnThemQua = new Button { Content = "+ Chọn quà", Background = new SolidColorBrush(Color.Parse("#16A34A")), Foreground = Brushes.White };
+            btnThemQua.Click += BtnThemQua_Click;
+            giftStack.Children.Add(btnThemQua);
 
-            _lblDiemSeCong.Foreground = new SolidColorBrush(Color.Parse("#10B981"));
-            _lblDiemSeCong.FontSize = 13;
-            panelTao.Children.Add(_lblDiemSeCong);
+            var giftTable = new List<ColDef<QuaTang>>
+            {
+                new("STT", .5, _ => "1"),
+                new("Tên quà", 1.7, q => q.TenQua),
+                new("Điểm đổi", 1, q => q.DiemQuyDoi.ToString()),
+                new("Thao tác", .8, _ => "Chọn để xoá")
+            };
+            giftStack.Children.Add(new Border { Height = 170, BorderBrush = new SolidColorBrush(Color.Parse("#E5E7EB")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(6), Child = UiHelpers.TaoBang(new List<QuaTang>(), giftTable, _lbQuaDaChon) });
+            var btnXoaQua = new Button { Content = "🗑 Bỏ quà đã chọn", Foreground = new SolidColorBrush(Color.Parse("#DC2626")), HorizontalAlignment = HorizontalAlignment.Left };
+            btnXoaQua.Click += (_, _) => { _quaDangChon = null; CapNhatQua(); };
+            giftStack.Children.Add(btnXoaQua);
+            ((StackPanel)giftCard.Child!).Children.Add(giftStack);
+            Grid.SetColumn(giftCard, 1);
+            middle.Children.Add(giftCard);
 
-            panelTao.Children.Add(TaoDong("Điểm hiện có:", _lblDiemHienCo));
-            _lblDiemHienCo.Foreground = new SolidColorBrush(Color.Parse("#2563EB"));
-            _lblDiemHienCo.FontWeight = FontWeight.Bold;
+            content.Children.Add(middle);
 
-            //panelTao.Children.Add(TaoDong("Điểm muốn sử dụng (trừ tiền):", _numDiemSuDung));
-            _numDiemSuDung.ValueChanged += (s, e) => CapNhatUocTinh();
+            // LỊCH SỬ + TỔNG KẾT
+            var bottom = new Grid { ColumnDefinitions = new ColumnDefinitions("1.65*,0.85*") };
+            var historyCard = Card("🕘  Lịch sử mua hàng của khách hàng");
+            var historyStack = new StackPanel { Spacing = 8 };
+            var historyCols = new List<ColDef<DonHang>>
+            {
+                new("STT", .45, x => (DanhSachLichSu().IndexOf(x) + 1).ToString()),
+                new("Ngày mua", 1.1, x => x.NgayTao.ToString("dd/MM/yyyy")),
+                new("Mã đơn", .85, x => x.MaDon),
+                new("Tổng tiền", 1.05, x => $"{x.SoTien:N0} đ"),
+                new("Điểm cộng", .85, x => x.DiemCong.ToString()),
+                new("Quà đã đổi", 1.05, x => string.IsNullOrEmpty(x.QuaTangDoi) ? "-" : x.QuaTangDoi)
+            };
+            historyStack.Children.Add(new Border { Height = 230, BorderBrush = new SolidColorBrush(Color.Parse("#E5E7EB")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(6), Child = UiHelpers.TaoBang(new List<DonHang>(), historyCols, _lbLichSu) });
+            historyStack.Children.Add(_txtKhongCoLichSu);
+            var filters = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center, Spacing = 18 };
+            filters.Children.Add(new TextBlock { Text = "Xem giao dịch theo:", VerticalAlignment = VerticalAlignment.Center, Foreground = Brushes.Gray });
+            filters.Children.Add(_rbNgay); filters.Children.Add(_rbThang); filters.Children.Add(_rbNam);
+            historyStack.Children.Add(filters);
+            ((StackPanel)historyCard.Child!).Children.Add(historyStack);
+            Grid.SetColumn(historyCard, 0);
+            bottom.Children.Add(historyCard);
 
-            _btnToggleQua.Checked += (s, e) => _lbQuaTang.IsVisible = true;
-            _btnToggleQua.Unchecked += (s, e) => { _lbQuaTang.IsVisible = false; _lbQuaTang.SelectedItem = null; CapNhatUocTinh(); };
-            _lbQuaTang.SelectionChanged += (s, e) => CapNhatUocTinh();
-            
-            panelTao.Children.Add(_btnToggleQua);
-            panelTao.Children.Add(_lbQuaTang);
-
-            // Dòng thông báo lỗi điểm nằm dưới ô điểm muốn sử dụng và trên thành tiền
-            panelTao.Children.Add(_lblThongBaoLoiDiem);
-
-            _lblThanhTien.FontWeight = FontWeight.Bold;
-            _lblThanhTien.FontSize = 14;
-            panelTao.Children.Add(_lblThanhTien);
-
+            var summaryCard = Card("🧾  Chi tiết giao dịch");
+            var summary = new StackPanel { Spacing = 11 };
+            summary.Children.Add(SummaryRow("Tổng tiền thuốc", _txtTongTien));
+            summary.Children.Add(SummaryRow("Tổng điểm được cộng", _txtDiemCong));
+            summary.Children.Add(new TextBlock { Text = "(Tổng tiền / 1000)", FontSize = 11, Foreground = Brushes.Gray, Margin = new Thickness(0, -8, 0, 0) });
+            summary.Children.Add(SummaryRow("Tổng điểm đổi quà", _txtTongDiemDoi));
+            summary.Children.Add(new Border { Height = 1, Background = new SolidColorBrush(Color.Parse("#D1D5DB")), Margin = new Thickness(0, 3) });
+            summary.Children.Add(SummaryRow("Điểm sau giao dịch", _txtDiemSau));
+            summary.Children.Add(Field("Ghi chú", _txtGhiChu));
+            summary.Children.Add(new Border { Height = 8, Background = Brushes.Transparent });
             _btnTaoDon.Click += BtnTaoDon_Click;
-            panelTao.Children.Add(_btnTaoDon);
+            summary.Children.Add(_btnTaoDon);
+            var btnHuy = new Button { Content = "✕  Hủy bỏ", Height = 40 };
+            btnHuy.Click += (_, _) => LamMoiDon();
+            summary.Children.Add(btnHuy);
+            ((StackPanel)summaryCard.Child!).Children.Add(summary);
+            Grid.SetColumn(summaryCard, 1);
+            bottom.Children.Add(summaryCard);
+            content.Children.Add(bottom);
 
-            var khungTao = new Border { Background = Brushes.White, BorderBrush = Brushes.LightGray, BorderThickness = new Thickness(1), Child = panelTao };
-            Grid.SetColumn(khungTao, 0);
+            Content = new ScrollViewer { Content = content, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
 
-            // ---- Danh sách đơn hàng bên phải ----
-            var phaiGoc = new DockPanel();
+            _cboKhachHang.SelectionChanged += (_, _) => CapNhatKhachHang();
+            _cboThuoc.SelectionChanged += (_, _) => CapNhatDonGiaThuoc();
+            _cboQua.SelectionChanged += (_, _) => CapNhatDiemQua();
+            _rbNgay.IsCheckedChanged += (_, _) => CapNhatLichSu();
+            _rbThang.IsCheckedChanged += (_, _) => CapNhatLichSu();
+            _rbNam.IsCheckedChanged += (_, _) => CapNhatLichSu();
 
-            var hangTieuDe = new DockPanel { Margin = new Thickness(0, 0, 0, 10) };
-            
-            var panelTraiTieuDe = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
-            panelTraiTieuDe.Children.Add(new TextBlock { Text = "Danh sách đơn hàng", FontSize = 15, FontWeight = FontWeight.Bold, VerticalAlignment = VerticalAlignment.Center });
-            
-            // Cấu hình bộ chọn Sắp xếp
-            _cboSapXep.ItemsSource = new[] { "Mới nhất (Ngày)", "Cũ nhất (Ngày)", "Tên khách hàng (A-Z)", "Số tiền (Cao - Thấp)", "Số điểm đã dùng" };
-            _cboSapXep.SelectedIndex = 0;
-            _cboSapXep.SelectionChanged += (s, e) => TaiLaiDuLieuDon();
-            
-            panelTraiTieuDe.Children.Add(new TextBlock { Text = " ↕ Sắp xếp:", VerticalAlignment = VerticalAlignment.Center, FontSize = 13 });
-            panelTraiTieuDe.Children.Add(_cboSapXep);
-
-            var btnXoaDon = new Button { Content = "🗑️ Xoá đơn đã chọn", Background = new SolidColorBrush(Color.Parse("#DC2626")), Foreground = Brushes.White, HorizontalAlignment = HorizontalAlignment.Right };
-            btnXoaDon.Click += BtnXoaDon_Click;
-            
-            DockPanel.SetDock(btnXoaDon, Dock.Right);
-            hangTieuDe.Children.Add(btnXoaDon);
-            hangTieuDe.Children.Add(panelTraiTieuDe);
-            DockPanel.SetDock(hangTieuDe, Dock.Top);
-            phaiGoc.Children.Add(hangTieuDe);
-
-            _listBoxDon.SelectionChanged += (s, e) => _donDangChon = _listBoxDon.SelectedItem as DonHang;
-            var khungBang = new Border { Background = Brushes.White, Height = 480 };
-var gridBang = new Grid();
-
-var bang = UiHelpers.TaoBang<DonHang>(
-    new List<DonHang>(),
-    new List<ColDef<DonHang>>
-    {
-        new("Mã đơn", 0.8, d => d.MaDon),
-        new("Khách hàng", 1.6, d => d.TenKH),
-        new("Số tiền", 1.1, d => d.SoTien.ToString("N0")),
-        new("Điểm cộng", 0.9, d => d.DiemCong.ToString()),
-        new("Quà tặng", 1.2, d => string.IsNullOrEmpty(d.QuaTangDoi) ? "-" : $"{d.QuaTangDoi} (-{d.DiemDoiQua})"),
-        new("Điểm dùng", 0.9, d => d.DiemSuDung.ToString()),
-        new("Thành tiền", 1.1, d => d.ThanhTien.ToString("N0")),
-        new("Ngày tạo", 1.4, d => d.NgayTao.ToString("dd/MM/yyyy HH:mm"))
-    },
-    _listBoxDon);
-
-    gridBang.Children.Add(bang);
-gridBang.Children.Add(_lblTrong);
-
-khungBang.Child = gridBang;
-phaiGoc.Children.Add(khungBang);
-
-            Grid.SetColumn(phaiGoc, 2);
-
-            hang.Children.Add(khungTao);
-            hang.Children.Add(phaiGoc);
-            goc.Children.Add(hang);
-
-            Content = goc;
-
-            NapDanhSachKhachHang();
-            NapDanhSachQua();
-            TaiLaiDuLieuDon();
+            NapDuLieu();
         }
 
-        /// <summary>
-        /// Nạp danh sách quà cho khu "Đổi Quà bằng Điểm". Đồng bộ với Kho Quà: chỉ những
-        /// quà đã được đưa vào trạng thái "Đang tặng" (QuaTang.DangBan == true) VÀ còn hàng
-        /// mới hiện ra ở đây. Quà đang "Chưa tặng" hoặc đã "Đã tặng hết" sẽ không xuất hiện.
-        /// </summary>
-        private void NapDanhSachQua()
+        private Border Card(string title)
         {
-            _lbQuaTang.ItemsSource = _data.QuaTangCoTheDoi();
-        }
-
-        private StackPanel TaoDong(string nhan, Control input)
-        {
-            input.Width = double.NaN;
-            input.HorizontalAlignment = HorizontalAlignment.Stretch;
-            var dong = new StackPanel { Spacing = 5 };
-            dong.Children.Add(new TextBlock { Text = nhan, FontSize = 13 });
-            dong.Children.Add(input);
-            return dong;
-        }
-
-        private void NapDanhSachKhachHang()
-        {
-            _cboKhachHang.ItemsSource = _data.DanhSachKhachHang
-                .Select(kh => $"{kh.MaKH} - {kh.HoTen} - {kh.SoDienThoai}")
-                .ToList();
-
-            _cboKhachHang.ItemFilter = (search, item) =>
+            var card = new Border
             {
-                if (string.IsNullOrWhiteSpace(search)) return true;
-                return item?.ToString()?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false;
+                Background = Brushes.White,
+                BorderBrush = new SolidColorBrush(Color.Parse("#DDE5F0")),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(9),
+                Padding = new Thickness(14)
             };
-
-            if (_cboKhachHang.ItemsSource is List<string> ds && ds.Count > 0)
-                _cboKhachHang.SelectedItem = ds[0];
-
-            CapNhatDiemHienCo();
+            var stack = new StackPanel { Spacing = 8 };
+            stack.Children.Add(new TextBlock { Text = title, FontSize = 16, FontWeight = FontWeight.Bold, Foreground = new SolidColorBrush(Color.Parse("#1F3B63")) });
+            card.Child = stack;
+            return card;
         }
+
+        private static Control Field(string label, Control control, int column = -1)
+        {
+            var p = new StackPanel { Spacing = 4 };
+            p.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = Brushes.Gray });
+            p.Children.Add(control);
+            if (column >= 0) Grid.SetColumn(p, column);
+            return p;
+        }
+
+        private static Control InfoField(string label, TextBlock value, int column)
+        {
+            var box = new Border { Background = new SolidColorBrush(Color.Parse("#F8FAFC")), BorderBrush = new SolidColorBrush(Color.Parse("#E5E7EB")), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(6), Padding = new Thickness(10, 8) };
+            box.Child = value;
+            return Field(label, box, column);
+        }
+
+        private static Control SummaryRow(string label, TextBlock value)
+        {
+            var g = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+            g.Children.Add(new TextBlock { Text = label, FontSize = 13, Foreground = new SolidColorBrush(Color.Parse("#374151")) });
+            Grid.SetColumn(value, 1);
+            g.Children.Add(value);
+            return g;
+        }
+
+     private void NapDuLieu()
+{
+    // =========================
+    // TÌM / CHỌN KHÁCH HÀNG
+    // =========================
+    _cboKhachHang.ItemsSource = _data.DanhSachKhachHang
+        .OrderBy(k => k.HoTen)
+        .Select(k => $"{k.MaKH} - {k.HoTen} - {k.SoDienThoai}")
+        .ToList();
+
+    _cboKhachHang.ItemFilter = (search, item) =>
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return true;
+
+        return item?.ToString()?.Contains(
+            search,
+            StringComparison.OrdinalIgnoreCase
+        ) ?? false;
+    };
+
+
+    // =========================
+    // TÌM / CHỌN THUỐC
+    // =========================
+    _cboThuoc.ItemsSource = _data.ThuocConHang();
+
+    _cboThuoc.ItemTemplate = new FuncDataTemplate<Thuoc>(
+        (x, _) => new TextBlock
+        {
+            Text = x == null
+                ? ""
+                : $"{x.MaThuoc} - {x.TenThuoc}"
+        });
+
+    _cboThuoc.ItemFilter = (search, item) =>
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return true;
+
+        if (item is not Thuoc thuoc)
+            return false;
+
+        return thuoc.MaThuoc.Contains(
+                   search,
+                   StringComparison.OrdinalIgnoreCase)
+               ||
+               thuoc.TenThuoc.Contains(
+                   search,
+                   StringComparison.OrdinalIgnoreCase);
+    };
+
+
+    // =========================
+    // QUÀ
+    // =========================
+    _cboQua.ItemsSource = _data.QuaTangCoTheDoi();
+
+    _cboQua.ItemTemplate = new FuncDataTemplate<QuaTang>(
+        (x, _) => new TextBlock
+        {
+            Text = x == null
+                ? ""
+                : $"{x.TenQua} - {x.DiemQuyDoi} điểm"
+        });
+
+    CapNhatKhachHang();
+    CapNhatThuoc();
+    CapNhatQua();
+}
 
         private KhachHang? KhachHangDangChon()
         {
-            if (_cboKhachHang.SelectedItem is string selectedStr)
-            {
-                var parts = selectedStr.Split(" - ");
-                if (parts.Length > 0)
-                {
-                    var maKH = parts[0];
-                    return _data.DanhSachKhachHang.FirstOrDefault(k => k.MaKH == maKH);
-                }
-            }
-            return null;
+            if (_cboKhachHang.SelectedItem is not string s) return null;
+            var ma = s.Split(" - ")[0];
+            return _data.DanhSachKhachHang.FirstOrDefault(x => x.MaKH == ma);
         }
 
-        private void CapNhatDiemHienCo()
+        private void CapNhatKhachHang()
         {
             var kh = KhachHangDangChon();
-            _lblDiemHienCo.Text = kh != null ? $"{kh.DiemTichLuy} điểm" : "-";
-            CapNhatUocTinh();
+            _txtMaKH.Text = kh?.MaKH ?? "-";
+            _txtTenKH.Text = kh?.HoTen ?? "-";
+            _txtSdt.Text = kh?.SoDienThoai ?? "-";
+            _txtDiem.Text = kh == null ? "0 điểm" : $"{kh.DiemTichLuy:N0} điểm";
+            CapNhatLichSu();
+            CapNhatTongKet();
         }
 
-        private void CapNhatUocTinh()
+        private void CapNhatDonGiaThuoc()
         {
-            decimal soTien = _numSoTien.Value ?? 0;
-            int diemCong = (int)(soTien / 1000);
-            _lblDiemSeCong.Text = $"→ Điểm sẽ được cộng: {diemCong} điểm (Số tiền / 1000)";
+            _txtDonGiaThuoc.Text = _cboThuoc.SelectedItem is Thuoc t ? $"{t.DonGia:N0} đ" : "0 đ";
+        }
 
+        private void CapNhatDiemQua()
+        {
+            _txtDiemQua.Text = _cboQua.SelectedItem is QuaTang q ? $"{q.DiemQuyDoi:N0} điểm" : "0 điểm";
+        }
+
+        private void BtnThemThuoc_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            if (_cboThuoc.SelectedItem is not Thuoc t || !t.ConHang) return;
+            int sl = (int)(_numSLThuoc.Value ?? 0);
+            if (sl <= 0) return;
+
+            var old = _thuocDangChon.FirstOrDefault(x => x.MaThuoc == t.MaThuoc);
+            if (old != null) old.SoLuong += sl;
+            else _thuocDangChon.Add(new ChiTietDonHang { MaThuoc = t.MaThuoc, TenThuoc = t.TenThuoc, DonGia = t.DonGia, SoLuong = sl });
+
+            _numSLThuoc.Value = 1;
+            CapNhatThuoc();
+        }
+
+        private void CapNhatThuoc()
+        {
+            _lbThuoc.ItemsSource = null;
+            _lbThuoc.ItemsSource = _thuocDangChon.ToList();
+            CapNhatTongKet();
+        }
+
+        private void BtnThemQua_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            if (_cboQua.SelectedItem is QuaTang q) { _quaDangChon = q; CapNhatQua(); }
+        }
+
+        private void CapNhatQua()
+        {
+            _lbQuaDaChon.ItemsSource = null;
+            _lbQuaDaChon.ItemsSource = _quaDangChon == null ? new List<QuaTang>() : new List<QuaTang> { _quaDangChon };
+            CapNhatTongKet();
+        }
+
+        private List<DonHang> DanhSachLichSu()
+        {
             var kh = KhachHangDangChon();
-            int diemHienCo = kh?.DiemTichLuy ?? 0;
-            decimal diemSuDung = _numDiemSuDung.Value ?? 0;
-            var qua = _lbQuaTang.SelectedItem as QuaTang;
-            int diemQua = qua?.DiemQuyDoi ?? 0;
+            if (kh == null) return new List<DonHang>();
+            var now = DateTime.Now;
+            var ds = _data.DanhSachDonHang.Where(x => x.MaKH == kh.MaKH);
+            if (_rbNgay.IsChecked == true) ds = ds.Where(x => x.NgayTao.Date == now.Date);
+            else if (_rbThang.IsChecked == true) ds = ds.Where(x => x.NgayTao.Year == now.Year && x.NgayTao.Month == now.Month);
+            else if (_rbNam.IsChecked == true) ds = ds.Where(x => x.NgayTao.Year == now.Year);
+            return ds.OrderByDescending(x => x.NgayTao).ToList();
+        }
 
-            // Ràng buộc kiểm tra tính hợp lệ của điểm khi gõ phím
-            bool laDiemAm = diemSuDung < 0;
-            bool vuotDiemHienCo = (diemSuDung + diemQua) > diemHienCo;
-            bool vuotSoTienChoPhep = diemSuDung > diemCong; // 1 điểm = 1000đ
+        private void CapNhatLichSu()
+        {
+            var ds = DanhSachLichSu();
+            _lbLichSu.ItemsSource = null;
+            _lbLichSu.ItemsSource = ds;
+            _txtKhongCoLichSu.IsVisible = KhachHangDangChon() != null && ds.Count == 0;
+        }
 
-            if (laDiemAm || vuotDiemHienCo || vuotSoTienChoPhep)
-            {
-                if (vuotDiemHienCo) 
-                    _lblThongBaoLoiDiem.Text = $"Không đủ điểm! Cần {diemSuDung + diemQua} (hiện có {diemHienCo})";
-                else 
-                    _lblThongBaoLoiDiem.Text = "Số điểm không hợp lệ";
+        private void CapNhatTongKet()
+        {
+            var kh = KhachHangDangChon();
+            decimal tongTien = _thuocDangChon.Sum(x => x.ThanhTien);
+            int diemCong = (int)(tongTien / 1000);
+            int diemDoi = _quaDangChon?.DiemQuyDoi ?? 0;
+            int diemSau = (kh?.DiemTichLuy ?? 0) + diemCong - diemDoi;
 
-                _lblThongBaoLoiDiem.IsVisible = true;
-                _btnTaoDon.IsEnabled = false; // Khoá nút tạo đơn khi dữ liệu sai
-            }
-            else
-            {
-                _lblThongBaoLoiDiem.IsVisible = false;
-                _btnTaoDon.IsEnabled = true;
-            }
-
-            decimal thanhTien = soTien - diemSuDung;
-            if (thanhTien < 0) thanhTien = 0;
-            _lblThanhTien.Text = $"Thành tiền phải trả: {thanhTien:N0} đ";
+            _txtTongTien.Text = $"{tongTien:N0} đ";
+            _txtDiemCong.Text = $"{diemCong:N0} điểm";
+            _txtTongDiemDoi.Text = $"{diemDoi:N0} điểm";
+            _txtDiemSau.Text = $"{diemSau:N0} điểm";
+            _btnTaoDon.IsEnabled = kh != null && _thuocDangChon.Count > 0 && diemDoi <= (kh?.DiemTichLuy ?? 0);
         }
 
         private async void BtnTaoDon_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            var cuaSoCha = TopLevel.GetTopLevel(this) as Window;
+            var parent = TopLevel.GetTopLevel(this) as Window;
             var kh = KhachHangDangChon();
             if (kh == null)
             {
-                await ThongBaoWindow.ThongBao(cuaSoCha, "Thiếu thông tin", "Vui lòng chọn khách hàng.");
+                await ThongBaoWindow.ThongBao(parent, "Thiếu thông tin", "Vui lòng chọn khách hàng.");
                 return;
             }
-
-            var qua = _lbQuaTang.SelectedItem as QuaTang;
-            var (thanhCong, thongBao, _) = _data.TaoDonHang(kh.MaKH, _numSoTien.Value ?? 0, (int)(_numDiemSuDung.Value ?? 0), qua);
-
-            if (!thanhCong)
+            if (_thuocDangChon.Count == 0)
             {
-                await ThongBaoWindow.ThongBao(cuaSoCha, "Không thể tạo đơn hàng", thongBao);
+                await ThongBaoWindow.ThongBao(parent, "Thiếu thông tin", "Vui lòng thêm ít nhất một loại thuốc.");
+                return;
+            }
+            int diemQua = _quaDangChon?.DiemQuyDoi ?? 0;
+            if (diemQua > kh.DiemTichLuy)
+            {
+                await ThongBaoWindow.ThongBao(parent, "Không đủ điểm", $"Khách hàng hiện có {kh.DiemTichLuy} điểm, chưa đủ đổi quà.");
                 return;
             }
 
-            await ThongBaoWindow.ThongBao(cuaSoCha, "Thành công", thongBao);
+            var copy = _thuocDangChon.Select(x => new ChiTietDonHang { MaThuoc = x.MaThuoc, TenThuoc = x.TenThuoc, DonGia = x.DonGia, SoLuong = x.SoLuong }).ToList();
+            var result = _data.TaoDonHang(kh.MaKH, copy, 0, _quaDangChon);
+            if (!result.ThanhCong)
+            {
+                await ThongBaoWindow.ThongBao(parent, "Không thể tạo đơn", result.ThongBao);
+                return;
+            }
 
-            _numSoTien.Value = 0;
-            _numDiemSuDung.Value = 0;
-            _btnToggleQua.IsChecked = false;
-            _lbQuaTang.SelectedItem = null;
-            NapDanhSachQua();
-            NapDanhSachKhachHang();
-            TaiLaiDuLieuDon();
+            await ThongBaoWindow.ThongBao(parent, "Thành công", result.ThongBao);
+            LamMoiDon();
+            NapDuLieu();
+            _cboKhachHang.SelectedItem = _data.DanhSachKhachHang
+                .Where(x => x.MaKH == kh.MaKH)
+                .Select(x => $"{x.MaKH} - {x.HoTen} - {x.SoDienThoai}")
+                .FirstOrDefault();
         }
 
-        private void TaiLaiDuLieuDon()
-{
-    IEnumerable<DonHang> danhSach = _data.DanhSachDonHang;
-
-    // Lọc theo khách hàng đang chọn
-    var kh = KhachHangDangChon();
-    if (kh != null)
-    {
-        danhSach = danhSach.Where(d => d.MaKH == kh.MaKH);
-    }
-
-    // Xử lý sắp xếp
-    switch (_cboSapXep.SelectedIndex)
-    {
-        case 0:
-            danhSach = danhSach.OrderByDescending(d => d.NgayTao);
-            break;
-        case 1:
-            danhSach = danhSach.OrderBy(d => d.NgayTao);
-            break;
-        case 2:
-            danhSach = danhSach.OrderBy(d => d.TenKH);
-            break;
-        case 3:
-            danhSach = danhSach.OrderByDescending(d => d.SoTien);
-            break;
-        case 4:
-            danhSach = danhSach.OrderByDescending(d => d.DiemSuDung);
-            break;
-        default:
-            danhSach = danhSach.OrderByDescending(d => d.NgayTao);
-            break;
-    }
-
-    var dsKetQua = danhSach.ToList();
-
-    // KIỂM TRA: Nếu danh sách trống thì hiện dòng chữ "Chưa có đơn hàng"
-    _lblTrong.IsVisible = dsKetQua.Count == 0;
-
-    _listBoxDon.ItemsSource = null;
-    _listBoxDon.ItemsSource = dsKetQua;
-}
-
-        private async void BtnXoaDon_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void LamMoiDon()
         {
-            var cuaSoCha = TopLevel.GetTopLevel(this) as Window;
-
-            if (_donDangChon == null)
-            {
-                await ThongBaoWindow.ThongBao(cuaSoCha, "Thông báo", "Vui lòng chọn 1 đơn hàng cần xoá.");
-                return;
-            }
-
-            bool dongY = await ThongBaoWindow.XacNhan(cuaSoCha, "Xác nhận xoá",
-                "Xoá đơn hàng này sẽ KHÔNG tự động hoàn/trừ lại điểm cho khách hàng.\nBạn có chắc muốn xoá?");
-
-            if (dongY)
-            {
-                _data.XoaDonHang(_donDangChon.MaDon);
-                _donDangChon = null;
-                _listBoxDon.SelectedItem = null;
-                TaiLaiDuLieuDon();
-            }
+            _thuocDangChon.Clear();
+            _quaDangChon = null;
+            _txtGhiChu.Text = "";
+            _numSLThuoc.Value = 1;
+            _cboThuoc.SelectedItem = null;
+            _cboQua.SelectedItem = null;
+            CapNhatThuoc();
+            CapNhatQua();
+            CapNhatTongKet();
         }
 
         public void ChonKhachHang(string maKH)
         {
-            var kh = _data.DanhSachKhachHang.FirstOrDefault(k => k.MaKH == maKH);
-            if (kh != null)
-            {
-                _cboKhachHang.SelectedItem = $"{kh.MaKH} - {kh.HoTen} - {kh.SoDienThoai}";
-            }
+            var kh = _data.DanhSachKhachHang.FirstOrDefault(x => x.MaKH == maKH);
+            if (kh != null) _cboKhachHang.SelectedItem = $"{kh.MaKH} - {kh.HoTen} - {kh.SoDienThoai}";
         }
     }
 }

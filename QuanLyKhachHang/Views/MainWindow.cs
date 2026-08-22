@@ -62,6 +62,7 @@ namespace QuanLyKhachHang.Views
             var btnTrangChu = TaoNutMenuIconOnly("docs/imagess/app.png");
             var btnKhachHang = TaoNutMenuIconOnly("docs/imagess/khachHang.png");
             var btnKhoQua = TaoNutMenuIconOnly("docs/imagess/khoQua.png");
+            var btnThuoc = TaoNutMenuIconOnly("docs/imagess/thuoc.png");
             var btnDonHang = TaoNutMenuIconOnly("docs/imagess/hoaDon.png");
             var btnThongKe = TaoNutMenuIconOnly("docs/imagess/thongKe.png");
             var btnThoat = TaoNutMenuIconOnly("docs/imagess/thoat.png");
@@ -87,6 +88,7 @@ namespace QuanLyKhachHang.Views
             btnTrangChu.Click += (s, e) => HienThi(TaoTrangChuView(), btnTrangChu);
             btnKhachHang.Click += (s, e) => HienThi(new KhachHangView(_data), btnKhachHang);
             btnKhoQua.Click += (s, e) => HienThi(new KhoQuaView(_data), btnKhoQua);
+            btnThuoc.Click += (s, e) => HienThi(new ThuocView(_data), btnThuoc);
             btnDonHang.Click += (s, e) => HienThi(new DonHangView(_data), btnDonHang);
             btnThongKe.Click += (s, e) => HienThi(new ThongKeView(_data), btnThongKe);
             btnThoat.Click += (s, e) => Close();
@@ -95,6 +97,7 @@ namespace QuanLyKhachHang.Views
             stackSidebar.Children.Add(btnTrangChu);
             stackSidebar.Children.Add(btnKhachHang);
             stackSidebar.Children.Add(btnKhoQua);
+            stackSidebar.Children.Add(btnThuoc);
             stackSidebar.Children.Add(btnDonHang);
             stackSidebar.Children.Add(btnThongKe);
             stackSidebar.Children.Add(btnThoat);
